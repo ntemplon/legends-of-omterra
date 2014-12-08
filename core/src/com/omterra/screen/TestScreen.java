@@ -60,6 +60,7 @@ public class TestScreen implements Screen {
         this.sprite.setOrigin(0, 0);
         this.sprite.setPosition(-1 * sprite.getWidth() / 2.0f,
                 -1 * sprite.getHeight() / 2.0f);
+//        this.sprite.setPosition(0, 0);
     }
 
 
