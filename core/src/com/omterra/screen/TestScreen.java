@@ -66,16 +66,20 @@ public class TestScreen implements Screen {
     // Screen Implementation
     @Override
     public void render(float f) {
+        // OpenGL code to clear the screen
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL_COLOR_BUFFER_BIT);
 
+        // Verify the math is all right
         this.camera.update();
         this.batch.setProjectionMatrix(camera.combined);
         
+        // Draw stuff
         this.batch.begin();
         this.sprite.draw(this.batch);
         this.batch.end();
         
+        // If debugging, output metrics
         if (OmterraGame.DEBUG) {
             fpslog.log();
         }
