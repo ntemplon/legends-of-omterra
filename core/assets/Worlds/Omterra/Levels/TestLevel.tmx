@@ -4,7 +4,7 @@
   <property name="Soundtrack" value="exploration"/>
  </properties>
  <tileset firstgid="1" name="Outdoor" tilewidth="32" tileheight="32">
-  <image source="../Tilesets/Outdoor.png" width="320" height="320"/>
+  <image source="../../../Graphics/Tilesets/Outdoor.png" width="320" height="320"/>
   <terraintypes>
    <terrain name="Grass" tile="-1"/>
    <terrain name="Cliff" tile="-1"/>
@@ -144,18 +144,19 @@
   <tile id="98" terrain="1,2,2,2"/>
  </tileset>
  <tileset firstgid="101" name="Misc" tilewidth="32" tileheight="32">
-  <image source="../Tilesets/Misc.png" width="320" height="320"/>
+  <image source="../../../Graphics/Tilesets/Misc.png" width="320" height="320"/>
  </tileset>
  <layer name="Background" width="50" height="50">
   <data encoding="base64" compression="zlib">
    eJzt0jsOwjAQRVFnA0DDt+HbJJRASSiBElEm2f82GEtGiizFmnIMtziN3bxruXDOFQBMGYmxwsTA1pSFWCqsDGylI5+OndgrHAxsTZmKmcLcwNZ/6FiLjcLWwFYAAAAAv6MU1YCjgX3ahk7cxUPU4inOQZNJzynsvfTOrlFLfG/Rt6OJ3vwddbwMbE3pv71vaYMunPn/5v/azcBWTUs9IIf9AAAAAJCjD/AaHw4=
   </data>
  </layer>
- <layer name="Obstacles1" width="50" height="50">
+ <layer name="Obstacles 1" width="50" height="50">
   <data encoding="base64" compression="zlib">
    eJzt1zEKgEAMRNHU1tbeztra29suEmEJiRnlP0gbdmCniJnZEhw1a2C2lpfmI0edSCcUc0Q6oZhjFjm0VOfYC3Z6qnMcBTs95JhzFuz00HMt5NByzxG9W7rvmDFH5GZ5mrd9+S+N/pQjqxOd/cjsRGc/AAAAAAAAAAA6LmVPDP0=
   </data>
  </layer>
+ <objectgroup name="Entities"/>
  <objectgroup name="Collision">
   <object x="32" y="0" width="448" height="64"/>
   <object x="448" y="64" width="32" height="512"/>
