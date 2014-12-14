@@ -21,25 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.omterra.io;
-
-import java.io.File;
-import java.nio.file.Paths;
+package com.omterra.util;
 
 /**
- * A static enumeration of file locations for Legends of Omterra
+ *
  * @author Nathan Templon
  */
-public final class FileLocations {
+public final class ArrayUtils {
     
-    // Constants
-    public static final File ASSET_DIRECTORY = Paths.get("./").toFile();
-    public static final File WORLD_DIRECTORY = new File(FileUtils.combine(ASSET_DIRECTORY.getPath(), "Worlds"));
+    // Static Methods
+    public static <T> boolean contains(final T[] array, final T value) {
+        if (value == null) {
+            for (final T item : array) {
+                if (item == null) {
+                    return true;
+                }
+            }
+        }
+        else {
+            for (final T item : array) {
+                if (item == value || item.equals(value)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
     
     
     // Initialization
-    //   Private constructor prevents instances of this class from being instantiated
-    private FileLocations() {
+    private ArrayUtils() {
         
     }
     

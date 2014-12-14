@@ -28,11 +28,13 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.omterra.OmterraGame;
+import com.omterra.world.Level;
 
 /**
  *
@@ -42,45 +44,30 @@ public class LevelScreen implements Screen {
 
     // Fields
     private final OrthographicCamera camera; // The camera for viewing the map
+    private Level level; // The current level being rendered
+    private TiledMap map;  // The map of the current level
+    private LevelRenderer mapRender;  // The map renderer for the current map
 
-    private final TmxMapLoader loader; // A loader for loading in TiledMaps
-    private TiledMap map;  // The current TiledMap that we are rendering
-    private TiledMapRenderer mapRender;  // The map renderer for the current map
-    
     private boolean paused = false;  // Whether or not the game is currently paused
-    
+
     private final FPSLogger fpslog = new FPSLogger();
 
 
     // Properties
-    /**
-     * Sets the rendered map
-     * @param map 
-     */
-    public void setMap(TiledMap map) {
-        this.map = map;
-        this.mapRender = new OrthogonalTiledMapRenderer(this.map);
-        
-        // Set the camera's position on the center of the map
-        int mapWidth = map.getProperties().get("width", Integer.class) * map.getProperties().get("tilewidth", Integer.class);
-        int mapHeight = map.getProperties().get("height", Integer.class) * map.getProperties().get("tileheight", Integer.class);
-        this.camera.position.set(mapWidth / 2.0f, mapHeight / 2.0f, 0.0f);
-    }
-    
-    /**
-     * Sets the rendered map to the map located at the specified path inside
-     * the jar file
-     * @param mapLocation 
-     */
-    public void setMap(String mapLocation) {
-        this.setMap(this.loader.load(mapLocation));
+    public void setLevel(Level level) {
+        this.level = level;
+        this.map = level.getMap();
+
+        // Debug code: set view to center of map
+        this.camera.position.set(this.level.getPixelWidth() / 2.0f, this.level.getPixelHeight() / 2.0f, 0.0f);
+
+        this.mapRender = new LevelRenderer(this.level);
     }
 
 
     // Initialization
     public LevelScreen() {
         this.camera = new OrthographicCamera(640, 480);
-        this.loader = new TmxMapLoader();
     }
 
 
@@ -97,11 +84,11 @@ public class LevelScreen implements Screen {
             mapRender.setView(camera);
             mapRender.render();
         }
-        
+
         // Record metrics if in debug mode
-        if (OmterraGame.DEBUG) {
-            fpslog.log();
-        }
+//        if (OmterraGame.DEBUG) {
+//            fpslog.log();
+//        }
     }
 
     @Override
@@ -113,12 +100,12 @@ public class LevelScreen implements Screen {
 
     @Override
     public void show() {
-        
+
     }
 
     @Override
     public void hide() {
-        
+
     }
 
     @Override
@@ -134,9 +121,42 @@ public class LevelScreen implements Screen {
     @Override
     public void dispose() {
         // Get rid of all the native resources
-        if (this.map != null) {
-            this.map.dispose();
+        if (this.mapRender != null) {
+            this.mapRender.dispose();
         }
+    }
+
+
+    // Inner Classes
+    private class LevelRenderer extends OrthogonalTiledMapRenderer {
+
+        // Initialization
+        public LevelRenderer(Level level) {
+            super(level.getMap());
+        }
+
+
+        // Custom OrthogonalTiledMapRenderer Implementation
+        @Override
+        public void render() {
+            beginRender(); // Built - in method
+
+            // Render each layer, in order
+            for (MapLayer layer : map.getLayers()) {
+                if (layer.isVisible()) {
+                    if (layer instanceof TiledMapTileLayer) {
+                        this.renderTileLayer((TiledMapTileLayer) layer);
+                    } else {
+                        for (MapObject object : layer.getObjects()) {
+                            this.renderObject(object);
+                        }
+                    }
+                }
+            }
+
+            endRender(); // Built-in method
+        }
+
     }
 
 }

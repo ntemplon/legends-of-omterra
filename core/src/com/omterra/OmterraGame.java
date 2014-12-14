@@ -29,8 +29,11 @@ import com.badlogic.gdx.ai.fsm.StackStateMachine;
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.omterra.io.FileLocations;
+import com.omterra.io.OmterraAssetManager;
 import com.omterra.screen.LevelScreen;
+import com.omterra.screen.LoadingScreen;
 import com.omterra.screen.TestScreen;
+import com.omterra.world.Level;
 import com.omterra.world.World;
 import java.io.File;
 import java.util.ArrayList;
@@ -48,32 +51,32 @@ public class OmterraGame extends Game {
     public static final float SCALE = 2.0f; // The number of pixels on-screen for each pixel in the resource
 
     public static final boolean DEBUG = true;
-    public static final String DEBUG_LEVEL = "Worlds/Omterra/Levels/TestForest.tmx";
+    public static final String DEBUG_LEVEL = "Worlds/Omterra/Levels/TestLevel.tmx";
 
 
     // Enumerations
     public enum GameStates implements State<OmterraGame> {
 
-        TEST() {
+        LOADING() {
 
-                    // State Implementation
+                    // State Imiplementation
                     @Override
-                    public void enter(OmterraGame e) {
-                        e.setScreen(e.testScreen);
+                    public void enter(OmterraGame game) {
+                        game.setScreen(game.loadingScreen);
                     }
 
                     @Override
-                    public void update(OmterraGame e) {
-
+                    public void update(OmterraGame game) {
+                        
                     }
 
                     @Override
-                    public void exit(OmterraGame e) {
-
+                    public void exit(OmterraGame game) {
+                        
                     }
 
                     @Override
-                    public boolean onMessage(OmterraGame e, Telegram tlgrm) {
+                    public boolean onMessage(OmterraGame game, Telegram telegram) {
                         return false;
                     }
 
@@ -108,23 +111,27 @@ public class OmterraGame extends Game {
         LEVEL() {
 
                     @Override
-                    public void enter(OmterraGame e) {
-                        e.levelScreen.setMap(OmterraGame.DEBUG_LEVEL);
-                        e.setScreen(e.levelScreen);
+                    public void enter(OmterraGame game) {
+                        // debug code only
+                        game.setWorld(game.worlds.get(0));
+                        game.setLevel(game.getCurrentWorld().getStartingLevel());
+
+                        game.levelScreen.setLevel(game.getCurrentLevel());
+                        game.setScreen(game.levelScreen);
                     }
 
                     @Override
-                    public void update(OmterraGame e) {
+                    public void update(OmterraGame game) {
 
                     }
 
                     @Override
-                    public void exit(OmterraGame e) {
+                    public void exit(OmterraGame game) {
 
                     }
 
                     @Override
-                    public boolean onMessage(OmterraGame e, Telegram tlgrm) {
+                    public boolean onMessage(OmterraGame game, Telegram tlgrm) {
                         return false;
                     }
 
@@ -163,9 +170,28 @@ public class OmterraGame extends Game {
     // Fields
     private Screen testScreen;
     private LevelScreen levelScreen;
+    private Screen loadingScreen;
     private List<World> worlds;
 
+    private World currentWorld;
+    private Level currentLevel;
     private final StackStateMachine<OmterraGame> stateMachine;
+
+    private OmterraAssetManager assetManager;
+
+
+    // Properties
+    public OmterraAssetManager getAssetManager() {
+        return this.assetManager;
+    }
+
+    public World getCurrentWorld() {
+        return this.currentWorld;
+    }
+
+    public Level getCurrentLevel() {
+        return this.currentLevel;
+    }
 
 
     // Initialization
@@ -174,40 +200,23 @@ public class OmterraGame extends Game {
     }
 
 
-    // ApplicationAdapter Implementation
-    @Override
-    public void create() {
-        // Load the static World data (including levels) from the disk
-        this.loadWorldData();
-
-        // Create our various screens
-        this.testScreen = new TestScreen(640, 480);
-        this.levelScreen = new LevelScreen();
-
-        // Set the state machine - be careful to not do this until all screens
-        //  are initialized!
-        this.stateMachine.changeState(GameStates.LEVEL);
+    // Public Methods
+    public void setWorld(World world) {
+        this.currentWorld = world;
     }
 
-    @Override
-    public void render() {
-        super.render();
+    public void setLevel(Level level) {
+        this.currentLevel = level;
     }
 
-    @Override
-    public void dispose() {
-        // Empty shell to remind me to dispose resources if I add them later
-        if (this.testScreen != null) {
-            this.testScreen.dispose();
-        }
+    public void setState(GameStates state) {
+        this.stateMachine.changeState(state);
     }
 
-
-    // Private Methods
-    private void loadWorldData() {
+    public void loadWorldData() {
         this.worlds = new ArrayList<>();
 
-        File worldsDir = new File(FileLocations.WORLD_DIRECTORY);
+        File worldsDir = FileLocations.WORLD_DIRECTORY;
 
         if (!worldsDir.exists() || !worldsDir.isDirectory()) {
             // This is problematic
@@ -218,7 +227,7 @@ public class OmterraGame extends Game {
         for (File file : worldsDir.listFiles()) {
             if (file.isDirectory()) {
                 try {
-                    this.worlds.add(World.fromDirectory(file));
+                    this.worlds.add(World.fromDirectory(file, this.assetManager));
                 }
                 catch (Exception ex) {
                     if (DEBUG) {
@@ -227,6 +236,63 @@ public class OmterraGame extends Game {
                     }
                 }
             }
+        }
+    }
+
+
+    // ApplicationAdapter Implementation
+    @Override
+    public void create() {
+        // Load Resources
+        this.assetManager = new OmterraAssetManager();
+//        this.assetManager.loadInternalResources();
+//        this.assetManager.finishLoading();
+
+        // Load the static World data (including levels) from the disk
+//        this.loadWorldData();
+        // Create our various screens
+        this.loadingScreen = new LoadingScreen(this);
+        this.testScreen = new TestScreen(640, 480);
+        this.levelScreen = new LevelScreen();
+
+        // Debug only code - load default world and level
+//        this.setWorld(this.worlds.get(0));
+//        this.setLevel(this.getCurrentWorld().getStartingLevel());
+        
+        // Set the state machine - be careful to not do this until all screens
+        //  are initialized!
+//        this.setState(GameStates.LEVEL);
+        this.setState(GameStates.LOADING);
+    }
+
+    @Override
+    public void render() {
+        super.render();
+    }
+
+    /**
+     * Called right before dispose() when the game is closing - I should save the game, etc. here
+     */
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void dispose() {
+        if (this.testScreen != null) {
+            this.testScreen.dispose();
+        }
+        if (this.levelScreen != null) {
+            this.levelScreen.dispose();
+        }
+        if (this.worlds != null) {
+            for (World world : this.worlds) {
+                world.dispose();
+            }
+        }
+        if (this.assetManager != null) {
+            this.assetManager.dispose();
         }
     }
 }

@@ -23,43 +23,111 @@
  */
 package com.omterra.world;
 
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.utils.Disposable;
-import com.omterra.OmterraGame;
 import java.io.File;
 
 /**
  * A class representing an individual level (map) in Legends of Omterra
+ *
  * @author Nathan Templon
  */
 public class Level implements Disposable {
-    
+
     // Constants
     public static final String LEVEL_FOLDER = "Levels";
     public static final String LEVEL_EXTENSION = "tmx";
+    public static final String ENTITY_LAYER_NAME = "Entities";
+    public static final String COLLISION_LAYER_NAME = "Collision";
+
+    public static final String TILE_WIDTH_KEY = "tilewidth";
+    public static final String TILE_HEIGHT_KEY = "tileheight";
+    public static final String MAP_WIDTH_KEY = "width";
+    public static final String MAP_HEIGHT_KEY = "height";
     
-    
-    // Static Methods
-    public static Level fromFile(File file) {
-        Level level = new Level();
-        
-        if (OmterraGame.DEBUG) {
-            System.out.println("Loading Level: " + file.getPath());
-        }
-        
-        return level;
+
+    // Fields
+    private TiledMap map;
+    private String name;
+
+    private int tileWidth, tileHeight;
+    private int mapWidth, mapHeight;
+    private int pixelWidth, pixelHeight;
+
+
+    // Properties
+    public TiledMap getMap() {
+        return this.map;
     }
-    
-    
+
+    private void setMap(TiledMap map) {
+        this.map = map;
+
+        // Get metrics
+        this.tileWidth = map.getProperties().get(TILE_WIDTH_KEY, Integer.class);
+        this.tileHeight = map.getProperties().get(TILE_HEIGHT_KEY, Integer.class);
+        this.mapWidth = map.getProperties().get(MAP_WIDTH_KEY, Integer.class);
+        this.mapHeight = map.getProperties().get(MAP_HEIGHT_KEY, Integer.class);
+        this.pixelWidth = this.getTileWidth() * this.getMapWidth();
+        this.pixelHeight = this.getTileHeight() * this.getMapHeight();
+
+        // Set all layers visible, except for the informational layers
+        for (MapLayer layer : this.map.getLayers()) {
+            layer.setVisible(!(layer.getName().equalsIgnoreCase(ENTITY_LAYER_NAME) || layer.getName().equalsIgnoreCase(
+                    COLLISION_LAYER_NAME)));
+        }
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public int getTileWidth() {
+        return this.tileWidth;
+    }
+
+    public int getTileHeight() {
+        return this.tileHeight;
+    }
+
+    public int getMapWidth() {
+        return this.mapWidth;
+    }
+
+    public int getMapHeight() {
+        return this.mapHeight;
+    }
+
+    public int getPixelWidth() {
+        return this.pixelWidth;
+    }
+
+    public int getPixelHeight() {
+        return this.pixelHeight;
+    }
+
+
     // Initialization
     public Level() {
-        
+
     }
     
-    
+    public Level(String name, TiledMap map) {
+        this();
+        
+        this.name = name;
+        this.setMap(map);
+    }
+
+
     // Disposable Imiplementation
     @Override
     public void dispose() {
-        
+        if (this.map != null) {
+            this.map.dispose();
+        }
     }
-    
+
 }

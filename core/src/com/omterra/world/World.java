@@ -23,12 +23,14 @@
  */
 package com.omterra.world;
 
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.utils.Disposable;
-import com.omterra.OmterraGame;
 import com.omterra.io.FileUtils;
+import com.omterra.io.OmterraAssetManager;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A world, or group of self-contained levels
@@ -38,12 +40,8 @@ import java.util.List;
 public class World implements Disposable {
 
     // Static Methods
-    public static World fromDirectory(File dir) {
+    public static World fromDirectory(File dir, OmterraAssetManager assets) {
         World world = new World();
-
-        if (OmterraGame.DEBUG) {
-            System.out.println("Loading World: " + dir.getPath());
-        }
 
         // Basic gist: If we are working with a directory, see if it has a subdirectory with levels in it.  If so,
         //  go through each file in that subdirectory and load a level from it, if possible
@@ -53,7 +51,9 @@ public class World implements Disposable {
             if (levelDir.exists() && levelDir.isDirectory()) {
                 for (File file : levelDir.listFiles()) {
                     if (FileUtils.getExtension(file).equalsIgnoreCase(Level.LEVEL_EXTENSION)) {
-                        world.addLevel(Level.fromFile(file));
+                        TiledMap map = assets.get(file.getPath(), TiledMap.class);
+                        String name = file.getName().replace("." + Level.LEVEL_EXTENSION, "");
+                        world.addLevel(new Level(name, map));
                     }
                 }
             }
@@ -64,27 +64,46 @@ public class World implements Disposable {
 
 
     // Fields
-    private final List<Level> levels;
+    private final Map<String, Level> levels;
+
+
+    // Properties
+    public Collection<String> getLevelNames() {
+        return this.levels.keySet();
+    }
+
+    /**
+     * Gets the starting level for a new game for this world
+     *
+     * @return
+     */
+    public Level getStartingLevel() {
+        if (this.levels.containsKey("TestLevel")) {
+            return this.levels.get("TestLevel");
+        }
+        return null;
+    }
 
 
     // Initialization
     public World() {
-        levels = new ArrayList<>();
+        levels = new HashMap<>();
     }
 
 
     // Public Methods
     public void addLevel(Level level) {
-        this.levels.add(level);
+        this.levels.put(level.getName(), level);
     }
 
 
     // Disposable Implementation
     @Override
     public void dispose() {
+        // Free all native resources
         if (this.levels != null) {
-            for (Level level : levels) {
-                level.dispose();
+            for (String key : this.levels.keySet()) {
+                this.levels.get(key).dispose();
             }
         }
     }
