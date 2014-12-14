@@ -29,7 +29,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.omterra.util.ArrayUtils;
 import java.io.File;
-import java.nio.file.Paths;
 
 /**
  *
@@ -58,6 +57,18 @@ public class OmterraAssetManager extends AssetManager {
     }
     
     
+    // Custom AssetManager Methods
+    @Override
+    public synchronized <T> T get(String fileName) {
+        return super.get(FileUtils.crossPlatformFilePath(fileName));
+    }
+    
+    @Override
+    public synchronized <T> T get(String fileName, Class<T> type) {
+        return super.get(FileUtils.crossPlatformFilePath(fileName), type);
+    }
+    
+    
     // Private Methods
     private void loadResourcesRecursive(File directory) {
         // Check for an empty directory
@@ -75,9 +86,11 @@ public class OmterraAssetManager extends AssetManager {
                 String extension = FileUtils.getExtension(subFile);
                 if (ArrayUtils.contains(TEXTURE_EXTENSIONS, extension)) {
                     this.load(subFile.getPath(), Texture.class);
+//                    System.out.println(subFile.getPath() + ": " + subFile.exists());
                 }
                 else if (ArrayUtils.contains(MAP_EXTENSIONS, extension)) {
                     this.load(subFile.getPath(), TiledMap.class);
+//                    System.out.println(subFile.getPath() + ": " + subFile.exists());
                 }
             }
         }

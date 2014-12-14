@@ -45,7 +45,11 @@ public final class FileUtils {
     }
     
     public static String combine(String firstPath, String secondPath) {
-        return firstPath + "/" + secondPath;
+        return new File(new File(firstPath), secondPath).getPath();
+    }
+    
+    public static String crossPlatformFilePath(String filePath) {
+        return filePath.replace("\\", "/");
     }
     
     
