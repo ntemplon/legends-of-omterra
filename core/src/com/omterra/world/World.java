@@ -23,6 +23,7 @@
  */
 package com.omterra.world;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.utils.Disposable;
 import com.omterra.io.FileUtils;
@@ -46,7 +47,7 @@ public class World implements Disposable {
         // Basic gist: If we are working with a directory, see if it has a subdirectory with levels in it.  If so,
         //  go through each file in that subdirectory and load a level from it, if possible
         if (dir.isDirectory()) {
-            File levelDir = new File(FileUtils.combine(dir.getPath(), Level.LEVEL_FOLDER));
+            File levelDir = new File(dir, Level.LEVEL_FOLDER);
 
             if (levelDir.exists() && levelDir.isDirectory()) {
                 for (File file : levelDir.listFiles()) {

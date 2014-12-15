@@ -23,6 +23,7 @@
  */
 package com.omterra.io;
 
+import com.badlogic.gdx.files.FileHandle;
 import java.io.File;
 
 /**
@@ -32,8 +33,7 @@ import java.io.File;
 public final class FileUtils {
     
     // Static Methods
-    public static String getExtension(File file) {
-        String filePath = file.getPath();
+    public static String getExtension(String filePath) {
         int periodIndex = filePath.lastIndexOf(".");
         int folderIndex = Math.max(filePath.lastIndexOf("/"), filePath.lastIndexOf("\\")); // "/" for linux, "\\" for windows
         
@@ -42,6 +42,14 @@ public final class FileUtils {
         }
         
         return filePath.substring(periodIndex + 1);
+    }
+    
+    public static String getExtension(File file) {
+        return getExtension(file.getPath());
+    }
+    
+    public static String getExtension(FileHandle handle) {
+        return getExtension(handle.path());
     }
     
     public static String combine(String firstPath, String secondPath) {

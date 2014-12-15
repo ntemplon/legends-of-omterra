@@ -7,7 +7,7 @@ sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = [ "src/" ]
 
 project.ext.mainClassName = "com.omterra.desktop.DesktopLauncher"
-project.ext.assetsDir = new File("../core/assets");
+project.ext.assetsDir = new File("../core");
 
 task run(dependsOn: classes, type: JavaExec) {
     main = project.mainClassName
@@ -27,18 +27,34 @@ task debug(dependsOn: classes, type: JavaExec) {
     debug = true
 }
 
-task dist(type: Jar) {
+task buildWithDeps(type: Jar) {
     from files(sourceSets.main.output.classesDir)
     from files(sourceSets.main.output.resourcesDir)
     from {configurations.compile.collect {zipTree(it)}}
-    from files(project.assetsDir);
+    //from files(project.assetsDir);
  
     manifest {
         attributes 'Main-Class': project.mainClassName
     }
 }
 
-dist.dependsOn classes
+task dist(type: Copy) {
+    from(new File("../core/data"))
+    into(new File("./build/libs/data"))
+}
+
+task buildAtlas(dependsOn: classes, type: JavaExec) {
+    main = "com.omterra.tools.AtlasPacker"
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    workingDir = project.assetsDir
+    jvmArgs = ['-Xms128m', '-Xmx512m']
+    ignoreExitValue = true
+}
+
+buildWithDeps.dependsOn classes
+buildWithDeps.dependsOn clean
+dist.dependsOn buildWithDeps
 
 eclipse {
     project {

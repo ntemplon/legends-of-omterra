@@ -21,30 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.omterra.io;
+package com.omterra.entity.component;
 
-import java.io.File;
-import java.nio.file.Paths;
+import com.badlogic.gdx.math.Rectangle;
+import com.omterra.quadtree.RectangularBoundedObject;
 
 /**
- * A static enumeration of file locations for Legends of Omterra
  *
  * @author Nathan Templon
  */
-public final class FileLocations {
-
-    // Constants
-    public static final File ASSET_DIRECTORY = Paths.get("./data").toFile();
-    public static final File WORLD_DIRECTORY = new File(ASSET_DIRECTORY, "worlds");
-    public static final File FONTS_DIRECTORY = new File(ASSET_DIRECTORY, "fonts");
-    public static final File GRAPHICS_DIRECTORY = new File(ASSET_DIRECTORY, "graphics");
-    public static final File SPRITES_DIRECTORY = new File(GRAPHICS_DIRECTORY, "sprites");
+public class CollisionComponent implements RectangularBoundedObject {
     
-
+    // Fields
+    private final Rectangle bounds;
+    
+    
     // Initialization
-    //   Private constructor prevents instances of this class from being instantiated
-    private FileLocations() {
-
+    public CollisionComponent(Rectangle bounds) {
+        this.bounds = bounds;
     }
-
+    
+    
+    // RectangularBoundedObject Implementation
+    @Override
+    public Rectangle getBounds() {
+        return this.bounds;
+    }
+    
 }

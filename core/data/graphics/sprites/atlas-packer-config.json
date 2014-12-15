@@ -1,0 +1,32 @@
+{
+atlas: [
+	{
+		name: "CharacterSprites.atlas",
+		image: "CharacterSprites.png",
+		size: 16,
+		rows: [
+			"prowler",
+			"magus",
+			"champion"
+		],
+		columns: [
+			"walk-front-1",
+			"walk-front-2",
+			"walk-back-1",
+			"walk-back-2",
+			"stand-right",
+			"walk-right",
+			"stand-left",
+			"walk-left",
+			"stand-front",
+			"stand-back",
+			"attack-right",
+			"attack-left",
+			"attack-down",
+			"attack-up",
+			"cast",
+			"dead"
+		]
+	}
+]
+}

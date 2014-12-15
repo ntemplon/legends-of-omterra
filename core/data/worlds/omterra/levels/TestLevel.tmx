@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="Floor" tilewidth="16" tileheight="16">
+  <image source="../../../graphics/tilesets/Floor.png" width="640" height="640"/>
+ </tileset>
+ <tileset firstgid="1601" name="Wall" tilewidth="16" tileheight="16">
+  <image source="../../../graphics/tilesets/Wall.png" width="640" height="896"/>
+ </tileset>
+ <layer name="Background" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztzwEJADAIAEFh/cOuwUoI6ryDD/ARAAAAALDDPbn56PVR9ebDx4SPKj58+Pj/AwAAunmcJ/fR
+  </data>
+ </layer>
+ <layer name="Walls" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt1sENgCAMBVDucHAc4/7DqFM4gHBSKJr3kl7bfEiapgQAAAAAbXtO6Xi5zjw+x1K+0TNi5lruf9RbxNv1IMdc5Gir7fLe7N2xPSNmyjHXzIgctRviaW0/2eUAAMS5ABByM2I=
+  </data>
+ </layer>
+ <objectgroup name="Entities"/>
+</map>

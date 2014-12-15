@@ -27,8 +27,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.omterra.OmterraGame;
 import com.omterra.io.OmterraAssetManager;
+import com.omterra.threading.NotifyingThread;
+import java.text.DecimalFormat;
 
 /**
  *
@@ -42,10 +48,17 @@ public class LoadingScreen implements Screen {
     
     // Fields
     private final OrthographicCamera camera; // The camera for viewing the map
-    private final OmterraGame game;
-    private final OmterraAssetManager assetManager;
+    private final OmterraGame game; // The game that we will wait to load data
+    private final OmterraAssetManager assetManager; // The asset manager who we will wait to load all assets
     
-    private long startTime;
+    private long loadTime; // The time at which we started loading assets
+    private boolean startedDataLoadingThread = false; // Whether or not the data loading thread has started yet
+    private boolean loadingComplete = false; // True if all loading is completed
+    private NotifyingThread dataLoadingThread; // The thread that handles the game loading data, separate from the assets.
+    
+    private final DecimalFormat format = new DecimalFormat("##");
+    private final Batch batch = new SpriteBatch();
+    private final BitmapFont font = new BitmapFont();
     
     
     // Initialization
@@ -60,28 +73,47 @@ public class LoadingScreen implements Screen {
     @Override
     public void render(float delta) {
         // OpenGL code to clear the screen
-        Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 1); // Clear white
+        Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1); // Clear black
         Gdx.gl.glClear(GL_COLOR_BUFFER_BIT);
         
-//        float progress = this.assetManager.getProgress();
+        float progress = this.assetManager.getProgress();
         
-        if (this.assetManager.update() && (System.nanoTime() - this.startTime) / 1000000 > MINIMUM_LOADING_TIME) {
-            this.game.loadWorldData();
-            this.game.setState(OmterraGame.GameStates.LEVEL);
+        if (!this.startedDataLoadingThread && this.assetManager.update()) {
+            this.dataLoadingThread = new NotifyingThread(() -> this.game.loadWorldData());
+            this.dataLoadingThread.addListener((Thread thread) -> this.loadingComplete = true);
+            this.dataLoadingThread.start();
+            this.startedDataLoadingThread = true;
         }
+        
+        if (loadingComplete && this.minimumTimeElapsed()) {
+            this.game.setState(OmterraGame.GameStates.MAIN_MENU);
+            this.dispose();
+        }
+        
+        // Rendering code
+        batch.setProjectionMatrix(camera.combined);
+        
+        batch.begin();
+        
+        this.font.setScale(1f);
+        String message = "Loading: " + this.format.format(progress * 100) + "%";
+        TextBounds bounds = this.font.getBounds(message);
+        this.font.draw(batch, message, -1 * (bounds.width) / (2.0f * this.font.getScaleX()), (bounds.height / (2.0f * this.font.getScaleY())));
+        
+        batch.end();
     }
 
     @Override
     public void resize(int width, int height) {
-        this.camera.viewportWidth = width / OmterraGame.SCALE;
-        this.camera.viewportHeight = height / OmterraGame.SCALE;
-        camera.update();
+        this.camera.viewportWidth = width;
+        this.camera.viewportHeight = height;
+        this.camera.update();
     }
 
     @Override
     public void show() {
-        assetManager.loadInternalResources();
-        this.startTime = System.nanoTime();
+        this.assetManager.loadInternalResources();
+        this.loadTime = System.nanoTime();
     }
 
     @Override
@@ -102,6 +134,12 @@ public class LoadingScreen implements Screen {
     @Override
     public void dispose() {
         
+    }
+    
+    
+    // Private Methods
+    private boolean minimumTimeElapsed() {
+        return (System.nanoTime() - this.loadTime) / 1000000 > MINIMUM_LOADING_TIME;
     }
     
 }

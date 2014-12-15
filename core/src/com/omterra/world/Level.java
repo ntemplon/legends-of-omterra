@@ -25,9 +25,7 @@ package com.omterra.world;
 
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.utils.Disposable;
-import java.io.File;
 
 /**
  * A class representing an individual level (map) in Legends of Omterra
@@ -37,7 +35,7 @@ import java.io.File;
 public class Level implements Disposable {
 
     // Constants
-    public static final String LEVEL_FOLDER = "Levels";
+    public static final String LEVEL_FOLDER = "levels";
     public static final String LEVEL_EXTENSION = "tmx";
     public static final String ENTITY_LAYER_NAME = "Entities";
     public static final String COLLISION_LAYER_NAME = "Collision";

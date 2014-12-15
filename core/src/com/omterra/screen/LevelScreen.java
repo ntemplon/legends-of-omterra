@@ -28,13 +28,19 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.omterra.OmterraGame;
+import com.omterra.entity.component.CollisionComponent;
+import com.omterra.io.FileLocations;
+import com.omterra.quadtree.Quadtree;
 import com.omterra.world.Level;
+import java.io.File;
 
 /**
  *
@@ -43,10 +49,12 @@ import com.omterra.world.Level;
 public class LevelScreen implements Screen {
 
     // Fields
+    private final OmterraGame game;
+
     private final OrthographicCamera camera; // The camera for viewing the map
     private Level level; // The current level being rendered
-    private TiledMap map;  // The map of the current level
     private LevelRenderer mapRender;  // The map renderer for the current map
+    private Sprite sprite;
 
     private boolean paused = false;  // Whether or not the game is currently paused
 
@@ -56,7 +64,6 @@ public class LevelScreen implements Screen {
     // Properties
     public void setLevel(Level level) {
         this.level = level;
-        this.map = level.getMap();
 
         // Debug code: set view to center of map
         this.camera.position.set(this.level.getPixelWidth() / 2.0f, this.level.getPixelHeight() / 2.0f, 0.0f);
@@ -66,8 +73,9 @@ public class LevelScreen implements Screen {
 
 
     // Initialization
-    public LevelScreen() {
-        this.camera = new OrthographicCamera(640, 480);
+    public LevelScreen(OmterraGame game) {
+        this.game = game;
+        this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
 
@@ -100,7 +108,12 @@ public class LevelScreen implements Screen {
 
     @Override
     public void show() {
+        // All da debug code
+        TextureAtlas atlas = this.game.getAssetManager().get(new File(FileLocations.SPRITES_DIRECTORY,
+                "CharacterSprites.atlas").getPath(), TextureAtlas.class);
+        this.sprite = new Sprite(atlas.findRegion("champion-stand-front"));
 
+        this.sprite.setPosition(this.level.getPixelWidth() / 2.0f, this.level.getPixelHeight() / 2.0f);
     }
 
     @Override
@@ -142,15 +155,21 @@ public class LevelScreen implements Screen {
             beginRender(); // Built - in method
 
             // Render each layer, in order
-            for (MapLayer layer : map.getLayers()) {
+            for (MapLayer layer : this.map.getLayers()) {
                 if (layer.isVisible()) {
                     if (layer instanceof TiledMapTileLayer) {
                         this.renderTileLayer((TiledMapTileLayer) layer);
-                    } else {
+                    }
+                    else {
                         for (MapObject object : layer.getObjects()) {
                             this.renderObject(object);
                         }
                     }
+                }
+
+                // Debug code - just trying to draw a sprite
+                if (layer.getName().equals(Level.ENTITY_LAYER_NAME)) {
+                    LevelScreen.this.sprite.draw(this.getSpriteBatch());
                 }
             }
 

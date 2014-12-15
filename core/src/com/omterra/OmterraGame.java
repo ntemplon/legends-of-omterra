@@ -32,7 +32,7 @@ import com.omterra.io.FileLocations;
 import com.omterra.io.OmterraAssetManager;
 import com.omterra.screen.LevelScreen;
 import com.omterra.screen.LoadingScreen;
-import com.omterra.screen.TestScreen;
+import com.omterra.screen.MainMenuScreen;
 import com.omterra.world.Level;
 import com.omterra.world.World;
 import java.io.File;
@@ -51,7 +51,6 @@ public class OmterraGame extends Game {
     public static final float SCALE = 2.0f; // The number of pixels on-screen for each pixel in the resource
 
     public static final boolean DEBUG = true;
-    public static final String DEBUG_LEVEL = "Worlds/Omterra/Levels/TestLevel.tmx";
 
 
     // Enumerations
@@ -84,27 +83,23 @@ public class OmterraGame extends Game {
         MAIN_MENU() {
 
                     @Override
-                    public void enter(OmterraGame e) {
-                        throw new UnsupportedOperationException(
-                                "Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    public void enter(OmterraGame game) {
+                        game.setScreen(game.mainMenuScreen);
                     }
 
                     @Override
                     public void update(OmterraGame e) {
-                        throw new UnsupportedOperationException(
-                                "Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        
                     }
 
                     @Override
                     public void exit(OmterraGame e) {
-                        throw new UnsupportedOperationException(
-                                "Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        
                     }
 
                     @Override
                     public boolean onMessage(OmterraGame e, Telegram tlgrm) {
-                        throw new UnsupportedOperationException(
-                                "Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        return false;
                     }
 
                 },
@@ -168,9 +163,9 @@ public class OmterraGame extends Game {
 
 
     // Fields
-    private Screen testScreen;
     private LevelScreen levelScreen;
     private Screen loadingScreen;
+    private Screen mainMenuScreen;
     private List<World> worlds;
 
     private World currentWorld;
@@ -222,7 +217,7 @@ public class OmterraGame extends Game {
             // This is problematic
             return;
         }
-
+        
         // At this point, we know that the worlds directory exists
         for (File file : worldsDir.listFiles()) {
             if (file.isDirectory()) {
@@ -252,8 +247,8 @@ public class OmterraGame extends Game {
 //        this.loadWorldData();
         // Create our various screens
         this.loadingScreen = new LoadingScreen(this);
-        this.testScreen = new TestScreen(640, 480);
-        this.levelScreen = new LevelScreen();
+        this.mainMenuScreen = new MainMenuScreen(this);
+        this.levelScreen = new LevelScreen(this);
 
         // Debug only code - load default world and level
 //        this.setWorld(this.worlds.get(0));
@@ -280,16 +275,19 @@ public class OmterraGame extends Game {
 
     @Override
     public void dispose() {
-        if (this.testScreen != null) {
-            this.testScreen.dispose();
+        if (this.loadingScreen != null) {
+            this.loadingScreen.dispose();
+        }
+        if (this.mainMenuScreen != null) {
+            this.mainMenuScreen.dispose();
         }
         if (this.levelScreen != null) {
             this.levelScreen.dispose();
         }
         if (this.worlds != null) {
-            for (World world : this.worlds) {
+            this.worlds.stream().forEach((world) -> {
                 world.dispose();
-            }
+            });
         }
         if (this.assetManager != null) {
             this.assetManager.dispose();

@@ -24,7 +24,8 @@
 package com.omterra.io;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.omterra.util.ArrayUtils;
@@ -38,7 +39,9 @@ public class OmterraAssetManager extends AssetManager {
     
     // Constants
     public final String[] TEXTURE_EXTENSIONS = new String[] {"png", "PNG"};
+    public final String[] ATLAS_EXTENSIONS = new String[] {"atlas", "ATLAS"};
     public final String[] MAP_EXTENSIONS = new String[] {"tmx", "TMX"};
+    public final String[] FONT_EXTENSIONS = new String[] {"fnt", "FNT"};
     
     
     // Initialization
@@ -52,7 +55,6 @@ public class OmterraAssetManager extends AssetManager {
     
     // Public Methods
     public void loadInternalResources() {
-//        File assetDir = Paths.get("./").toFile();
         this.loadResourcesRecursive(FileLocations.ASSET_DIRECTORY);
     }
     
@@ -60,11 +62,13 @@ public class OmterraAssetManager extends AssetManager {
     // Custom AssetManager Methods
     @Override
     public synchronized <T> T get(String fileName) {
+        // Replace "\\" with "/" to match libGDX internal file naming
         return super.get(FileUtils.crossPlatformFilePath(fileName));
     }
     
     @Override
     public synchronized <T> T get(String fileName, Class<T> type) {
+        // Replace "\\" with "/" to match libGDX internal file naming
         return super.get(FileUtils.crossPlatformFilePath(fileName), type);
     }
     
@@ -79,18 +83,24 @@ public class OmterraAssetManager extends AssetManager {
         }
         
         for(File subFile : subFiles) {
+//            System.out.println(subFile.getPath() + ": " + subFile.exists());
+            
             if (subFile.isDirectory()) {
                 this.loadResourcesRecursive(subFile);
             }
             else {
                 String extension = FileUtils.getExtension(subFile);
                 if (ArrayUtils.contains(TEXTURE_EXTENSIONS, extension)) {
-                    this.load(subFile.getPath(), Texture.class);
-//                    System.out.println(subFile.getPath() + ": " + subFile.exists());
+//                    this.load(subFile.getPath(), Texture.class);
                 }
                 else if (ArrayUtils.contains(MAP_EXTENSIONS, extension)) {
                     this.load(subFile.getPath(), TiledMap.class);
-//                    System.out.println(subFile.getPath() + ": " + subFile.exists());
+                }
+                else if (ArrayUtils.contains(FONT_EXTENSIONS, extension)) {
+                    this.load(subFile.getPath(), BitmapFont.class);
+                }
+                else if (ArrayUtils.contains(ATLAS_EXTENSIONS, extension)) {
+                    this.load(subFile.getPath(), TextureAtlas.class);
                 }
             }
         }

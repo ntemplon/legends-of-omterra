@@ -21,30 +21,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.omterra.io;
+package com.omterra.threading;
 
-import java.io.File;
-import java.nio.file.Paths;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
- * A static enumeration of file locations for Legends of Omterra
- *
+ * A thread which runs, then notifies any number of listeners of completion
  * @author Nathan Templon
  */
-public final class FileLocations {
-
-    // Constants
-    public static final File ASSET_DIRECTORY = Paths.get("./data").toFile();
-    public static final File WORLD_DIRECTORY = new File(ASSET_DIRECTORY, "worlds");
-    public static final File FONTS_DIRECTORY = new File(ASSET_DIRECTORY, "fonts");
-    public static final File GRAPHICS_DIRECTORY = new File(ASSET_DIRECTORY, "graphics");
-    public static final File SPRITES_DIRECTORY = new File(GRAPHICS_DIRECTORY, "sprites");
+public class NotifyingThread extends Thread {
     
-
+    // Fields
+    private final Set<ThreadCompleteListener> listeners = new CopyOnWriteArraySet<>();
+    
+    
     // Initialization
-    //   Private constructor prevents instances of this class from being instantiated
-    private FileLocations() {
-
+    public NotifyingThread(Runnable runnable) {
+        super(runnable);
     }
-
+    
+    
+    // Public Methods
+    public final void addListener(ThreadCompleteListener listener) {
+        this.listeners.add(listener);
+    }
+    
+    public final void removeListener(ThreadCompleteListener listener) {
+        this.listeners.remove(listener);
+    }
+    
+    @Override
+    public final void run() {
+        try {
+            super.run();
+        }
+        finally {
+            this.notifyListeners();
+        }
+    }
+    
+    
+    // Private Methods
+    private void notifyListeners() {
+        for (ThreadCompleteListener listener : listeners) {
+            listener.notifyOfThreadComplete(this);
+        }
+    }
 }
