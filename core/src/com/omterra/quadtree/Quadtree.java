@@ -143,6 +143,9 @@ public class Quadtree<T extends RectangularBoundedObject> {
         }
         
         // If this takes our total count to below the maximum, we can collapse the child quadtrees
+        if (this.size() <= this.maxObjectsPerLeaf) {
+            this.recombine();
+        }
     }
 
     public void clear() {
@@ -155,6 +158,18 @@ public class Quadtree<T extends RectangularBoundedObject> {
                 this.children[i] = null;
             }
         }
+    }
+    
+    public int size() {
+        int count = this.objects.size();
+        
+        if (this.children[0] != null) {
+            for(Quadtree<T> child : this.children) {
+                count += child.size();
+            }
+        }
+        
+        return count;
     }
 
 
@@ -170,6 +185,18 @@ public class Quadtree<T extends RectangularBoundedObject> {
         this.children[BOTTOM_LEFT_INDEX] = new Quadtree<>(new Rectangle(x, y + subHeight, subWidth, subHeight)); // Bottom Left
         this.children[BOTTOM_RIGHT_INDEX] = new Quadtree<>(new Rectangle(x + subWidth, y + subHeight, subWidth,
                 subHeight)); // Bottom Right
+    }
+    
+    private void recombine() {
+        if (this.children[0] == null) {
+            return;
+        }
+        
+        for (int i = 0; i < this.children.length; i++) {
+            Quadtree<T> child = this.children[i];
+            this.objects.addAll(child.retrieve(child.getBounds()));
+            this.children[i] = null;
+        }
     }
 
     private int getIndexOfContainer(Rectangle rect) {

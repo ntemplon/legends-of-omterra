@@ -169,7 +169,7 @@ public class LevelScreen implements Screen {
 
                 // Debug code - just trying to draw a sprite
                 if (layer.getName().equals(Level.ENTITY_LAYER_NAME)) {
-                    LevelScreen.this.sprite.draw(this.getSpriteBatch());
+                    LevelScreen.this.sprite.draw(this.getBatch());
                 }
             }
 
