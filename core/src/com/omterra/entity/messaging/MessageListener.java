@@ -21,16 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.omterra.quadtree;
-
-import java.awt.Rectangle;
+package com.omterra.entity.messaging;
 
 /**
  *
  * @author Nathan Templon
+ * @param <T>
  */
-public interface RectangularBoundedObject {
-    
-    Rectangle getBounds();
-    
+@FunctionalInterface
+public interface MessageListener<T extends Message> {
+    void handleMessage(T message);
 }

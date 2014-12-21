@@ -24,43 +24,63 @@
 package com.omterra.entity.component;
 
 import com.badlogic.ashley.core.Component;
-import com.omterra.geometry.Size;
-import com.omterra.quadtree.RectangularBoundedObject;
+import com.omterra.world.Level;
 import java.awt.Point;
-import java.awt.Rectangle;
 
 /**
  *
  * @author Nathan Templon
  */
-public class CollisionComponent extends Component implements RectangularBoundedObject {
-    
+public class PositionComponent extends Component {
+
     // Fields
-    private Rectangle bounds;
-    
-    
+    private Point tilePosition;
+    private Point pixelPosition;
+    private Level level;
+
+
     // Properties
-    @Override
-    public Rectangle getBounds() {
-        return this.bounds;
+    public final Level getLevel() {
+        return this.level;
+    }
+
+    public final void setLevel(Level level) {
+        this.level = level;
+    }
+
+    public final void setTilePosition(Point position) {
+        this.tilePosition = position;
+        if (this.level != null) {
+            this.pixelPosition = new Point(this.tilePosition.x * this.level.getTileWidth(),
+                    this.tilePosition.y * this.level.getPixelHeight());
+        }
+        else {
+            this.pixelPosition = this.tilePosition;
+        }
     }
     
-    public void setLocation(Point location) {
-        this.bounds = new Rectangle(location.x, location.y, this.bounds.width, this.bounds.height);
+    public final Point getTilePosition() {
+        return this.tilePosition;
     }
     
-    public void setSize(Size size) {
-        this.bounds = new Rectangle(this.bounds.x, this.bounds.y, size.width, size.height);
+    public final Point getPixelPosition() {
+        return this.pixelPosition;
     }
-    
-    
+
+
     // Initialization
-    public CollisionComponent(Size size) {
-        this.bounds = new Rectangle(0, 0, size.width, size.height);
+    public PositionComponent() {
+
     }
     
-    public CollisionComponent(Point location, Size size) {
-        this.bounds = new Rectangle(location.x, location.y, size.width, size.height);
+    public PositionComponent(Level level) {
+        this();
+        this.setLevel(level);
     }
     
+    public PositionComponent(Level level, Point position) {
+        this(level);
+        this.setTilePosition(position);
+    }
+
 }

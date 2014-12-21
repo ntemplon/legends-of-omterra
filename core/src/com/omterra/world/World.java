@@ -23,12 +23,15 @@
  */
 package com.omterra.world;
 
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
+import com.omterra.EmergenceGame;
 import com.omterra.io.FileUtils;
-import com.omterra.io.OmterraAssetManager;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,8 +43,17 @@ import java.util.Map;
  */
 public class World implements Disposable {
 
+    // Constants
+    public static final String WORLD_FILE_NAME = "world.json";
+    public static final String NAME_KEY = "name";
+    public static final String STARTING_LEVEL_KEY = "starting-level";
+    
+    public static final String DEFAULT_WORLD_NAME = "default";
+    public static final String DEFAULT_STARTING_LEVEL = "Start";
+
+
     // Static Methods
-    public static World fromDirectory(File dir, OmterraAssetManager assets) {
+    public static World fromDirectory(File dir) {
         World world = new World();
 
         // Basic gist: If we are working with a directory, see if it has a subdirectory with levels in it.  If so,
@@ -50,9 +62,40 @@ public class World implements Disposable {
             File levelDir = new File(dir, Level.LEVEL_FOLDER);
 
             if (levelDir.exists() && levelDir.isDirectory()) {
+                // Set the world's properties
+                File configFile = new File(dir, WORLD_FILE_NAME);
+                JsonReader reader = new JsonReader();
+                String contents;
+                try {
+                    contents = new String(Files.readAllBytes(configFile.toPath()), StandardCharsets.UTF_8);
+                    JsonValue value = reader.parse(contents);
+                    
+                    // Name
+                    if (value.has(NAME_KEY)) {
+                        world.name = value.getString(NAME_KEY);
+                    }
+                    else {
+                        world.name = DEFAULT_WORLD_NAME;
+                    }
+                    
+                    // Starting Level
+                    if (value.has(STARTING_LEVEL_KEY)) {
+                        world.startingLevelName = value.getString(STARTING_LEVEL_KEY);
+                    }
+                    else {
+                        world.startingLevelName = DEFAULT_STARTING_LEVEL;
+                    }
+                }
+                catch (Exception ex) {
+                    // Set default properties
+                    world.name = DEFAULT_WORLD_NAME;
+                    world.startingLevelName = DEFAULT_STARTING_LEVEL;
+                }
+
+                // Loop through all levels in the directory
                 for (File file : levelDir.listFiles()) {
                     if (FileUtils.getExtension(file).equalsIgnoreCase(Level.LEVEL_EXTENSION)) {
-                        TiledMap map = assets.get(file.getPath(), TiledMap.class);
+                        TiledMap map = EmergenceGame.getGame().getAssetManager().get(file.getPath(), TiledMap.class);
                         String name = file.getName().replace("." + Level.LEVEL_EXTENSION, "");
                         world.addLevel(new Level(name, map));
                     }
@@ -60,12 +103,16 @@ public class World implements Disposable {
             }
         }
 
+        System.out.println(world.getName());
+        System.out.println(world.startingLevelName);
         return world;
     }
 
 
     // Fields
     private final Map<String, Level> levels;
+    private String name;
+    private String startingLevelName;
 
 
     // Properties
@@ -83,6 +130,10 @@ public class World implements Disposable {
             return this.levels.get("TestLevel");
         }
         return null;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
 
@@ -103,9 +154,9 @@ public class World implements Disposable {
     public void dispose() {
         // Free all native resources
         if (this.levels != null) {
-            for (String key : this.levels.keySet()) {
+            this.levels.keySet().stream().forEach((String key) -> {
                 this.levels.get(key).dispose();
-            }
+            });
         }
     }
 

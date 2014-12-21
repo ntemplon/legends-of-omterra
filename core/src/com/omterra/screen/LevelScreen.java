@@ -34,11 +34,8 @@ import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
-import com.omterra.OmterraGame;
-import com.omterra.entity.component.CollisionComponent;
+import com.omterra.EmergenceGame;
 import com.omterra.io.FileLocations;
-import com.omterra.quadtree.Quadtree;
 import com.omterra.world.Level;
 import java.io.File;
 
@@ -49,7 +46,7 @@ import java.io.File;
 public class LevelScreen implements Screen {
 
     // Fields
-    private final OmterraGame game;
+    private final EmergenceGame game;
 
     private final OrthographicCamera camera; // The camera for viewing the map
     private Level level; // The current level being rendered
@@ -73,7 +70,7 @@ public class LevelScreen implements Screen {
 
 
     // Initialization
-    public LevelScreen(OmterraGame game) {
+    public LevelScreen(EmergenceGame game) {
         this.game = game;
         this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
@@ -101,8 +98,8 @@ public class LevelScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        this.camera.viewportWidth = width / OmterraGame.SCALE;
-        this.camera.viewportHeight = height / OmterraGame.SCALE;
+        this.camera.viewportWidth = width / EmergenceGame.SCALE;
+        this.camera.viewportHeight = height / EmergenceGame.SCALE;
         camera.update();
     }
 

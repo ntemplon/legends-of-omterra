@@ -37,7 +37,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.omterra.OmterraGame;
+import com.omterra.EmergenceGame;
 import com.omterra.io.FileLocations;
 import java.io.File;
 
@@ -46,14 +46,14 @@ import java.io.File;
  * @author Nathan Templon
  */
 public class MainMenuScreen implements Screen {
-    
+
     // Constants
     public static final String MENU_FONT = "arial12.fnt";
-    
+
 
     // Fields
-    private final OmterraGame game;
-    
+    private final EmergenceGame game;
+
     private BitmapFont font;
     private Skin skin; // The skin for the main menu controls
     private Stage stage;
@@ -62,7 +62,7 @@ public class MainMenuScreen implements Screen {
 
 
     // Initialization
-    public MainMenuScreen(OmterraGame game) {
+    public MainMenuScreen(EmergenceGame game) {
         this.game = game;
     }
 
@@ -105,7 +105,9 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
-        this.stage.dispose();
+        if (this.stage != null) {
+            this.stage.dispose();
+        }
     }
 
 
@@ -114,10 +116,10 @@ public class MainMenuScreen implements Screen {
         this.font = this.game.getAssetManager().get(new File(FileLocations.FONTS_DIRECTORY, MENU_FONT).getPath());
 //        this.font = new BitmapFont();
         this.buildDefaultSkin();
-        
+
         this.stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);// Make the stage consume events
-        
+
         // Add and arrange the buttons
         this.table = new Table();
         this.table.setFillParent(true);
@@ -129,12 +131,12 @@ public class MainMenuScreen implements Screen {
                 MainMenuScreen.this.onNewGameClick();
             }
         });
-        
+
         this.table.add(this.newGameButton).width(250).height(75).row();
-        
+
         this.stage.addActor(this.table);
     }
-    
+
     private void buildDefaultSkin() {
         this.skin = new Skin();
 
@@ -156,9 +158,9 @@ public class MainMenuScreen implements Screen {
         textButtonStyle.font = this.skin.getFont("default");
         this.skin.add("default", textButtonStyle);
     }
-    
+
     private void onNewGameClick() {
-        this.game.setState(OmterraGame.GameStates.LEVEL);
+        this.game.setState(EmergenceGame.GameStates.LEVEL);
     }
 
 }

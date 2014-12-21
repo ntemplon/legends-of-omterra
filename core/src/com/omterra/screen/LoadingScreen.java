@@ -31,7 +31,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.omterra.OmterraGame;
+import com.omterra.EmergenceGame;
 import com.omterra.io.OmterraAssetManager;
 import com.omterra.threading.NotifyingThread;
 import java.text.DecimalFormat;
@@ -48,7 +48,7 @@ public class LoadingScreen implements Screen {
     
     // Fields
     private final OrthographicCamera camera; // The camera for viewing the map
-    private final OmterraGame game; // The game that we will wait to load data
+    private final EmergenceGame game; // The game that we will wait to load data
     private final OmterraAssetManager assetManager; // The asset manager who we will wait to load all assets
     
     private long loadTime; // The time at which we started loading assets
@@ -62,7 +62,7 @@ public class LoadingScreen implements Screen {
     
     
     // Initialization
-    public LoadingScreen(OmterraGame game) {
+    public LoadingScreen(EmergenceGame game) {
         this.camera = new OrthographicCamera(640, 480);
         this.game = game;
         this.assetManager = game.getAssetManager();
@@ -86,7 +86,7 @@ public class LoadingScreen implements Screen {
         }
         
         if (loadingComplete && this.minimumTimeElapsed()) {
-            this.game.setState(OmterraGame.GameStates.MAIN_MENU);
+            this.game.setState(EmergenceGame.GameStates.MAIN_MENU);
             this.dispose();
         }
         

@@ -16,5 +16,17 @@
    eJzt1sENgCAMBVDucHAc4/7DqFM4gHBSKJr3kl7bfEiapgQAAAAAbXtO6Xi5zjw+x1K+0TNi5lruf9RbxNv1IMdc5Gir7fLe7N2xPSNmyjHXzIgctRviaW0/2eUAAMS5ABByM2I=
   </data>
  </layer>
- <objectgroup name="Entities"/>
+ <objectgroup name="Entities">
+  <object name="PS" type="player-spawn" x="304" y="384" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup name="Collision">
+  <object x="288" y="352" width="352" height="16"/>
+  <object x="640" y="352" width="16" height="48"/>
+  <object x="656" y="384" width="48" height="16"/>
+  <object x="656" y="496" width="48" height="16"/>
+  <object x="640" y="496" width="16" height="112"/>
+  <object x="288" y="592" width="352" height="16"/>
+  <object x="272" y="352" width="16" height="256"/>
+ </objectgroup>
+ <objectgroup name="Zones"/>
 </map>

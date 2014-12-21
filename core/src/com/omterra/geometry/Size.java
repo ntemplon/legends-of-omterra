@@ -21,16 +21,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.omterra.quadtree;
-
-import java.awt.Rectangle;
+package com.omterra.geometry;
 
 /**
  *
  * @author Nathan Templon
  */
-public interface RectangularBoundedObject {
+public class Size {
     
-    Rectangle getBounds();
+    // Fields
+    public final int width;
+    public final int height;
+    
+    
+    // Initialization
+    public Size() {
+        this.width = 0;
+        this.height = 0;
+    }
+    
+    public Size(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
+    
+    
+    // Public Methods
+    @Override
+    public String toString() {
+        return "(" + this.width + ", " + this.height + ")";
+    }
+    
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Size) {
+            Size otherSize = (Size)other;
+            return (this.width == otherSize.width) && (this.height == otherSize.height);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 67 * hash + this.width;
+        hash = 67 * hash + this.height;
+        return hash;
+    }
     
 }

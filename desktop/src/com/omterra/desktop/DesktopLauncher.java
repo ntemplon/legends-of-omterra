@@ -2,7 +2,7 @@ package com.omterra.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglFrame;
-import com.omterra.OmterraGame;
+import com.omterra.EmergenceGame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
@@ -15,7 +15,7 @@ public class DesktopLauncher {
 
     // Static Methods
     public static String getWindowTitle() {
-        return OmterraGame.TITLE + " " + OmterraGame.VERSION;
+        return EmergenceGame.TITLE + " " + EmergenceGame.VERSION;
     }
 
 
@@ -25,7 +25,7 @@ public class DesktopLauncher {
         config.title = DesktopLauncher.getWindowTitle();
         config.resizable = RESIZEABLE;
 
-        final OmterraGame game = new OmterraGame();
+        final EmergenceGame game = EmergenceGame.getGame();
         
         LwjglFrame frame = new LwjglFrame(game, config);
 

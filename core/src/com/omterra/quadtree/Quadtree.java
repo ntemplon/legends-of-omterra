@@ -23,7 +23,7 @@
  */
 package com.omterra.quadtree;
 
-import com.badlogic.gdx.math.Rectangle;
+import java.awt.Rectangle;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -119,13 +119,13 @@ public class Quadtree<T extends RectangularBoundedObject> {
         Set<T> returnObjects = new HashSet<>();
 
         // For each object in my collection, if it intersects the given bounds, add it to the return collection
-        this.objects.stream().filter((currentObject) -> (bounds.overlaps(currentObject.getBounds()))).forEach(
+        this.objects.stream().filter((currentObject) -> (bounds.intersects(currentObject.getBounds()))).forEach(
                 (currentObject) -> {
                     returnObjects.add(currentObject);
                 });
 
         for (Quadtree<T> child : this.children) {
-            if (child != null && bounds.overlaps(child.getBounds())) {
+            if (child != null && bounds.intersects(child.getBounds())) {
                 returnObjects.addAll(child.retrieve(bounds));
             }
         }
@@ -175,10 +175,10 @@ public class Quadtree<T extends RectangularBoundedObject> {
 
     // Private Methods
     private void split() {
-        float subWidth = this.bounds.getWidth() / 2.0f;
-        float subHeight = this.bounds.getHeight() / 2.0f;
-        float x = this.bounds.getX();
-        float y = this.bounds.getY();
+        int subWidth = this.bounds.width / 2;
+        int subHeight = this.bounds.height / 2;
+        int x = this.bounds.x;
+        int y = this.bounds.y;
 
         this.children[TOP_LEFT_INDEX] = new Quadtree<>(new Rectangle(x, y, subWidth, subHeight)); // Top Left
         this.children[TOP_RIGHT_INDEX] = new Quadtree<>(new Rectangle(x + subWidth, y, subWidth, subHeight)); // Top Right

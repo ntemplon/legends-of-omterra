@@ -21,16 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.omterra.quadtree;
+package com.omterra.save;
 
-import java.awt.Rectangle;
+import com.omterra.world.World;
 
 /**
- *
+ * A class representing a save game in the Legends of Omterra game
  * @author Nathan Templon
  */
-public interface RectangularBoundedObject {
+public class SaveGame {
     
-    Rectangle getBounds();
+    // Fields
+    private final String worldName;
+    
+    private final World world;
+    
+    
+    // Initialization
+    public SaveGame(World world) {
+        this.world = world;
+        this.worldName = this.world.getName();
+    }
     
 }

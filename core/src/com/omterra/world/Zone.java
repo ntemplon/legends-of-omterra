@@ -21,16 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.omterra.quadtree;
+package com.omterra.world;
 
+import com.omterra.quadtree.RectangularBoundedObject;
 import java.awt.Rectangle;
 
 /**
  *
  * @author Nathan Templon
  */
-public interface RectangularBoundedObject {
+public class Zone implements RectangularBoundedObject {
     
-    Rectangle getBounds();
+    // Fields
+    private final Rectangle bounds;
+    
+    
+    // Initialization
+    public Zone(Rectangle bounds) {
+        this.bounds = bounds;
+    }
+    
+    
+    // Rectangular Bounded Object Iimplementation
+    @Override
+    public Rectangle getBounds() {
+        return this.bounds;
+    }
     
 }

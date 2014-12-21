@@ -23,11 +23,15 @@
  */
 package com.omterra;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ai.fsm.StackStateMachine;
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
+import com.omterra.audio.AudioService;
+import com.omterra.audio.LocalAudioService;
+import com.omterra.entity.EmergenceEntityEngine;
 import com.omterra.io.FileLocations;
 import com.omterra.io.OmterraAssetManager;
 import com.omterra.screen.LevelScreen;
@@ -36,10 +40,11 @@ import com.omterra.screen.MainMenuScreen;
 import com.omterra.world.Level;
 import com.omterra.world.World;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
-public class OmterraGame extends Game {
+public class EmergenceGame extends Game {
 
     // Constants
     public static final String TITLE = "Legends of Omterra";
@@ -51,31 +56,41 @@ public class OmterraGame extends Game {
     public static final float SCALE = 2.0f; // The number of pixels on-screen for each pixel in the resource
 
     public static final boolean DEBUG = true;
-
+    
+    
+    // Static Fields
+    private static final EmergenceGame instance = new EmergenceGame();
+    
+    
+    // Static Methods
+    public static EmergenceGame getGame() {
+        return instance;
+    }
+    
 
     // Enumerations
-    public enum GameStates implements State<OmterraGame> {
+    public enum GameStates implements State<EmergenceGame> {
 
         LOADING() {
 
                     // State Imiplementation
                     @Override
-                    public void enter(OmterraGame game) {
+                    public void enter(EmergenceGame game) {
                         game.setScreen(game.loadingScreen);
                     }
 
                     @Override
-                    public void update(OmterraGame game) {
-                        
+                    public void update(EmergenceGame game) {
+
                     }
 
                     @Override
-                    public void exit(OmterraGame game) {
-                        
+                    public void exit(EmergenceGame game) {
+
                     }
 
                     @Override
-                    public boolean onMessage(OmterraGame game, Telegram telegram) {
+                    public boolean onMessage(EmergenceGame game, Telegram telegram) {
                         return false;
                     }
 
@@ -83,22 +98,22 @@ public class OmterraGame extends Game {
         MAIN_MENU() {
 
                     @Override
-                    public void enter(OmterraGame game) {
+                    public void enter(EmergenceGame game) {
                         game.setScreen(game.mainMenuScreen);
                     }
 
                     @Override
-                    public void update(OmterraGame e) {
-                        
+                    public void update(EmergenceGame e) {
+
                     }
 
                     @Override
-                    public void exit(OmterraGame e) {
-                        
+                    public void exit(EmergenceGame e) {
+
                     }
 
                     @Override
-                    public boolean onMessage(OmterraGame e, Telegram tlgrm) {
+                    public boolean onMessage(EmergenceGame e, Telegram tlgrm) {
                         return false;
                     }
 
@@ -106,9 +121,9 @@ public class OmterraGame extends Game {
         LEVEL() {
 
                     @Override
-                    public void enter(OmterraGame game) {
+                    public void enter(EmergenceGame game) {
                         // debug code only
-                        game.setWorld(game.worlds.get(0));
+                        game.setWorld(game.worlds.get(game.worlds.keySet().toArray()[0].toString())); // The first world in the list
                         game.setLevel(game.getCurrentWorld().getStartingLevel());
 
                         game.levelScreen.setLevel(game.getCurrentLevel());
@@ -116,17 +131,17 @@ public class OmterraGame extends Game {
                     }
 
                     @Override
-                    public void update(OmterraGame game) {
+                    public void update(EmergenceGame game) {
 
                     }
 
                     @Override
-                    public void exit(OmterraGame game) {
+                    public void exit(EmergenceGame game) {
 
                     }
 
                     @Override
-                    public boolean onMessage(OmterraGame game, Telegram tlgrm) {
+                    public boolean onMessage(EmergenceGame game, Telegram tlgrm) {
                         return false;
                     }
 
@@ -134,25 +149,25 @@ public class OmterraGame extends Game {
         PAUSED() {
 
                     @Override
-                    public void enter(OmterraGame e) {
+                    public void enter(EmergenceGame e) {
                         throw new UnsupportedOperationException(
                                 "Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                     }
 
                     @Override
-                    public void update(OmterraGame e) {
+                    public void update(EmergenceGame e) {
                         throw new UnsupportedOperationException(
                                 "Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                     }
 
                     @Override
-                    public void exit(OmterraGame e) {
+                    public void exit(EmergenceGame e) {
                         throw new UnsupportedOperationException(
                                 "Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                     }
 
                     @Override
-                    public boolean onMessage(OmterraGame e, Telegram tlgrm) {
+                    public boolean onMessage(EmergenceGame e, Telegram tlgrm) {
                         throw new UnsupportedOperationException(
                                 "Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                     }
@@ -166,11 +181,13 @@ public class OmterraGame extends Game {
     private LevelScreen levelScreen;
     private Screen loadingScreen;
     private Screen mainMenuScreen;
-    private List<World> worlds;
+    private Map<String, World> worlds;
+    private final EmergenceEntityEngine engine = new EmergenceEntityEngine(); // Ashley entity framework engine
+    private final AudioService audio = new LocalAudioService();
 
     private World currentWorld;
     private Level currentLevel;
-    private final StackStateMachine<OmterraGame> stateMachine;
+    private final StackStateMachine<EmergenceGame> stateMachine;
 
     private OmterraAssetManager assetManager;
 
@@ -178,6 +195,14 @@ public class OmterraGame extends Game {
     // Properties
     public OmterraAssetManager getAssetManager() {
         return this.assetManager;
+    }
+
+    public EmergenceEntityEngine getEntityEngine() {
+        return this.engine;
+    }
+
+    public AudioService getAudioService() {
+        return this.audio;
     }
 
     public World getCurrentWorld() {
@@ -190,7 +215,7 @@ public class OmterraGame extends Game {
 
 
     // Initialization
-    public OmterraGame() {
+    private EmergenceGame() {
         this.stateMachine = new StackStateMachine<>(this);
     }
 
@@ -209,7 +234,7 @@ public class OmterraGame extends Game {
     }
 
     public void loadWorldData() {
-        this.worlds = new ArrayList<>();
+        this.worlds = new HashMap<>();
 
         File worldsDir = FileLocations.WORLD_DIRECTORY;
 
@@ -217,17 +242,19 @@ public class OmterraGame extends Game {
             // This is problematic
             return;
         }
-        
+
         // At this point, we know that the worlds directory exists
         for (File file : worldsDir.listFiles()) {
             if (file.isDirectory()) {
                 try {
-                    this.worlds.add(World.fromDirectory(file, this.assetManager));
+                    World nextWorld = World.fromDirectory(file);
+                    this.worlds.put(nextWorld.getName(), nextWorld);
                 }
                 catch (Exception ex) {
                     if (DEBUG) {
                         System.out.println(
                                 "Trouble loading world: " + file.getPath() + "\n\t" + ex.getLocalizedMessage());
+                        System.out.println(Arrays.toString(ex.getStackTrace()));
                     }
                 }
             }
@@ -239,9 +266,7 @@ public class OmterraGame extends Game {
     @Override
     public void create() {
         // Load Resources
-        this.assetManager = new OmterraAssetManager();
-//        this.assetManager.loadInternalResources();
-//        this.assetManager.finishLoading();
+        this.assetManager = new OmterraAssetManager(); // The loading screen will take care of actually loading the resources
 
         // Load the static World data (including levels) from the disk
 //        this.loadWorldData();
@@ -250,13 +275,8 @@ public class OmterraGame extends Game {
         this.mainMenuScreen = new MainMenuScreen(this);
         this.levelScreen = new LevelScreen(this);
 
-        // Debug only code - load default world and level
-//        this.setWorld(this.worlds.get(0));
-//        this.setLevel(this.getCurrentWorld().getStartingLevel());
-        
         // Set the state machine - be careful to not do this until all screens
         //  are initialized!
-//        this.setState(GameStates.LEVEL);
         this.setState(GameStates.LOADING);
     }
 
@@ -285,8 +305,8 @@ public class OmterraGame extends Game {
             this.levelScreen.dispose();
         }
         if (this.worlds != null) {
-            this.worlds.stream().forEach((world) -> {
-                world.dispose();
+            this.worlds.keySet().stream().forEach((String name) -> {
+                worlds.get(name).dispose();
             });
         }
         if (this.assetManager != null) {

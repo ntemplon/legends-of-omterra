@@ -21,16 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.omterra.quadtree;
+package com.omterra.entity;
 
-import java.awt.Rectangle;
+import com.badlogic.ashley.core.Engine;
+import com.omterra.entity.messaging.MessageSystem;
 
 /**
  *
  * @author Nathan Templon
  */
-public interface RectangularBoundedObject {
+public class EmergenceEntityEngine extends Engine {
+
+    // Fields
+    private final MessageSystem messageSystem;
     
-    Rectangle getBounds();
     
+    // Properties
+    public MessageSystem getMessageSystem() {
+        return this.messageSystem;
+    }
+
+
+    // Iniitialization
+    public EmergenceEntityEngine() {
+        this.messageSystem = new MessageSystem();
+    }
 }

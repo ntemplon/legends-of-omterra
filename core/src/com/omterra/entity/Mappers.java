@@ -21,16 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.omterra.quadtree;
+package com.omterra.entity;
 
-import java.awt.Rectangle;
+import com.omterra.entity.component.CollisionComponent;
+import com.badlogic.ashley.core.ComponentMapper;
 
 /**
  *
  * @author Nathan Templon
  */
-public interface RectangularBoundedObject {
+public final class Mappers {
     
-    Rectangle getBounds();
+    // Constants
+    public static final ComponentMapper<CollisionComponent> collision = ComponentMapper.getFor(CollisionComponent.class);
+    
+    
+    // Initialization
+    private Mappers() {
+        
+    }
     
 }

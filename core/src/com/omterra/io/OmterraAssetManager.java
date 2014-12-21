@@ -83,8 +83,6 @@ public class OmterraAssetManager extends AssetManager {
         }
         
         for(File subFile : subFiles) {
-//            System.out.println(subFile.getPath() + ": " + subFile.exists());
-            
             if (subFile.isDirectory()) {
                 this.loadResourcesRecursive(subFile);
             }

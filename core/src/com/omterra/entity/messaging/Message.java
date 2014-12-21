@@ -21,12 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.omterra.entity;
+package com.omterra.entity.messaging;
 
 /**
  *
  * @author Nathan Templon
  */
-public class Entity {
+public abstract class Message {
+
+    // Initialization
+    public Message() {
+        
+    }
     
 }
