@@ -23,17 +23,20 @@
  */
 package com.omterra.entity.component;
 
-import com.badlogic.ashley.core.Component;
+import com.omterra.entity.messaging.Message;
+import com.omterra.entity.messaging.PositionChangedMessage;
 import com.omterra.geometry.Size;
 import com.omterra.quadtree.RectangularBoundedObject;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
  * @author Nathan Templon
  */
-public class CollisionComponent extends Component implements RectangularBoundedObject {
+public class CollisionComponent extends EmergenceComponent implements RectangularBoundedObject {
     
     // Fields
     private Rectangle bounds;
@@ -53,6 +56,15 @@ public class CollisionComponent extends Component implements RectangularBoundedO
         this.bounds = new Rectangle(this.bounds.x, this.bounds.y, size.width, size.height);
     }
     
+    @Override
+    public Set<Class<? extends Message>> getSubscribedMessageTypes() {
+        Set<Class<? extends Message>> types = new HashSet<>();
+        
+        types.add(PositionChangedMessage.class);
+        
+        return types;
+    }
+    
     
     // Initialization
     public CollisionComponent(Size size) {
@@ -61,6 +73,21 @@ public class CollisionComponent extends Component implements RectangularBoundedO
     
     public CollisionComponent(Point location, Size size) {
         this.bounds = new Rectangle(location.x, location.y, size.width, size.height);
+    }
+    
+    
+    // Public Methods
+    @Override
+    public void handleMessage(Message message) {
+        if (message instanceof PositionChangedMessage) {
+            this.handlePositionChanged((PositionChangedMessage)message);
+        }
+    }
+    
+    
+    // Private Methods
+    private void handlePositionChanged(PositionChangedMessage message) {
+        this.setLocation(message.location);
     }
     
 }

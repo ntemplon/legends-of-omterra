@@ -25,6 +25,7 @@ package com.omterra.entity;
 
 import com.badlogic.ashley.core.Engine;
 import com.omterra.entity.messaging.MessageSystem;
+import com.omterra.entity.messaging.SimpleMessageSystem;
 
 /**
  *
@@ -44,6 +45,6 @@ public class EmergenceEntityEngine extends Engine {
 
     // Iniitialization
     public EmergenceEntityEngine() {
-        this.messageSystem = new MessageSystem();
+        this.messageSystem = new SimpleMessageSystem();
     }
 }

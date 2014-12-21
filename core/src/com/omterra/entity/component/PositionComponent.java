@@ -23,15 +23,18 @@
  */
 package com.omterra.entity.component;
 
-import com.badlogic.ashley.core.Component;
+import com.omterra.entity.messaging.Message;
+import com.omterra.entity.messaging.PositionChangedMessage;
 import com.omterra.world.Level;
 import java.awt.Point;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
  * @author Nathan Templon
  */
-public class PositionComponent extends Component {
+public class PositionComponent extends EmergenceComponent {
 
     // Fields
     private Point tilePosition;
@@ -40,6 +43,13 @@ public class PositionComponent extends Component {
 
 
     // Properties
+    @Override
+    public Set<Class<? extends Message>> getSubscribedMessageTypes() {
+        Set<Class<? extends Message>> types = new HashSet<>();
+        
+        return types;
+    }
+    
     public final Level getLevel() {
         return this.level;
     }
@@ -50,6 +60,7 @@ public class PositionComponent extends Component {
 
     public final void setTilePosition(Point position) {
         this.tilePosition = position;
+        
         if (this.level != null) {
             this.pixelPosition = new Point(this.tilePosition.x * this.level.getTileWidth(),
                     this.tilePosition.y * this.level.getPixelHeight());
@@ -57,6 +68,8 @@ public class PositionComponent extends Component {
         else {
             this.pixelPosition = this.tilePosition;
         }
+        
+        this.getMessageSystem().publish(new PositionChangedMessage(this.tilePosition));
     }
     
     public final Point getTilePosition() {
@@ -81,6 +94,13 @@ public class PositionComponent extends Component {
     public PositionComponent(Level level, Point position) {
         this(level);
         this.setTilePosition(position);
+    }
+    
+    
+    // Public Methods
+    @Override
+    public void handleMessage(Message message) {
+        
     }
 
 }

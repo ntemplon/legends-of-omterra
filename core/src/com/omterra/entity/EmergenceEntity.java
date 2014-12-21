@@ -25,7 +25,12 @@ package com.omterra.entity;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
+import com.omterra.entity.component.EmergenceComponent;
+import com.omterra.entity.messaging.FauxMessageSystem;
+import com.omterra.entity.messaging.Message;
 import com.omterra.entity.messaging.MessageSystem;
+import com.omterra.entity.messaging.SimpleMessageSystem;
+import java.util.Set;
 
 /**
  *
@@ -46,34 +51,39 @@ public class EmergenceEntity extends Entity {
     // Initialization
     public EmergenceEntity() {
         super();
-        this.messageSystem = new MessageSystem();
+        this.messageSystem = new SimpleMessageSystem();
     }
     
     
     // Public Methods
     @Override
     public Entity add(Component component) {
-        this.onComponentAdded(component);
+        if (component instanceof EmergenceComponent) {
+            this.onComponentAdded((EmergenceComponent)component);
+        }
         return super.add(component);
     }
     
     @Override
     public Component remove(Class<? extends Component> componentClass) {
         Component removed = super.remove(componentClass);
-        if (removed != null) {
-            this.onComponentRemoved(removed);
+        if (removed != null && removed instanceof EmergenceComponent) {
+            this.onComponentRemoved((EmergenceComponent)removed);
         }
         return removed;
     }
     
     
     // Private Methods
-    private void onComponentAdded(Component component) {
-        
+    private void onComponentAdded(EmergenceComponent component) {
+        component.setMessageSystem(this.messageSystem);
+        Set<Class<? extends Message>> types = component.getSubscribedMessageTypes();
+        this.messageSystem.subscribe(component, types.toArray(new Class[types.size()]));
     }
     
-    private void onComponentRemoved(Component component) {
-        
+    private void onComponentRemoved(EmergenceComponent component) {
+        component.setMessageSystem(new FauxMessageSystem());
+        this.messageSystem.unsubscribe(component);
     }
     
 }

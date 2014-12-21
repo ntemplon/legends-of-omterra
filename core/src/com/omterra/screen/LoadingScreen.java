@@ -32,7 +32,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.omterra.EmergenceGame;
-import com.omterra.io.OmterraAssetManager;
+import com.omterra.io.EmergenceAssetManager;
 import com.omterra.threading.NotifyingThread;
 import java.text.DecimalFormat;
 
@@ -49,7 +49,7 @@ public class LoadingScreen implements Screen {
     // Fields
     private final OrthographicCamera camera; // The camera for viewing the map
     private final EmergenceGame game; // The game that we will wait to load data
-    private final OmterraAssetManager assetManager; // The asset manager who we will wait to load all assets
+    private final EmergenceAssetManager assetManager; // The asset manager who we will wait to load all assets
     
     private long loadTime; // The time at which we started loading assets
     private boolean startedDataLoadingThread = false; // Whether or not the data loading thread has started yet

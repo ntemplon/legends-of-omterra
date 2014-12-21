@@ -35,7 +35,7 @@ import java.io.File;
  *
  * @author Nathan Templon
  */
-public class OmterraAssetManager extends AssetManager {
+public class EmergenceAssetManager extends AssetManager {
     
     // Constants
     public final String[] TEXTURE_EXTENSIONS = new String[] {"png", "PNG"};
@@ -45,7 +45,7 @@ public class OmterraAssetManager extends AssetManager {
     
     
     // Initialization
-    public OmterraAssetManager() {
+    public EmergenceAssetManager() {
         super();
         
         // Support for tmx map loading

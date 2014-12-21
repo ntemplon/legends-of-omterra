@@ -33,7 +33,7 @@ import com.omterra.audio.AudioService;
 import com.omterra.audio.LocalAudioService;
 import com.omterra.entity.EmergenceEntityEngine;
 import com.omterra.io.FileLocations;
-import com.omterra.io.OmterraAssetManager;
+import com.omterra.io.EmergenceAssetManager;
 import com.omterra.screen.LevelScreen;
 import com.omterra.screen.LoadingScreen;
 import com.omterra.screen.MainMenuScreen;
@@ -189,11 +189,11 @@ public class EmergenceGame extends Game {
     private Level currentLevel;
     private final StackStateMachine<EmergenceGame> stateMachine;
 
-    private OmterraAssetManager assetManager;
+    private EmergenceAssetManager assetManager;
 
 
     // Properties
-    public OmterraAssetManager getAssetManager() {
+    public EmergenceAssetManager getAssetManager() {
         return this.assetManager;
     }
 
@@ -266,7 +266,7 @@ public class EmergenceGame extends Game {
     @Override
     public void create() {
         // Load Resources
-        this.assetManager = new OmterraAssetManager(); // The loading screen will take care of actually loading the resources
+        this.assetManager = new EmergenceAssetManager(); // The loading screen will take care of actually loading the resources
 
         // Load the static World data (including levels) from the disk
 //        this.loadWorldData();
