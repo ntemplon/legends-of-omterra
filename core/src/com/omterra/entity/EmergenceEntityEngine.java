@@ -47,4 +47,13 @@ public class EmergenceEntityEngine extends Engine {
     public EmergenceEntityEngine() {
         this.messageSystem = new SimpleMessageSystem();
     }
+    
+    
+    // Public Methods
+    @Override
+    public void update(float deltaT) {
+        this.messageSystem.update();
+        super.update(deltaT);
+    }
+    
 }

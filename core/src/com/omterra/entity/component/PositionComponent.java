@@ -23,33 +23,24 @@
  */
 package com.omterra.entity.component;
 
-import com.omterra.entity.messaging.Message;
-import com.omterra.entity.messaging.PositionChangedMessage;
+import com.badlogic.ashley.core.Component;
 import com.omterra.world.Level;
 import java.awt.Point;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  *
  * @author Nathan Templon
  */
-public class PositionComponent extends EmergenceComponent {
+public class PositionComponent extends Component {
 
     // Fields
     private Point tilePosition;
     private Point pixelPosition;
     private Level level;
+    private int zOrder;
 
 
     // Properties
-    @Override
-    public Set<Class<? extends Message>> getSubscribedMessageTypes() {
-        Set<Class<? extends Message>> types = new HashSet<>();
-        
-        return types;
-    }
-    
     public final Level getLevel() {
         return this.level;
     }
@@ -63,13 +54,15 @@ public class PositionComponent extends EmergenceComponent {
         
         if (this.level != null) {
             this.pixelPosition = new Point(this.tilePosition.x * this.level.getTileWidth(),
-                    this.tilePosition.y * this.level.getPixelHeight());
+                    this.tilePosition.y * this.level.getTileHeight());
         }
         else {
             this.pixelPosition = this.tilePosition;
         }
-        
-        this.getMessageSystem().publish(new PositionChangedMessage(this.tilePosition));
+    }
+    
+    public final void setZOrder(int zOrder) {
+        this.zOrder = zOrder;
     }
     
     public final Point getTilePosition() {
@@ -78,6 +71,10 @@ public class PositionComponent extends EmergenceComponent {
     
     public final Point getPixelPosition() {
         return this.pixelPosition;
+    }
+    
+    public final int getZOrder() {
+        return this.zOrder;
     }
 
 
@@ -96,11 +93,9 @@ public class PositionComponent extends EmergenceComponent {
         this.setTilePosition(position);
     }
     
-    
-    // Public Methods
-    @Override
-    public void handleMessage(Message message) {
-        
+    public PositionComponent(Level level, Point position, int zOrder) {
+        this(level, position);
+        this.setZOrder(zOrder);
     }
 
 }

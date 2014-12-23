@@ -5,6 +5,7 @@
  */
 package com.omterra.entity.messaging;
 
+import com.badlogic.ashley.core.Entity;
 import java.awt.Point;
 
 /**
@@ -15,10 +16,12 @@ public class PositionChangedMessage extends Message {
     
     // Fields
     public final Point location;
+    public final Entity entity;
     
     
     // Initialization
-    public PositionChangedMessage(Point location) {
+    public PositionChangedMessage(Entity entity, Point location) {
+        this.entity = entity;
         this.location = location;
     }
     

@@ -23,6 +23,7 @@
  */
 package com.omterra.screen;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -30,13 +31,14 @@ import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.omterra.EmergenceGame;
+import com.omterra.entity.component.PositionComponent;
+import com.omterra.entity.component.RenderComponent;
+import com.omterra.entity.component.SizeComponent;
+import com.omterra.geometry.Size;
 import com.omterra.io.FileLocations;
 import com.omterra.world.Level;
+import java.awt.Point;
 import java.io.File;
 
 /**
@@ -51,6 +53,8 @@ public class LevelScreen implements Screen {
     private final OrthographicCamera camera; // The camera for viewing the map
     private Level level; // The current level being rendered
     private LevelRenderer mapRender;  // The map renderer for the current map
+    
+    private Entity player;
     private Sprite sprite;
 
     private boolean paused = false;  // Whether or not the game is currently paused
@@ -100,7 +104,7 @@ public class LevelScreen implements Screen {
     public void resize(int width, int height) {
         this.camera.viewportWidth = width / EmergenceGame.SCALE;
         this.camera.viewportHeight = height / EmergenceGame.SCALE;
-        camera.update();
+        this.camera.update();
     }
 
     @Override
@@ -111,6 +115,14 @@ public class LevelScreen implements Screen {
         this.sprite = new Sprite(atlas.findRegion("champion-stand-front"));
 
         this.sprite.setPosition(this.level.getPixelWidth() / 2.0f, this.level.getPixelHeight() / 2.0f);
+        
+        this.player = new Entity();
+        this.player.add(new PositionComponent(this.level, new Point(19, 24), 0));
+        this.player.add(new SizeComponent(new Size(1, 1)));
+        this.player.add(new RenderComponent(this.sprite));
+        
+        this.game.getEntityEngine().addEntity(this.player);
+        this.level.getEntityLayer().addEntity(this.player);
     }
 
     @Override
@@ -134,45 +146,6 @@ public class LevelScreen implements Screen {
         if (this.mapRender != null) {
             this.mapRender.dispose();
         }
-    }
-
-
-    // Inner Classes
-    private class LevelRenderer extends OrthogonalTiledMapRenderer {
-
-        // Initialization
-        public LevelRenderer(Level level) {
-            super(level.getMap());
-        }
-
-
-        // Custom OrthogonalTiledMapRenderer Implementation
-        @Override
-        public void render() {
-            beginRender(); // Built - in method
-
-            // Render each layer, in order
-            for (MapLayer layer : this.map.getLayers()) {
-                if (layer.isVisible()) {
-                    if (layer instanceof TiledMapTileLayer) {
-                        this.renderTileLayer((TiledMapTileLayer) layer);
-                    }
-                    else {
-                        for (MapObject object : layer.getObjects()) {
-                            this.renderObject(object);
-                        }
-                    }
-                }
-
-                // Debug code - just trying to draw a sprite
-                if (layer.getName().equals(Level.ENTITY_LAYER_NAME)) {
-                    LevelScreen.this.sprite.draw(this.getBatch());
-                }
-            }
-
-            endRender(); // Built-in method
-        }
-
     }
 
 }

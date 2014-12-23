@@ -25,6 +25,9 @@ package com.omterra.entity;
 
 import com.omterra.entity.component.CollisionComponent;
 import com.badlogic.ashley.core.Family;
+import com.omterra.entity.component.PositionComponent;
+import com.omterra.entity.component.RenderComponent;
+import com.omterra.entity.component.SizeComponent;
 
 /**
  *
@@ -34,6 +37,8 @@ public final class Families {
     
     // Constants
     public static final Family collidables = Family.all(CollisionComponent.class).get();
+    public static final Family positionables = Family.all(PositionComponent.class, SizeComponent.class).get();
+    public static final Family renderables = Family.all(RenderComponent.class).get();
     
     
     // Initialization

@@ -23,8 +23,11 @@
  */
 package com.omterra;
 
-import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ai.fsm.StackStateMachine;
 import com.badlogic.gdx.ai.fsm.State;
@@ -32,6 +35,9 @@ import com.badlogic.gdx.ai.msg.Telegram;
 import com.omterra.audio.AudioService;
 import com.omterra.audio.LocalAudioService;
 import com.omterra.entity.EmergenceEntityEngine;
+import com.omterra.entity.MovementSystem;
+import com.omterra.entity.RenderingMaintenenceSystem;
+import com.omterra.entity.messaging.SelfSubscribingListener;
 import com.omterra.io.FileLocations;
 import com.omterra.io.EmergenceAssetManager;
 import com.omterra.screen.LevelScreen;
@@ -44,7 +50,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EmergenceGame extends Game {
+public class EmergenceGame extends Game implements InputProcessor {
 
     // Constants
     public static final String TITLE = "Legends of Omterra";
@@ -54,6 +60,9 @@ public class EmergenceGame extends Game {
     public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVISION;
 
     public static final float SCALE = 2.0f; // The number of pixels on-screen for each pixel in the resource
+    
+    public static final int MOVEMENT_SYSTEM_PRIORITY = 1;
+    public static final int RENDERING_SYSTEM_PRIORITY = 10;
 
     public static final boolean DEBUG = true;
     
@@ -66,7 +75,7 @@ public class EmergenceGame extends Game {
     public static EmergenceGame getGame() {
         return instance;
     }
-    
+
 
     // Enumerations
     public enum GameStates implements State<EmergenceGame> {
@@ -126,6 +135,7 @@ public class EmergenceGame extends Game {
                         game.setWorld(game.worlds.get(game.worlds.keySet().toArray()[0].toString())); // The first world in the list
                         game.setLevel(game.getCurrentWorld().getStartingLevel());
 
+                        game.lastUpdateTime = System.nanoTime();
                         game.levelScreen.setLevel(game.getCurrentLevel());
                         game.setScreen(game.levelScreen);
                     }
@@ -178,11 +188,13 @@ public class EmergenceGame extends Game {
 
 
     // Fields
+    private long lastUpdateTime;
+    
     private LevelScreen levelScreen;
     private Screen loadingScreen;
     private Screen mainMenuScreen;
     private Map<String, World> worlds;
-    private final EmergenceEntityEngine engine = new EmergenceEntityEngine(); // Ashley entity framework engine
+    private final InputMultiplexer inputMultiplexer = new InputMultiplexer();
     private final AudioService audio = new LocalAudioService();
 
     private World currentWorld;
@@ -190,37 +202,33 @@ public class EmergenceGame extends Game {
     private final StackStateMachine<EmergenceGame> stateMachine;
 
     private EmergenceAssetManager assetManager;
+    
+    private final EmergenceEntityEngine engine = new EmergenceEntityEngine(); // Ashley entity framework engine
+    private final MovementSystem movementSystem = new MovementSystem();
+    private final RenderingMaintenenceSystem renderingSystem = new RenderingMaintenenceSystem();
 
 
     // Properties
-    public EmergenceAssetManager getAssetManager() {
+    public final EmergenceAssetManager getAssetManager() {
         return this.assetManager;
     }
 
-    public EmergenceEntityEngine getEntityEngine() {
+    public final EmergenceEntityEngine getEntityEngine() {
         return this.engine;
     }
 
-    public AudioService getAudioService() {
+    public final AudioService getAudioService() {
         return this.audio;
     }
 
-    public World getCurrentWorld() {
+    public final World getCurrentWorld() {
         return this.currentWorld;
     }
 
-    public Level getCurrentLevel() {
+    public final Level getCurrentLevel() {
         return this.currentLevel;
     }
-
-
-    // Initialization
-    private EmergenceGame() {
-        this.stateMachine = new StackStateMachine<>(this);
-    }
-
-
-    // Public Methods
+    
     public void setWorld(World world) {
         this.currentWorld = world;
     }
@@ -229,6 +237,24 @@ public class EmergenceGame extends Game {
         this.currentLevel = level;
     }
 
+
+    // Initialization
+    private EmergenceGame() {
+        this.stateMachine = new StackStateMachine<>(this);
+        
+        // Add systems to the engine
+        this.engine.addSystem(this.movementSystem);
+        this.engine.addSystem(this.renderingSystem);
+        
+        for(EntitySystem system : this.engine.getSystems()) {
+            if (system instanceof SelfSubscribingListener) {
+                ((SelfSubscribingListener)system).subscribe(this.engine);
+            }
+        }
+    }
+
+
+    // Public Methods
     public void setState(GameStates state) {
         this.stateMachine.changeState(state);
     }
@@ -268,8 +294,6 @@ public class EmergenceGame extends Game {
         // Load Resources
         this.assetManager = new EmergenceAssetManager(); // The loading screen will take care of actually loading the resources
 
-        // Load the static World data (including levels) from the disk
-//        this.loadWorldData();
         // Create our various screens
         this.loadingScreen = new LoadingScreen(this);
         this.mainMenuScreen = new MainMenuScreen(this);
@@ -278,10 +302,19 @@ public class EmergenceGame extends Game {
         // Set the state machine - be careful to not do this until all screens
         //  are initialized!
         this.setState(GameStates.LOADING);
+        
+        // Take Over Input
+        Gdx.input.setInputProcessor(this.inputMultiplexer);
+        this.inputMultiplexer.addProcessor(this);
     }
 
     @Override
     public void render() {
+        long currentTime = System.nanoTime();
+        float deltaT = (currentTime - this.lastUpdateTime) / 1e9f;
+        this.engine.update(deltaT);
+        this.lastUpdateTime = currentTime;
+
         super.render();
     }
 
@@ -313,4 +346,47 @@ public class EmergenceGame extends Game {
             this.assetManager.dispose();
         }
     }
+    
+    
+    // InputProcessorImplementation
+    @Override
+    public boolean keyDown(int i) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int i) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char c) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int i, int i1, int i2, int i3) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int i, int i1, int i2, int i3) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int i, int i1, int i2) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int i, int i1) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int i) {
+        return false;
+    }
+    
 }

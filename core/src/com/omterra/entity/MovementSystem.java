@@ -23,28 +23,26 @@
  */
 package com.omterra.entity;
 
-import com.omterra.entity.component.CollisionComponent;
-import com.badlogic.ashley.core.ComponentMapper;
-import com.omterra.entity.component.PositionComponent;
-import com.omterra.entity.component.RenderComponent;
-import com.omterra.entity.component.SizeComponent;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.systems.IteratingSystem;
+import com.omterra.EmergenceGame;
 
 /**
  *
  * @author Nathan Templon
  */
-public final class Mappers {
-    
-    // Constants
-    public static final ComponentMapper<CollisionComponent> collision = ComponentMapper.getFor(CollisionComponent.class);
-    public static final ComponentMapper<PositionComponent> position = ComponentMapper.getFor(PositionComponent.class);
-    public static final ComponentMapper<RenderComponent> render = ComponentMapper.getFor(RenderComponent.class);
-    public static final ComponentMapper<SizeComponent> size = ComponentMapper.getFor(SizeComponent.class);
-    
-    
+public class MovementSystem extends IteratingSystem {
+
     // Initialization
-    private Mappers() {
+    public MovementSystem() {
+        super(Families.positionables, EmergenceGame.MOVEMENT_SYSTEM_PRIORITY);
+    }
+
+
+    // Protected Methods
+    @Override
+    protected void processEntity(Entity entity, float f) {
         
     }
-    
+
 }

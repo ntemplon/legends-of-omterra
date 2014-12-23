@@ -37,7 +37,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Nathan Templon
  */
 public class SimpleMessageSystem implements MessageSystem {
-    
+
     // Fields
     private final List<Message> queue;
     private final Map<Class<? extends Message>, Set<MessageListener>> listeners;
@@ -46,8 +46,10 @@ public class SimpleMessageSystem implements MessageSystem {
     private final Lock queueLock;
     private final Lock listenersLock;
     private final Lock globalListenersLock;
-    
-    
+
+    private Thread updateThread;
+
+
     // Initialization
     public SimpleMessageSystem() {
         super();
@@ -59,38 +61,26 @@ public class SimpleMessageSystem implements MessageSystem {
         this.listenersLock = new ReentrantLock();
         this.globalListenersLock = new ReentrantLock();
     }
-    
-    
+
+
     // Public Methods
     /**
-     * Sends all queued messages to all subscribed entities
+     * Sends all queued messages to all subscribed entities. If the previous call to update() has not yet completed,
+     * this method will block until it has
      */
     @Override
     public void update() {
-        this.queueLock.lock();
-        this.globalListenersLock.lock();
-        this.listenersLock.lock();
-        try {
-            this.queue.stream().forEach((Message message) -> {
-                // Send the message to global listeners
-                this.globalListeners.stream().forEach((MessageListener listener) -> {
-                    new Thread(() -> listener.handleMessage(message)).start();
-                });
-                
-                // Send the message to specifically subscribed listeners
-                Class<? extends Message> type = message.getClass();
-                if (this.listeners.containsKey(type)) {
-                    this.listeners.get(type).stream().forEach((MessageListener listener) -> {
-                        new Thread(() -> listener.handleMessage(message)).start();
-                    });
-                }
-            });
+        if (this.updateThread != null) {
+            try {
+                this.updateThread.join();
+            }
+            catch (InterruptedException ex) {
+
+            }
         }
-        finally {
-            this.queueLock.unlock();
-            this.globalListenersLock.unlock();
-            this.listenersLock.unlock();
-        }
+
+        this.updateThread = new Thread(() -> this.updateInternal());
+        this.updateThread.start();
     }
 
     /**
@@ -172,7 +162,7 @@ public class SimpleMessageSystem implements MessageSystem {
 
         try {
             this.globalListeners.remove(listener);
-            
+
             this.listeners.keySet().stream().forEach((Class<? extends Message> type) -> {
                 this.listeners.get(type).remove(listener);
             });
@@ -199,5 +189,34 @@ public class SimpleMessageSystem implements MessageSystem {
             this.queueLock.unlock();
         }
     }
-    
+
+
+    // Private Methods
+    private void updateInternal() {
+        this.queueLock.lock();
+        this.globalListenersLock.lock();
+        this.listenersLock.lock();
+        try {
+            this.queue.stream().forEach((Message message) -> {
+                // Send the message to global listeners
+                this.globalListeners.stream().forEach((MessageListener listener) -> {
+                    listener.handleMessage(message);
+                });
+
+                // Send the message to specifically subscribed listeners
+                Class<? extends Message> type = message.getClass();
+                if (this.listeners.containsKey(type)) {
+                    this.listeners.get(type).stream().forEach((MessageListener listener) -> {
+                        listener.handleMessage(message);
+                    });
+                }
+            });
+        }
+        finally {
+            this.queueLock.unlock();
+            this.globalListenersLock.unlock();
+            this.listenersLock.unlock();
+        }
+    }
+
 }

@@ -103,8 +103,6 @@ public class World implements Disposable {
             }
         }
 
-        System.out.println(world.getName());
-        System.out.println(world.startingLevelName);
         return world;
     }
 

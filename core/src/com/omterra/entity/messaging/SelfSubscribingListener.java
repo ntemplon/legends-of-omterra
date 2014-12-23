@@ -21,30 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.omterra.entity;
+package com.omterra.entity.messaging;
 
-import com.omterra.entity.component.CollisionComponent;
-import com.badlogic.ashley.core.ComponentMapper;
-import com.omterra.entity.component.PositionComponent;
-import com.omterra.entity.component.RenderComponent;
-import com.omterra.entity.component.SizeComponent;
+import com.omterra.entity.EmergenceEntityEngine;
 
 /**
  *
  * @author Nathan Templon
  */
-public final class Mappers {
+public interface SelfSubscribingListener {
     
-    // Constants
-    public static final ComponentMapper<CollisionComponent> collision = ComponentMapper.getFor(CollisionComponent.class);
-    public static final ComponentMapper<PositionComponent> position = ComponentMapper.getFor(PositionComponent.class);
-    public static final ComponentMapper<RenderComponent> render = ComponentMapper.getFor(RenderComponent.class);
-    public static final ComponentMapper<SizeComponent> size = ComponentMapper.getFor(SizeComponent.class);
-    
-    
-    // Initialization
-    private Mappers() {
-        
-    }
+    void subscribe(EmergenceEntityEngine engine);
     
 }

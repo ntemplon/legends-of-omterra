@@ -29,6 +29,7 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.utils.Disposable;
+import com.omterra.geometry.Size;
 import com.omterra.quadtree.Quadtree;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -63,6 +64,7 @@ public class Level implements Disposable {
     // Fields
     private TiledMap map;
     private String name;
+    private EntityLayer entityLayer;
     private Quadtree<Zone> collision;
     
     private final Set<Entity> entitySet;
@@ -92,7 +94,8 @@ public class Level implements Disposable {
         for (MapLayer layer : this.map.getLayers()) {
             String layerName = layer.getName();
             if (layerName.equalsIgnoreCase(ENTITY_LAYER_NAME)) {
-                
+                // Get the entity layer from the map
+                this.entityLayer = new EntityLayer(layer, new Size(this.getMapWidth(), this.getMapHeight()));
             }
             else if (layerName.equalsIgnoreCase(COLLISION_LAYER_NAME)) {
                 this.collision = this.getCollisionFrom(layer);
@@ -132,6 +135,10 @@ public class Level implements Disposable {
 
     public int getPixelHeight() {
         return this.pixelHeight;
+    }
+    
+    public EntityLayer getEntityLayer() {
+        return this.entityLayer;
     }
 
 
