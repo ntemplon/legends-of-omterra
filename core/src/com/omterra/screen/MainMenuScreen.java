@@ -24,6 +24,7 @@
 package com.omterra.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -45,7 +46,7 @@ import java.io.File;
  *
  * @author Nathan Templon
  */
-public class MainMenuScreen implements Screen {
+public class MainMenuScreen implements Screen, InputProcessor {
 
     // Constants
     public static final String MENU_FONT = "arial12.fnt";
@@ -109,6 +110,48 @@ public class MainMenuScreen implements Screen {
             this.stage.dispose();
         }
     }
+    
+    
+    // InputProcessor Implementation
+    @Override
+    public boolean keyDown(int i) {
+        return this.stage.keyDown(i);
+    }
+
+    @Override
+    public boolean keyUp(int i) {
+        return this.stage.keyUp(i);
+    }
+
+    @Override
+    public boolean keyTyped(char c) {
+        return this.stage.keyTyped(c);
+    }
+
+    @Override
+    public boolean touchDown(int i, int i1, int i2, int i3) {
+        return this.stage.touchDown(i, i1, i2, i3);
+    }
+
+    @Override
+    public boolean touchUp(int i, int i1, int i2, int i3) {
+        return this.stage.touchUp(i, i1, i2, i3);
+    }
+
+    @Override
+    public boolean touchDragged(int i, int i1, int i2) {
+        return this.stage.touchDragged(i, i1, i2);
+    }
+
+    @Override
+    public boolean mouseMoved(int i, int i1) {
+        return this.stage.mouseMoved(i, i1);
+    }
+
+    @Override
+    public boolean scrolled(int i) {
+        return this.stage.scrolled(i);
+    }
 
 
     // Private Methods
@@ -118,7 +161,6 @@ public class MainMenuScreen implements Screen {
         this.buildDefaultSkin();
 
         this.stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(stage);// Make the stage consume events
 
         // Add and arrange the buttons
         this.table = new Table();

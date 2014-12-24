@@ -25,6 +25,8 @@ package com.omterra.screen;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
@@ -32,9 +34,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.omterra.EmergenceGame;
+import com.omterra.entity.MovementSystem.MovementDirections;
 import com.omterra.entity.component.PositionComponent;
 import com.omterra.entity.component.RenderComponent;
 import com.omterra.entity.component.SizeComponent;
+import com.omterra.entity.messaging.MovementRequestMessage;
 import com.omterra.geometry.Size;
 import com.omterra.io.FileLocations;
 import com.omterra.world.Level;
@@ -45,17 +49,12 @@ import java.io.File;
  *
  * @author Nathan Templon
  */
-public class LevelScreen implements Screen {
+public class LevelScreen implements Screen, InputProcessor {
 
     // Fields
-    private final EmergenceGame game;
-
     private final OrthographicCamera camera; // The camera for viewing the map
     private Level level; // The current level being rendered
     private LevelRenderer mapRender;  // The map renderer for the current map
-    
-    private Entity player;
-    private Sprite sprite;
 
     private boolean paused = false;  // Whether or not the game is currently paused
 
@@ -74,8 +73,7 @@ public class LevelScreen implements Screen {
 
 
     // Initialization
-    public LevelScreen(EmergenceGame game) {
-        this.game = game;
+    public LevelScreen() {
         this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
@@ -110,19 +108,19 @@ public class LevelScreen implements Screen {
     @Override
     public void show() {
         // All da debug code
-        TextureAtlas atlas = this.game.getAssetManager().get(new File(FileLocations.SPRITES_DIRECTORY,
-                "CharacterSprites.atlas").getPath(), TextureAtlas.class);
-        this.sprite = new Sprite(atlas.findRegion("champion-stand-front"));
-
-        this.sprite.setPosition(this.level.getPixelWidth() / 2.0f, this.level.getPixelHeight() / 2.0f);
-        
-        this.player = new Entity();
-        this.player.add(new PositionComponent(this.level, new Point(19, 24), 0));
-        this.player.add(new SizeComponent(new Size(1, 1)));
-        this.player.add(new RenderComponent(this.sprite));
-        
-        this.game.getEntityEngine().addEntity(this.player);
-        this.level.getEntityLayer().addEntity(this.player);
+//        TextureAtlas atlas = EmergenceGame.game.getAssetManager().get(new File(FileLocations.SPRITES_DIRECTORY,
+//                "CharacterSprites.atlas").getPath(), TextureAtlas.class);
+//        this.sprite = new Sprite(atlas.findRegion("champion-stand-front"));
+//
+//        this.sprite.setPosition(this.level.getPixelWidth() / 2.0f, this.level.getPixelHeight() / 2.0f);
+//        
+//        this.player = new Entity();
+//        this.player.add(new PositionComponent(this.level, new Point(19, 24), 0));
+//        this.player.add(new SizeComponent(new Size(1, 1)));
+//        this.player.add(new RenderComponent(this.sprite));
+//        
+//        EmergenceGame.game.entityEngine.addEntity(this.player);
+//        this.level.getEntityLayer().addEntity(this.player);
     }
 
     @Override
@@ -146,6 +144,66 @@ public class LevelScreen implements Screen {
         if (this.mapRender != null) {
             this.mapRender.dispose();
         }
+    }
+
+    
+    // InputProcessor Implementation
+    @Override
+    public boolean keyDown(int i) {
+        switch(i) {
+            case Keys.W:
+                EmergenceGame.game.getMessageSystem().publish(
+                        new MovementRequestMessage(this.level.getControlledEntity(), MovementDirections.UP));
+                return true;
+            case Keys.A:
+                EmergenceGame.game.getMessageSystem().publish(
+                        new MovementRequestMessage(this.level.getControlledEntity(), MovementDirections.LEFT));
+                return true;
+            case Keys.S:
+                EmergenceGame.game.getMessageSystem().publish(
+                        new MovementRequestMessage(this.level.getControlledEntity(), MovementDirections.DOWN));
+                return true;
+            case Keys.D:
+                EmergenceGame.game.getMessageSystem().publish(
+                        new MovementRequestMessage(this.level.getControlledEntity(), MovementDirections.RIGHT));
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int i) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char c) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int i, int i1, int i2, int i3) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int i, int i1, int i2, int i3) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int i, int i1, int i2) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int i, int i1) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int i) {
+        return false;
     }
 
 }

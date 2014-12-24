@@ -25,7 +25,7 @@ public class DesktopLauncher {
         config.title = DesktopLauncher.getWindowTitle();
         config.resizable = RESIZEABLE;
 
-        final EmergenceGame game = EmergenceGame.getGame();
+        final EmergenceGame game = EmergenceGame.game;
         
         LwjglFrame frame = new LwjglFrame(game, config);
 

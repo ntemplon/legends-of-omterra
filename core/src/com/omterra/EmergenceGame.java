@@ -23,6 +23,8 @@
  */
 package com.omterra;
 
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -34,12 +36,15 @@ import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.omterra.audio.AudioService;
 import com.omterra.audio.LocalAudioService;
-import com.omterra.entity.EmergenceEntityEngine;
 import com.omterra.entity.MovementSystem;
+import com.omterra.entity.Party;
 import com.omterra.entity.RenderingMaintenenceSystem;
+import com.omterra.entity.messaging.MessageSystem;
 import com.omterra.entity.messaging.SelfSubscribingListener;
+import com.omterra.entity.messaging.SimpleMessageSystem;
 import com.omterra.io.FileLocations;
 import com.omterra.io.EmergenceAssetManager;
+import com.omterra.save.SaveGame;
 import com.omterra.screen.LevelScreen;
 import com.omterra.screen.LoadingScreen;
 import com.omterra.screen.MainMenuScreen;
@@ -63,18 +68,17 @@ public class EmergenceGame extends Game implements InputProcessor {
     
     public static final int MOVEMENT_SYSTEM_PRIORITY = 1;
     public static final int RENDERING_SYSTEM_PRIORITY = 10;
+    
+    public static final char MOVE_RIGHT_KEY = 'd';
+    public static final char MOVE_LEFT_KEY = 'a';
+    public static final char MOVE_UP_KEY = 'w';
+    public static final char MOVE_DOWN_KEY = 's';
 
     public static final boolean DEBUG = true;
     
     
     // Static Fields
-    private static final EmergenceGame instance = new EmergenceGame();
-    
-    
-    // Static Methods
-    public static EmergenceGame getGame() {
-        return instance;
-    }
+    public static final EmergenceGame game = new EmergenceGame();
 
 
     // Enumerations
@@ -109,6 +113,7 @@ public class EmergenceGame extends Game implements InputProcessor {
                     @Override
                     public void enter(EmergenceGame game) {
                         game.setScreen(game.mainMenuScreen);
+                        game.addInputProcessor(game.mainMenuScreen);
                     }
 
                     @Override
@@ -117,8 +122,8 @@ public class EmergenceGame extends Game implements InputProcessor {
                     }
 
                     @Override
-                    public void exit(EmergenceGame e) {
-
+                    public void exit(EmergenceGame game) {
+                        game.removeInputProcessor(game.mainMenuScreen);
                     }
 
                     @Override
@@ -132,12 +137,14 @@ public class EmergenceGame extends Game implements InputProcessor {
                     @Override
                     public void enter(EmergenceGame game) {
                         // debug code only
+                        game.startGame(null);
                         game.setWorld(game.worlds.get(game.worlds.keySet().toArray()[0].toString())); // The first world in the list
                         game.setLevel(game.getCurrentWorld().getStartingLevel());
 
                         game.lastUpdateTime = System.nanoTime();
                         game.levelScreen.setLevel(game.getCurrentLevel());
                         game.setScreen(game.levelScreen);
+                        game.addInputProcessor(game.levelScreen);
                     }
 
                     @Override
@@ -147,7 +154,7 @@ public class EmergenceGame extends Game implements InputProcessor {
 
                     @Override
                     public void exit(EmergenceGame game) {
-
+                        game.removeInputProcessor(game.levelScreen);
                     }
 
                     @Override
@@ -188,11 +195,13 @@ public class EmergenceGame extends Game implements InputProcessor {
 
 
     // Fields
+    public final Engine entityEngine = new Engine(); // Ashley entity framework engine
+    
     private long lastUpdateTime;
     
     private LevelScreen levelScreen;
     private Screen loadingScreen;
-    private Screen mainMenuScreen;
+    private MainMenuScreen mainMenuScreen;
     private Map<String, World> worlds;
     private final InputMultiplexer inputMultiplexer = new InputMultiplexer();
     private final AudioService audio = new LocalAudioService();
@@ -202,19 +211,17 @@ public class EmergenceGame extends Game implements InputProcessor {
     private final StackStateMachine<EmergenceGame> stateMachine;
 
     private EmergenceAssetManager assetManager;
-    
-    private final EmergenceEntityEngine engine = new EmergenceEntityEngine(); // Ashley entity framework engine
+
+    private MessageSystem messageSystem = new SimpleMessageSystem();
     private final MovementSystem movementSystem = new MovementSystem();
     private final RenderingMaintenenceSystem renderingSystem = new RenderingMaintenenceSystem();
+    
+    private Party party;
 
 
     // Properties
     public final EmergenceAssetManager getAssetManager() {
         return this.assetManager;
-    }
-
-    public final EmergenceEntityEngine getEntityEngine() {
-        return this.engine;
     }
 
     public final AudioService getAudioService() {
@@ -229,12 +236,26 @@ public class EmergenceGame extends Game implements InputProcessor {
         return this.currentLevel;
     }
     
-    public void setWorld(World world) {
+    public final void setWorld(World world) {
         this.currentWorld = world;
     }
 
-    public void setLevel(Level level) {
+    public final void setLevel(Level level) {
         this.currentLevel = level;
+        
+        for(Entity entity : this.party.getPartyMembers()) {
+           this.currentLevel.getEntityLayer().addEntity(entity);
+        }
+        
+        this.currentLevel.setControlledEntity(this.getParty().getPartyMembers()[0]);
+    }
+    
+    public final MessageSystem getMessageSystem() {
+        return this.messageSystem;
+    }
+    
+    public final Party getParty() {
+        return this.party;
     }
 
 
@@ -243,12 +264,12 @@ public class EmergenceGame extends Game implements InputProcessor {
         this.stateMachine = new StackStateMachine<>(this);
         
         // Add systems to the engine
-        this.engine.addSystem(this.movementSystem);
-        this.engine.addSystem(this.renderingSystem);
+        this.entityEngine.addSystem(this.movementSystem);
+        this.entityEngine.addSystem(this.renderingSystem);
         
-        for(EntitySystem system : this.engine.getSystems()) {
+        for(EntitySystem system : this.entityEngine.getSystems()) {
             if (system instanceof SelfSubscribingListener) {
-                ((SelfSubscribingListener)system).subscribe(this.engine);
+                ((SelfSubscribingListener)system).subscribe(this.entityEngine, this.getMessageSystem());
             }
         }
     }
@@ -286,6 +307,21 @@ public class EmergenceGame extends Game implements InputProcessor {
             }
         }
     }
+    
+    public void startGame(SaveGame save) {
+        this.party = new Party();
+        for(Entity entity : party.getPartyMembers()) {
+            this.entityEngine.addEntity(entity);
+        }
+    }
+    
+    public void addInputProcessor(InputProcessor processor) {
+        this.inputMultiplexer.addProcessor(processor);
+    }
+    
+    public void removeInputProcessor(InputProcessor processor) {
+        this.inputMultiplexer.removeProcessor(processor);
+    }
 
 
     // ApplicationAdapter Implementation
@@ -297,7 +333,7 @@ public class EmergenceGame extends Game implements InputProcessor {
         // Create our various screens
         this.loadingScreen = new LoadingScreen(this);
         this.mainMenuScreen = new MainMenuScreen(this);
-        this.levelScreen = new LevelScreen(this);
+        this.levelScreen = new LevelScreen();
 
         // Set the state machine - be careful to not do this until all screens
         //  are initialized!
@@ -305,14 +341,15 @@ public class EmergenceGame extends Game implements InputProcessor {
         
         // Take Over Input
         Gdx.input.setInputProcessor(this.inputMultiplexer);
-        this.inputMultiplexer.addProcessor(this);
+        this.addInputProcessor(this);
     }
 
     @Override
     public void render() {
         long currentTime = System.nanoTime();
         float deltaT = (currentTime - this.lastUpdateTime) / 1e9f;
-        this.engine.update(deltaT);
+        this.messageSystem.update();
+        this.entityEngine.update(deltaT);
         this.lastUpdateTime = currentTime;
 
         super.render();

@@ -12,7 +12,7 @@ import java.awt.Point;
  *
  * @author Hortator
  */
-public class PositionChangedMessage extends Message {
+public class PositionChangedMessage extends StateChangeMessage {
     
     // Fields
     public final Point location;

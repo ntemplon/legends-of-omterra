@@ -50,6 +50,7 @@ public class EntityLayer implements Comparator<Entity> {
     private final Quadtree<PositionedEntity> positionalLookup;
     private final Set<Entity> entities;
     private final Set<EntityListener> listeners;
+    private final Level level;
 
 
     // Properties
@@ -59,14 +60,15 @@ public class EntityLayer implements Comparator<Entity> {
 
 
     // Initialization
-    public EntityLayer(Size size) {
+    public EntityLayer(Size size, Level level) {
         this.positionalLookup = new Quadtree<>(new Rectangle(0, 0, size.width, size.height));
         this.entities = new TreeSet<>(this);
         this.listeners = new HashSet<>();
+        this.level = level;
     }
 
-    public EntityLayer(MapLayer layer, Size size) {
-        this(size);
+    public EntityLayer(MapLayer layer, Size size, Level level) {
+        this(size, level);
         this.addEntitiesFrom(layer);
     }
 
@@ -83,9 +85,9 @@ public class EntityLayer implements Comparator<Entity> {
     public void addEntity(Entity entity) {
         this.entities.add(entity);
 
-//        if (Families.renderables.matches(entity)) {
-//            this.stage.addActor(Mappers.render.get(entity).getActor());
-//        }
+        if (Families.positionables.matches(entity)) {
+            Mappers.position.get(entity).setLevel(this.level);
+        }
         // Commented out until it can listen for changes to the collision (position and size)
 //        if (Families.collidables.matches(entity)) {
 //            Rectangle bounds = Mappers.collision.get(entity).getBounds();

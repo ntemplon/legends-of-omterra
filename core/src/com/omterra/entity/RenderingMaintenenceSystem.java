@@ -23,15 +23,16 @@
  */
 package com.omterra.entity;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.omterra.EmergenceGame;
 import com.omterra.entity.component.RenderComponent;
 import com.omterra.entity.messaging.Message;
 import com.omterra.entity.messaging.MessageListener;
+import com.omterra.entity.messaging.MessageSystem;
 import com.omterra.entity.messaging.PositionChangedMessage;
 import com.omterra.entity.messaging.SelfSubscribingListener;
 import java.awt.Point;
@@ -67,9 +68,9 @@ public class RenderingMaintenenceSystem extends IteratingSystem implements Messa
     }
     
     @Override
-    public void subscribe(EmergenceEntityEngine engine) {
+    public void subscribe(Engine engine, MessageSystem system) {
         engine.addEntityListener(Families.renderables, this);
-        engine.getMessageSystem().subscribe(this, PositionChangedMessage.class);
+        system.subscribe(this, PositionChangedMessage.class);
     }
 
 

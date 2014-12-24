@@ -21,39 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.omterra.entity;
+package com.omterra.entity.messaging;
 
-import com.badlogic.ashley.core.Engine;
-import com.omterra.entity.messaging.MessageSystem;
-import com.omterra.entity.messaging.SimpleMessageSystem;
+import com.badlogic.ashley.core.Entity;
+import com.omterra.entity.MovementSystem.MovementDirections;
 
 /**
  *
  * @author Nathan Templon
  */
-public class EmergenceEntityEngine extends Engine {
-
+public class MovementRequestMessage extends RequestMessage {
+    
     // Fields
-    private final MessageSystem messageSystem;
+    public final Entity entity;
+    public final MovementDirections direction;
     
     
-    // Properties
-    public MessageSystem getMessageSystem() {
-        return this.messageSystem;
-    }
-
-
-    // Iniitialization
-    public EmergenceEntityEngine() {
-        this.messageSystem = new SimpleMessageSystem();
-    }
-    
-    
-    // Public Methods
-    @Override
-    public void update(float deltaT) {
-        this.messageSystem.update();
-        super.update(deltaT);
+    // Initialization
+    public MovementRequestMessage(Entity entity, MovementDirections direction) {
+        this.entity = entity;
+        this.direction = direction;
     }
     
 }

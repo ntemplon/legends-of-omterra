@@ -33,6 +33,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
+ * A simple messaging system, with subscription based on class
  *
  * @author Nathan Templon
  */
@@ -40,24 +41,30 @@ public class SimpleMessageSystem implements MessageSystem {
 
     // Fields
     private final List<Message> queue;
+    private final List<Message> publishedWhileUpdating;
     private final Map<Class<? extends Message>, Set<MessageListener>> listeners;
     private final Set<MessageListener> globalListeners;
 
     private final Lock queueLock;
+    private final Lock publishedWhileUpdatingLock;
     private final Lock listenersLock;
     private final Lock globalListenersLock;
+    private volatile boolean isUpdating = false;
 
     private Thread updateThread;
+    private Thread publishThread;
 
 
     // Initialization
     public SimpleMessageSystem() {
         super();
         this.queue = new ArrayList<>();
+        this.publishedWhileUpdating = new ArrayList<>();
         this.listeners = new HashMap<>();
         this.globalListeners = new HashSet<>();
 
         this.queueLock = new ReentrantLock();
+        this.publishedWhileUpdatingLock = new ReentrantLock();
         this.listenersLock = new ReentrantLock();
         this.globalListenersLock = new ReentrantLock();
     }
@@ -79,7 +86,7 @@ public class SimpleMessageSystem implements MessageSystem {
             }
         }
 
-        this.updateThread = new Thread(() -> this.updateInternal());
+        this.updateThread = new Thread(() -> this.updateInternal(), "Message System Update Thread");
         this.updateThread.start();
     }
 
@@ -180,14 +187,17 @@ public class SimpleMessageSystem implements MessageSystem {
      */
     @Override
     public void publish(Message message) {
-        this.queueLock.lock();
+        if (this.publishThread != null) {
+            try {
+                this.publishThread.join();
+            }
+            catch (InterruptedException ex) {
 
-        try {
-            this.queue.add(message);
+            }
         }
-        finally {
-            this.queueLock.unlock();
-        }
+
+        this.publishThread = new Thread(() -> this.publishInternal(message), "Message System Publish Thread");
+        this.publishThread.start();
     }
 
 
@@ -197,25 +207,64 @@ public class SimpleMessageSystem implements MessageSystem {
         this.globalListenersLock.lock();
         this.listenersLock.lock();
         try {
-            this.queue.stream().forEach((Message message) -> {
-                // Send the message to global listeners
-                this.globalListeners.stream().forEach((MessageListener listener) -> {
-                    listener.handleMessage(message);
-                });
-
-                // Send the message to specifically subscribed listeners
-                Class<? extends Message> type = message.getClass();
-                if (this.listeners.containsKey(type)) {
-                    this.listeners.get(type).stream().forEach((MessageListener listener) -> {
+            while (this.queue.size() > 0) {
+                this.isUpdating = true;
+                this.queue.stream().forEach((Message message) -> {
+                    // Send the message to global listeners
+                    this.globalListeners.stream().forEach((MessageListener listener) -> {
                         listener.handleMessage(message);
                     });
+
+                    // Send the message to specifically subscribed listeners
+                    Class<? extends Message> type = message.getClass();
+                    if (this.listeners.containsKey(type)) {
+                        this.listeners.get(type).stream().forEach((MessageListener listener) -> {
+                            listener.handleMessage(message);
+                        });
+                    }
+                });
+                
+                // Allows systems to have conversations
+                this.publishedWhileUpdatingLock.lock();
+                try {
+                    this.queue.clear();
+                    this.queue.addAll(this.publishedWhileUpdating);
+                    this.publishedWhileUpdating.clear();
                 }
-            });
+                finally {
+                    this.publishedWhileUpdatingLock.unlock();
+                }
+            }
         }
         finally {
+            this.isUpdating = false;
+            this.queue.clear();
             this.queueLock.unlock();
             this.globalListenersLock.unlock();
             this.listenersLock.unlock();
+        }
+    }
+
+    private void publishInternal(Message message) {
+        if (this.isUpdating) {
+            this.publishedWhileUpdatingLock.lock();
+
+            try {
+                this.publishedWhileUpdating.add(message);
+            }
+            finally {
+                this.publishedWhileUpdatingLock.unlock();
+            }
+        }
+        else {
+            this.queueLock.lock();
+
+            try {
+                this.queue.add(message);
+            }
+            finally {
+                this.queueLock.unlock();
+            }
         }
     }
 

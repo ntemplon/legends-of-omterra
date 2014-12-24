@@ -23,14 +23,10 @@
  */
 package com.omterra.entity.messaging;
 
-import com.badlogic.ashley.core.Engine;
-
 /**
  *
  * @author Nathan Templon
  */
-public interface SelfSubscribingListener {
-    
-    void subscribe(Engine engine, MessageSystem system);
+public abstract class RequestMessage extends Message {
     
 }

@@ -25,6 +25,8 @@ package com.omterra.entity.component;
 
 import com.badlogic.ashley.core.Component;
 import com.omterra.world.Level;
+import static com.omterra.world.Level.DEFAULT_TILE_HEIGHT;
+import static com.omterra.world.Level.DEFAULT_TILE_WIDTH;
 import java.awt.Point;
 
 /**
@@ -57,7 +59,8 @@ public class PositionComponent extends Component {
                     this.tilePosition.y * this.level.getTileHeight());
         }
         else {
-            this.pixelPosition = this.tilePosition;
+            this.pixelPosition = new Point(this.tilePosition.x * DEFAULT_TILE_WIDTH,
+                    this.tilePosition.y * DEFAULT_TILE_HEIGHT);
         }
     }
     

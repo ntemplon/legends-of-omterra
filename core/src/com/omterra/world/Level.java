@@ -29,6 +29,7 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.utils.Disposable;
+import com.omterra.EmergenceGame;
 import com.omterra.geometry.Size;
 import com.omterra.quadtree.Quadtree;
 import java.awt.Point;
@@ -59,6 +60,9 @@ public class Level implements Disposable {
     public static final String MAP_HEIGHT_KEY = HEIGHT_KEY;
     public static final String X_KEY = "x";
     public static final String Y_KEY = "y";
+    
+    public static final int DEFAULT_TILE_WIDTH = 16;
+    public static final int DEFAULT_TILE_HEIGHT = 16;
 
 
     // Fields
@@ -72,6 +76,8 @@ public class Level implements Disposable {
     private int tileWidth, tileHeight;
     private int mapWidth, mapHeight;
     private int pixelWidth, pixelHeight;
+    
+    private Entity controlledEntity;
 
 
     // Properties
@@ -95,7 +101,7 @@ public class Level implements Disposable {
             String layerName = layer.getName();
             if (layerName.equalsIgnoreCase(ENTITY_LAYER_NAME)) {
                 // Get the entity layer from the map
-                this.entityLayer = new EntityLayer(layer, new Size(this.getMapWidth(), this.getMapHeight()));
+                this.entityLayer = new EntityLayer(layer, new Size(this.getMapWidth(), this.getMapHeight()), this);
             }
             else if (layerName.equalsIgnoreCase(COLLISION_LAYER_NAME)) {
                 this.collision = this.getCollisionFrom(layer);
@@ -139,6 +145,14 @@ public class Level implements Disposable {
     
     public EntityLayer getEntityLayer() {
         return this.entityLayer;
+    }
+    
+    public Entity getControlledEntity() {
+        return this.controlledEntity;
+    }
+    
+    public void setControlledEntity(Entity entity) {
+        this.controlledEntity = entity;
     }
 
 
