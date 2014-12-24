@@ -25,6 +25,7 @@ package com.omterra.entity.component;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import java.awt.Point;
 
 /**
  *
@@ -34,6 +35,7 @@ public class RenderComponent extends Component {
     
     // Fields
     private Sprite sprite;
+    private Point offset;
     
     
     // Properties
@@ -45,10 +47,25 @@ public class RenderComponent extends Component {
         this.sprite = sprite;
     }
     
+    /**
+     * @return the offset
+     */
+    public final Point getOffset() {
+        return offset;
+    }
+
+    /**
+     * @param offset the offset to set
+     */
+    public final void setOffset(Point offset) {
+        this.offset = offset;
+    }
+    
     
     // Initialization
     public RenderComponent(Sprite sprite) {
         this.setSprite(sprite);
+        this.setOffset(new Point(0, 0));
     }
     
 }

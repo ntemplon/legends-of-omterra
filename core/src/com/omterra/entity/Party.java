@@ -30,6 +30,8 @@ import com.omterra.EmergenceGame;
 import com.omterra.entity.component.PositionComponent;
 import com.omterra.entity.component.RenderComponent;
 import com.omterra.entity.component.SizeComponent;
+import com.omterra.entity.component.TextureResourceComponent;
+import com.omterra.entity.component.WalkComponent;
 import com.omterra.geometry.Size;
 import com.omterra.io.FileLocations;
 import java.awt.Point;
@@ -42,8 +44,7 @@ import java.io.File;
 public class Party {
     
     // Fields
-    private Entity player1;
-    private final Sprite sprite;
+    private final Entity player1;
     
     private final Entity[] partyMembers;
     
@@ -61,10 +62,11 @@ public class Party {
         // All the debug code
         TextureAtlas atlas = EmergenceGame.game.getAssetManager().get(new File(FileLocations.SPRITES_DIRECTORY,
                 "CharacterSprites.atlas").getPath(), TextureAtlas.class);
-        this.sprite = new Sprite(atlas.findRegion("champion-stand-front"));
+        this.player1.add(new TextureResourceComponent(atlas, "champion"));
         this.player1.add(new PositionComponent(null, new Point(19, 24), 0));
         this.player1.add(new SizeComponent(new Size(1, 1)));
-        this.player1.add(new RenderComponent(this.sprite));
+        this.player1.add(new WalkComponent());
+        this.player1.add(new RenderComponent(new Sprite(Mappers.texture.get(this.player1).getFrontStandTexture())));
         
         this.partyMembers = new Entity[] {this.player1};
     }

@@ -28,6 +28,8 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.omterra.entity.component.PositionComponent;
 import com.omterra.entity.component.RenderComponent;
 import com.omterra.entity.component.SizeComponent;
+import com.omterra.entity.component.TextureResourceComponent;
+import com.omterra.entity.component.WalkComponent;
 
 /**
  *
@@ -40,6 +42,8 @@ public final class Mappers {
     public static final ComponentMapper<PositionComponent> position = ComponentMapper.getFor(PositionComponent.class);
     public static final ComponentMapper<RenderComponent> render = ComponentMapper.getFor(RenderComponent.class);
     public static final ComponentMapper<SizeComponent> size = ComponentMapper.getFor(SizeComponent.class);
+    public static final ComponentMapper<TextureResourceComponent> texture = ComponentMapper.getFor(TextureResourceComponent.class);
+    public static final ComponentMapper<WalkComponent> walk = ComponentMapper.getFor(WalkComponent.class);
     
     
     // Initialization

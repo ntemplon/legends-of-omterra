@@ -89,7 +89,7 @@ public class RenderingMaintenenceSystem extends IteratingSystem implements Messa
             Sprite sprite = render.getSprite();
 
             // Coordinates of the bottom right corner of the space, where the sprite's origin is
-            sprite.setPosition(loc.x, loc.y + sprite.getHeight());
+            sprite.setPosition(loc.x + render.getOffset().x, loc.y + sprite.getHeight() + render.getOffset().y);
         }
     }
 

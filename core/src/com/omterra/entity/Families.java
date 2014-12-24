@@ -28,6 +28,8 @@ import com.badlogic.ashley.core.Family;
 import com.omterra.entity.component.PositionComponent;
 import com.omterra.entity.component.RenderComponent;
 import com.omterra.entity.component.SizeComponent;
+import com.omterra.entity.component.TextureResourceComponent;
+import com.omterra.entity.component.WalkComponent;
 
 /**
  *
@@ -39,6 +41,8 @@ public final class Families {
     public static final Family collidables = Family.all(CollisionComponent.class).get();
     public static final Family positionables = Family.all(PositionComponent.class, SizeComponent.class).get();
     public static final Family renderables = Family.all(RenderComponent.class).get();
+    public static final Family walkables = Family.all(PositionComponent.class, SizeComponent.class, WalkComponent.class,
+            TextureResourceComponent.class).get();
     
     
     // Initialization

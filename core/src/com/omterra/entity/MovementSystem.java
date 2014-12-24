@@ -28,6 +28,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.omterra.EmergenceGame;
 import com.omterra.entity.component.PositionComponent;
+import com.omterra.entity.component.RenderComponent;
+import com.omterra.entity.component.WalkComponent;
+import com.omterra.entity.component.WalkComponent.WalkStates;
 import com.omterra.entity.messaging.Message;
 import com.omterra.entity.messaging.MessageListener;
 import com.omterra.entity.messaging.MessageSystem;
@@ -44,34 +47,36 @@ public class MovementSystem extends IteratingSystem implements MessageListener, 
 
     // Enumerations
     public enum MovementDirections {
+
         UP(0, 1),
         LEFT(-1, 0),
         DOWN(0, -1),
         RIGHT(1, 0);
-        
+
         public final int deltaX;
         public final int deltaY;
+
         MovementDirections(int deltaX, int deltaY) {
             this.deltaX = deltaX;
             this.deltaY = deltaY;
         }
     }
-    
+
 
     // Initialization
     public MovementSystem() {
         super(Families.positionables, EmergenceGame.MOVEMENT_SYSTEM_PRIORITY);
     }
-    
-    
+
+
     // Public Methods
     @Override
     public void handleMessage(Message message) {
         if (message instanceof MovementRequestMessage) {
-            this.handleMovementRequest((MovementRequestMessage)message);
+            this.handleMovementRequest((MovementRequestMessage) message);
         }
     }
-    
+
     @Override
     public void subscribe(Engine engine, MessageSystem system) {
         system.subscribe(this, MovementRequestMessage.class);
@@ -80,11 +85,38 @@ public class MovementSystem extends IteratingSystem implements MessageListener, 
 
     // Protected Methods
     @Override
-    protected void processEntity(Entity entity, float f) {
-        
+    protected void processEntity(Entity entity, float deltaT) {
+        if (Families.walkables.matches(entity)) {
+            WalkComponent walk = Mappers.walk.get(entity);
+            walk.update(deltaT);
+
+            // Add sprite changing logic
+            switch (walk.getState()) {
+                case FINISHED_WALKING:
+                    walk.setState(WalkStates.STANDING);
+                    RenderComponent render = Mappers.render.get(entity);
+                    render.setOffset(new Point(0, 0));
+                    render.getSprite().setRegion(Mappers.texture.get(entity).standingTextureFor(walk.getWalkDirection()));
+                    this.moveEntityTo(entity, walk.getWalkTarget());
+                    break;
+                case STANDING:
+                    break;
+                case WALK_LEFT:
+                case WALK_RIGHT:
+                case WALK_UP:
+                case WALK_DOWN:
+                    float percentComplete = walk.getElapsedTime() / walk.getTimePerStep();
+                    int xOff = (int) (EmergenceGame.game.getCurrentLevel().getTileWidth() * percentComplete * walk.getWalkDirection().deltaX);
+                    int yOff = (int) (EmergenceGame.game.getCurrentLevel().getTileHeight() * percentComplete * walk.getWalkDirection().deltaY);
+                    Mappers.render.get(entity).setOffset(new Point(xOff, yOff));
+                    EmergenceGame.game.getMessageSystem().publish(new PositionChangedMessage(entity,
+                            Mappers.position.get(entity).getTilePosition()));
+                    break;
+            }
+        }
     }
-    
-    
+
+
     // Private Methods
     private void handleMovementRequest(MovementRequestMessage message) {
         Entity entity = message.entity;
@@ -92,12 +124,20 @@ public class MovementSystem extends IteratingSystem implements MessageListener, 
         if (Families.positionables.matches(entity)) {
             PositionComponent position = Mappers.position.get(entity);
             Point location = position.getTilePosition();
-            
-            // Debug code - instantly moves to new location
-            this.moveEntityTo(entity, new Point(location.x + direction.deltaX, location.y + direction.deltaY));
+            Point requested = new Point(location.x + direction.deltaX, location.y + direction.deltaY);
+
+            if (Families.walkables.matches(entity)) {
+                WalkComponent walk = Mappers.walk.get(entity);
+                if (walk.getState().equals(WalkStates.STANDING)) {
+                    walk.startWalking(direction, requested);
+                }
+            }
+            else {
+                this.moveEntityTo(entity, requested);
+            }
         }
     }
-    
+
     private void moveEntityTo(Entity entity, Point location) {
         PositionComponent position = Mappers.position.get(entity);
         position.setTilePosition(location);
