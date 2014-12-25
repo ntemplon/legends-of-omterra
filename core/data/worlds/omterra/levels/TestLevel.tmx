@@ -1,32 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="30" tilewidth="16" tileheight="16">
  <tileset firstgid="1" name="Floor" tilewidth="16" tileheight="16">
   <image source="../../../graphics/tilesets/Floor.png" width="640" height="640"/>
  </tileset>
  <tileset firstgid="1601" name="Wall" tilewidth="16" tileheight="16">
   <image source="../../../graphics/tilesets/Wall.png" width="640" height="896"/>
  </tileset>
- <layer name="Background" width="50" height="50">
+ <tileset firstgid="3841" name="Decor" tilewidth="16" tileheight="16">
+  <image source="../../../graphics/sprites/Decor.png" width="640" height="640"/>
+ </tileset>
+ <layer name="Background" width="50" height="30">
   <data encoding="base64" compression="zlib">
-   eJztzwEJADAIAEFh/cOuwUoI6ryDD/ARAAAAALDDPbn56PVR9ebDx4SPKj58+Pj/AwAAunmcJ/fR
+   eJztmNENgCAMBZvAEOr+w6jTiBOoXySKMSmPUqEvuV/gUiAFonYyO6KFyepqrz5mO9cSmOzmAQ/KI2d/IvYryiNnHESdNXoERt20ekjObx7fjP7J3zzezvl9DvMwD/OQ9RgS9wuXydfzkEiPHoj61/bQ9J5IxTx0xTx0pTePC9RfQQmk+iJpWvRA9nfSSPcTpXMAzTPeMA==
   </data>
  </layer>
- <layer name="Walls" width="50" height="50">
+ <layer name="Walls" width="50" height="30">
   <data encoding="base64" compression="zlib">
-   eJzt1sENgCAMBVDucHAc4/7DqFM4gHBSKJr3kl7bfEiapgQAAAAAbXtO6Xi5zjw+x1K+0TNi5lruf9RbxNv1IMdc5Gir7fLe7N2xPSNmyjHXzIgctRviaW0/2eUAAMS5ABByM2I=
+   eJztl0sOwCAIRN3XRY/T9P6HsT1F2y3xRwSdKpOwcDP4goKGzbmrMe43Rmv3GB4Ie5iJIwicz5bzKsWhUROOJzLH4evrhszRO79xyMg4dHyoaC9P9WF0DuqZymEcOj4x39xaOr9xlH1za+n8n0ftG4IT5wCOHlqVg/uXoPXXEpcD4X8Xk3FgaVUOjVmgMU9KHH+TcWBpJg7UO829/w88vLF5
+  </data>
+ </layer>
+ <layer name="Decor" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJxjYGBgWMaPivEBdLWE1A808BCA0PICqPxRQB+gKERd85YD09sifgi9BIgXA/FCpLS4HEqvGOTpchQwMHhROW2MgsEDDAUZGIyQsLHgQLuIPBAJdHcUEo4e9ceAglF/DC4wXPzRCHR3ExJuJtIfE4HtyUlAPJmCduVQqAdlgP6TBWK50fbzKBgFo2AUjIJRMApGwSgYBUQDACFPIPQ=
   </data>
  </layer>
  <objectgroup name="Entities">
-  <object name="PS" type="player-spawn" x="304" y="384" width="16" height="16"/>
+  <object name="PS" type="player-spawn" x="304" y="80" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="Collision">
-  <object x="288" y="352" width="352" height="16"/>
-  <object x="640" y="352" width="16" height="48"/>
-  <object x="656" y="384" width="48" height="16"/>
-  <object x="656" y="496" width="48" height="16"/>
-  <object x="640" y="496" width="16" height="112"/>
-  <object x="288" y="592" width="352" height="16"/>
-  <object x="272" y="352" width="16" height="256"/>
+  <object x="272" y="0" width="528" height="64"/>
+  <object x="272" y="64" width="32" height="192"/>
+  <object x="624" y="64" width="176" height="32"/>
+  <object x="272" y="256" width="432" height="48"/>
+  <object x="624" y="160" width="80" height="96"/>
+  <object x="80" y="304" width="624" height="96"/>
+  <object x="784" y="96" width="16" height="384"/>
+  <object x="0" y="464" width="784" height="16"/>
+  <object x="0" y="0" width="272" height="16"/>
+  <object x="0" y="16" width="16" height="448"/>
+  <object x="32" y="48" width="16" height="16"/>
+  <object x="128" y="16" width="16" height="16"/>
+  <object x="160" y="16" width="16" height="16"/>
+  <object x="96" y="16" width="16" height="16"/>
+  <object x="320" y="224" width="48" height="16"/>
+  <object x="448" y="240" width="48" height="16"/>
+  <object x="592" y="224" width="16" height="16"/>
+  <object x="592" y="80" width="16" height="16"/>
  </objectgroup>
  <objectgroup name="Zones"/>
 </map>

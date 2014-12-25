@@ -6,7 +6,7 @@ version = '0.1.0'
 sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = [ "src/" ]
 
-project.ext.mainClassName = "com.omterra.desktop.DesktopLauncher"
+project.ext.mainClassName = "com.emergence.desktop.DesktopLauncher"
 project.ext.assetsDir = new File("../core");
 
 task run(dependsOn: classes, type: JavaExec) {
@@ -14,7 +14,7 @@ task run(dependsOn: classes, type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
     workingDir = project.assetsDir
-    jvmArgs = ['-Xms128m', '-Xmx512m']
+    jvmArgs = ['-Xms128m', '-Xmx1024m']
     ignoreExitValue = true
 }
 
@@ -23,7 +23,7 @@ task debug(dependsOn: classes, type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
     workingDir = project.assetsDir
-    jvmArgs = ['-Xms128m', '-Xmx512m']
+    jvmArgs = ['-Xms128m', '-Xmx1024m']
     debug = true
 }
 
@@ -36,6 +36,10 @@ task buildWithDeps(type: Jar) {
     manifest {
         attributes 'Main-Class': project.mainClassName
     }
+}
+
+task tidy(type: Delete) {
+    delete "./build/libs/data" 
 }
 
 task dist(type: Copy) {
@@ -53,8 +57,9 @@ task buildAtlas(dependsOn: classes, type: JavaExec) {
 }
 
 buildWithDeps.dependsOn classes
-buildWithDeps.dependsOn clean
+//buildWithDeps.dependsOn clean
 dist.dependsOn buildWithDeps
+dist.dependsOn tidy
 
 eclipse {
     project {
