@@ -36,11 +36,14 @@ import com.emergence.entity.component.WalkComponent.WalkStates;
 import com.emergence.entity.messaging.Message;
 import com.emergence.entity.messaging.MessageListener;
 import com.emergence.entity.messaging.MessageSystem;
-import com.emergence.entity.messaging.MovementRequestMessage;
+import com.emergence.entity.messaging.WalkRequestMessage;
 import com.emergence.entity.messaging.OffsetUpdatedMessage;
 import com.emergence.entity.messaging.PositionChangedMessage;
 import com.emergence.entity.messaging.SelfSubscribingListener;
+import com.emergence.geometry.Size;
+import com.emergence.world.Level;
 import java.awt.Point;
+import java.awt.Rectangle;
 
 /**
  *
@@ -49,8 +52,8 @@ import java.awt.Point;
 public class MovementSystem extends IteratingSystem implements MessageListener, SelfSubscribingListener {
 
     // Constants
-    private static final float FIRST_WALK_SPRITE_BREAKPOINT = 0.35f;
-    private static final float SECOND_WALK_SPRITE_BREAKPOINT = 0.65f;
+    private static final float FIRST_WALK_SPRITE_BREAKPOINT = 0.3f;
+    private static final float SECOND_WALK_SPRITE_BREAKPOINT = 0.7f;
 
 
     // Enumerations
@@ -80,14 +83,14 @@ public class MovementSystem extends IteratingSystem implements MessageListener, 
     // Public Methods
     @Override
     public void handleMessage(Message message) {
-        if (message instanceof MovementRequestMessage) {
-            this.handleMovementRequest((MovementRequestMessage) message);
+        if (message instanceof WalkRequestMessage) {
+            this.handleWalkRequest((WalkRequestMessage) message);
         }
     }
 
     @Override
     public void subscribe(Engine engine, MessageSystem system) {
-        system.subscribe(this, MovementRequestMessage.class);
+        system.subscribe(this, WalkRequestMessage.class);
     }
 
 
@@ -95,96 +98,41 @@ public class MovementSystem extends IteratingSystem implements MessageListener, 
     @Override
     protected void processEntity(Entity entity, float deltaT) {
         if (Families.walkables.matches(entity)) {
-            WalkComponent walk = Mappers.walk.get(entity);
-            walk.update(deltaT);
-
-            float percentComplete = walk.getCompletionPercentage();
-            RenderComponent render = Mappers.render.get(entity);
-            Sprite sprite = render.getSprite();
-            MovementResourceComponent textures = Mappers.moveTexture.get(entity);
-
-            // Add sprite changing logic
-            switch (walk.getState()) {
-                case FINISHED_WALKING:
-                    walk.setState(WalkStates.STANDING);
-                    render.setOffset(new Point(0, 0));
-                    sprite.setRegion(textures.standingTextureFor(walk.getWalkDirection()));
-                    this.moveEntityTo(entity, walk.getWalkTarget());
-                    break;
-                case STANDING:
-                    break;
-                case WALK_LEFT:
-                    if (FIRST_WALK_SPRITE_BREAKPOINT < percentComplete && percentComplete < SECOND_WALK_SPRITE_BREAKPOINT) {
-                        sprite.setRegion(textures.getLeftStandTexture());
-                    }
-                    else {
-                        sprite.setRegion(textures.getLeftWalkTexture());
-                    }
-                    this.updateWalkPosition(entity, walk);
-                    break;
-                case WALK_RIGHT:
-                    if (FIRST_WALK_SPRITE_BREAKPOINT < percentComplete && percentComplete < SECOND_WALK_SPRITE_BREAKPOINT) {
-                        sprite.setRegion(textures.getRightStandTexture());
-                    }
-                    else {
-                        sprite.setRegion(textures.getRightWalkTexture());
-                    }
-                    this.updateWalkPosition(entity, walk);
-                    break;
-                case WALK_UP:
-                    if (FIRST_WALK_SPRITE_BREAKPOINT < percentComplete && percentComplete < SECOND_WALK_SPRITE_BREAKPOINT) {
-                        sprite.setRegion(textures.getBackStandTexture());
-                    }
-                    else if (FIRST_WALK_SPRITE_BREAKPOINT > percentComplete) {
-                        sprite.setRegion(textures.getBackWalkTexture1());
-                    }
-                    else {
-                        sprite.setRegion(textures.getBackWalkTexture2());
-                    }
-                    this.updateWalkPosition(entity, walk);
-                    break;
-                case WALK_DOWN:
-                    if (FIRST_WALK_SPRITE_BREAKPOINT < percentComplete && percentComplete < SECOND_WALK_SPRITE_BREAKPOINT) {
-                        sprite.setRegion(textures.getFrontStandTexture());
-                    }
-                    else if (FIRST_WALK_SPRITE_BREAKPOINT > percentComplete) {
-                        sprite.setRegion(textures.getFrontWalkTexture1());
-                    }
-                    else {
-                        sprite.setRegion(textures.getFrontWalkTexture2());
-                    }
-                    this.updateWalkPosition(entity, walk);
-                    break;
-            }
+            this.updateWalkSprite(entity, deltaT);
         }
     }
 
 
     // Private Methods
-    private void handleMovementRequest(MovementRequestMessage message) {
-        Entity entity = message.entity;
-        MovementDirections direction = message.direction;
-        if (Families.positionables.matches(entity)) {
-            PositionComponent position = Mappers.position.get(entity);
-            Point location = position.getTilePosition();
-            Point requested = new Point(location.x + direction.deltaX, location.y + direction.deltaY);
-
-            if (Families.walkables.matches(entity)) {
-                WalkComponent walk = Mappers.walk.get(entity);
-                if (walk.getState().equals(WalkStates.STANDING)) {
-                    walk.startWalking(direction, requested);
-                }
-            }
-            else {
-                this.moveEntityTo(entity, requested);
-            }
-        }
-    }
-
     private void moveEntityTo(Entity entity, Point location) {
         PositionComponent position = Mappers.position.get(entity);
         position.setTilePosition(location);
         EmergenceGame.game.getMessageSystem().publish(new PositionChangedMessage(entity, location));
+    }
+
+    private void handleWalkRequest(WalkRequestMessage message) {
+        Entity entity = message.entity;
+        MovementDirections direction = message.direction;
+        if (Families.walkables.matches(entity)) {
+            PositionComponent position = Mappers.position.get(entity);
+            Point location = position.getTilePosition();
+            Point requested = new Point(location.x + direction.deltaX, location.y + direction.deltaY);
+
+            Level level = position.getLevel();
+            Size size = Mappers.size.get(entity).getSize();
+            Rectangle destination = new Rectangle(requested.x, requested.y, size.width, size.height);
+
+            if (!level.collides(destination) && level.contains(destination)) {
+                WalkComponent walk = Mappers.walk.get(entity);
+                if (walk.getState().equals(WalkStates.STANDING)) {
+                    walk.startWalking(direction, requested);
+                    Mappers.moveTexture.get(entity).incrementWalkingTexture(direction);
+                }
+            }
+            else {
+                Mappers.render.get(entity).getSprite().setRegion(Mappers.moveTexture.get(entity).standingTextureFor(direction));
+            }
+        }
     }
 
     private void updateWalkPosition(Entity entity, WalkComponent walk) {
@@ -193,6 +141,39 @@ public class MovementSystem extends IteratingSystem implements MessageListener, 
         int yOff = (int) (EmergenceGame.game.getCurrentLevel().getTileHeight() * percentComplete * walk.getWalkDirection().deltaY);
         Mappers.render.get(entity).setOffset(new Point(xOff, yOff));
         EmergenceGame.game.getMessageSystem().publish(new OffsetUpdatedMessage(entity));
+    }
+
+    private void updateWalkSprite(Entity entity, float deltaT) {
+        WalkComponent walk = Mappers.walk.get(entity);
+        walk.update(deltaT);
+
+        float percentComplete = walk.getCompletionPercentage();
+        RenderComponent render = Mappers.render.get(entity);
+        Sprite sprite = render.getSprite();
+        MovementResourceComponent textures = Mappers.moveTexture.get(entity);
+
+        switch (walk.getState()) {
+            case FINISHED_WALKING:
+                walk.setState(WalkStates.STANDING);
+                render.setOffset(new Point(0, 0));
+                sprite.setRegion(textures.standingTextureFor(walk.getWalkDirection()));
+                this.moveEntityTo(entity, walk.getWalkTarget());
+                break;
+            case STANDING:
+                break;
+            case WALK_LEFT:
+            case WALK_RIGHT:
+            case WALK_UP:
+            case WALK_DOWN:
+                if (FIRST_WALK_SPRITE_BREAKPOINT < percentComplete && percentComplete < SECOND_WALK_SPRITE_BREAKPOINT) {
+                    sprite.setRegion(textures.walkingTextureFont(walk.getWalkDirection()));
+                }
+                else {
+                    sprite.setRegion(textures.standingTextureFor(walk.getWalkDirection()));
+                }
+                this.updateWalkPosition(entity, walk);
+                break;
+        }
     }
 
 }

@@ -70,7 +70,7 @@ public class Party implements Serializable {
         TextureAtlas atlas = EmergenceGame.game.getAssetManager().get(new File(FileLocations.SPRITES_DIRECTORY,
                 "CharacterSprites.atlas").getPath(), TextureAtlas.class);
         this.player1.add(new MovementResourceComponent(atlas, "champion"));
-        this.player1.add(new PositionComponent(null, new Point(19, 4), 0));
+        this.player1.add(new PositionComponent(null, new Point(19, 25), 0));
         this.player1.add(new SizeComponent(new Size(1, 1)));
         this.player1.add(new CollisionComponent(Mappers.position.get(this.player1).getTilePosition(), Mappers.size.get(
                 this.player1).getSize()));

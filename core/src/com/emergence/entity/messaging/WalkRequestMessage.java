@@ -30,15 +30,15 @@ import com.emergence.entity.MovementSystem.MovementDirections;
  *
  * @author Nathan Templon
  */
-public class MovementRequestMessage extends RequestMessage {
-    
+public class WalkRequestMessage extends RequestMessage {
+
     // Fields
     public final Entity entity;
     public final MovementDirections direction;
     
     
     // Initialization
-    public MovementRequestMessage(Entity entity, MovementDirections direction) {
+    public WalkRequestMessage(Entity entity, MovementDirections direction) {
         this.entity = entity;
         this.direction = direction;
     }

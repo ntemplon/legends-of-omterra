@@ -35,10 +35,22 @@ public final class FileLocations {
 
     // Constants
     public static final File ASSET_DIRECTORY = Paths.get("./data").toFile();
+    
     public static final File WORLD_DIRECTORY = new File(ASSET_DIRECTORY, "worlds");
-    public static final File FONTS_DIRECTORY = new File(ASSET_DIRECTORY, "fonts");
+    
+    public static final File UI_DIRECTORY = new File(ASSET_DIRECTORY, "ui");
+    public static final File FONTS_DIRECTORY = new File(UI_DIRECTORY, "fonts");
+    public static final File SKINS_DIRECTORY = new File(UI_DIRECTORY, "skins");
+    
     public static final File GRAPHICS_DIRECTORY = new File(ASSET_DIRECTORY, "graphics");
     public static final File SPRITES_DIRECTORY = new File(GRAPHICS_DIRECTORY, "sprites");
+    
+    private static final File USER_HOME = new File(System.getProperty("user.home"));
+    private static final File LOCAL_DATA_DIRECTORY = new File(USER_HOME, ".emergence");
+    public static final File SAVE_DIRECTORY = new File(LOCAL_DATA_DIRECTORY, "saves");
+    public static final File CONFIGURATION_DIRECTORY = new File(LOCAL_DATA_DIRECTORY, "config");
+    
+    
     
 
     // Initialization

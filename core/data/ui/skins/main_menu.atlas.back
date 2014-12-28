@@ -1,0 +1,18 @@
+main_menu.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+solid-region
+  rotate: false
+  xy: 0, 0
+  size: 100, 100
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+red-region
+  rotate: false
+  xy: 0, 100
+  size: 100, 100
+  orig: 0, 0
+  offset: 0, 0
+  index: -1

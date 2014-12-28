@@ -28,6 +28,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.emergence.util.ArrayUtils;
 import java.io.File;
 
@@ -38,10 +39,10 @@ import java.io.File;
 public class EmergenceAssetManager extends AssetManager {
     
     // Constants
-    public final String[] TEXTURE_EXTENSIONS = new String[] {"png", "PNG"};
     public final String[] ATLAS_EXTENSIONS = new String[] {"atlas", "ATLAS"};
     public final String[] MAP_EXTENSIONS = new String[] {"tmx", "TMX"};
     public final String[] FONT_EXTENSIONS = new String[] {"fnt", "FNT"};
+    public final String[] SKIN_EXTENSIONS = new String[] {"skin", "SKIN"};
     
     
     // Initialization
@@ -88,10 +89,7 @@ public class EmergenceAssetManager extends AssetManager {
             }
             else {
                 String extension = FileUtils.getExtension(subFile);
-                if (ArrayUtils.contains(TEXTURE_EXTENSIONS, extension)) {
-//                    this.load(subFile.getPath(), Texture.class);
-                }
-                else if (ArrayUtils.contains(MAP_EXTENSIONS, extension)) {
+                if (ArrayUtils.contains(MAP_EXTENSIONS, extension)) {
                     this.load(subFile.getPath(), TiledMap.class);
                 }
                 else if (ArrayUtils.contains(FONT_EXTENSIONS, extension)) {
@@ -99,6 +97,9 @@ public class EmergenceAssetManager extends AssetManager {
                 }
                 else if (ArrayUtils.contains(ATLAS_EXTENSIONS, extension)) {
                     this.load(subFile.getPath(), TextureAtlas.class);
+                }
+                else if (ArrayUtils.contains(SKIN_EXTENSIONS, extension)) {
+                    this.load(subFile.getPath(), Skin.class);
                 }
             }
         }

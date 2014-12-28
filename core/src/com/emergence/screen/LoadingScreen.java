@@ -43,7 +43,7 @@ import java.text.DecimalFormat;
 public class LoadingScreen implements Screen {
     
     // Constants
-    public static final int MINIMUM_LOADING_TIME = 500; // Minimum time that the loading screen will be displayed, in ms.
+    public static final int MINIMUM_LOADING_TIME = 250; // Minimum time that the loading screen will be displayed, in ms.
     
     
     // Fields

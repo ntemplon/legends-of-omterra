@@ -1,8 +1,10 @@
 package com.emergence.desktop;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglFrame;
 import com.emergence.EmergenceGame;
+import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
@@ -29,13 +31,14 @@ public class DesktopLauncher {
         
         LwjglFrame frame = new LwjglFrame(game, config);
 
+        frame.setMinimumSize(new Dimension(640, 480));
         frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                game.pause();
-                game.dispose();
+                Gdx.app.exit();
             }
         });
     }

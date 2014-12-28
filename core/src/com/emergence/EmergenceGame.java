@@ -50,6 +50,7 @@ import com.emergence.save.SaveGame;
 import com.emergence.screen.LevelScreen;
 import com.emergence.screen.LoadingScreen;
 import com.emergence.screen.MainMenuScreen;
+import com.emergence.util.GameTimer;
 import com.emergence.world.Level;
 import com.emergence.world.World;
 import java.io.File;
@@ -64,25 +65,26 @@ public class EmergenceGame extends Game implements InputProcessor {
 
     // Constants
     public static final String TITLE = "Legends of Omterra";
+    public static final String SUBTITLE = "Necromancer Rising";
     public static final int MAJOR_VERSION = 0;
     public static final int MINOR_VERSION = 1;
     public static final int REVISION = 0;
     public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVISION;
 
     public static final float SCALE = 2.0f; // The number of pixels on-screen for each pixel in the resource
-    
+
     public static final int MOVEMENT_SYSTEM_PRIORITY = 1;
     public static final int COLLISION_SYSTEM_PRIORITY = 9;
     public static final int RENDERING_SYSTEM_PRIORITY = 10;
-    
+
     public static final char MOVE_RIGHT_KEY = 'd';
     public static final char MOVE_LEFT_KEY = 'a';
     public static final char MOVE_UP_KEY = 'w';
     public static final char MOVE_DOWN_KEY = 's';
 
     public static final boolean DEBUG = true;
-    
-    
+
+
     // Static Fields
     public static final EmergenceGame game = new EmergenceGame();
 
@@ -142,12 +144,6 @@ public class EmergenceGame extends Game implements InputProcessor {
 
                     @Override
                     public void enter(EmergenceGame game) {
-                        // debug code only
-                        game.startGame(null);
-                        game.setWorld(game.worlds.get(game.worlds.keySet().toArray()[0].toString())); // The first world in the list
-                        game.setLevel(game.getCurrentWorld().getStartingLevel());
-
-                        game.lastUpdateTime = System.nanoTime();
                         game.levelScreen.setLevel(game.getCurrentLevel());
                         game.setScreen(game.levelScreen);
                         game.addInputProcessor(game.levelScreen);
@@ -202,9 +198,8 @@ public class EmergenceGame extends Game implements InputProcessor {
 
     // Fields
     public final Engine entityEngine = new Engine(); // Ashley entity framework engine
-    
-    private long lastUpdateTime;
-    
+    private final GameTimer timer = new GameTimer();
+
     private LevelScreen levelScreen;
     private Screen loadingScreen;
     private MainMenuScreen mainMenuScreen;
@@ -222,7 +217,10 @@ public class EmergenceGame extends Game implements InputProcessor {
     private final MovementSystem movementSystem = new MovementSystem();
     private final CollisionSystem collisionSystem = new CollisionSystem();
     private final RenderingMaintenenceSystem renderingSystem = new RenderingMaintenenceSystem();
-    
+
+    private boolean suspended;
+
+    private SaveGame save;
     private Party party;
 
 
@@ -242,45 +240,49 @@ public class EmergenceGame extends Game implements InputProcessor {
     public final Level getCurrentLevel() {
         return this.currentLevel;
     }
-    
+
     public final void setWorld(World world) {
         this.currentWorld = world;
     }
 
     public final void setLevel(Level level) {
         this.currentLevel = level;
-        
-        for(Entity entity : this.party.getPartyMembers()) {
-           this.currentLevel.getEntityLayer().addEntity(entity);
+
+        for (Entity entity : this.party.getPartyMembers()) {
+            this.currentLevel.getEntityLayer().addEntity(entity);
         }
-        
+
         this.currentLevel.setControlledEntity(this.getParty().getPartyMembers()[0]);
     }
-    
+
     public final MessageSystem getMessageSystem() {
         return this.messageSystem;
     }
-    
+
     public final Party getParty() {
         return this.party;
+    }
+
+    public final boolean isSuspended() {
+        return this.suspended;
     }
 
 
     // Initialization
     private EmergenceGame() {
         this.stateMachine = new StackStateMachine<>(this);
-        
+
         // Add systems to the engine        this.movementSystem.priority = MOVEMENT_SYSTEM_PRIORITY;
         this.collisionSystem.priority = COLLISION_SYSTEM_PRIORITY;
         this.renderingSystem.priority = RENDERING_SYSTEM_PRIORITY;
-        
+
         this.entityEngine.addSystem(this.movementSystem);
         this.entityEngine.addSystem(this.collisionSystem);
         this.entityEngine.addSystem(this.renderingSystem);
-        
-        for(EntitySystem system : this.entityEngine.getSystems()) {
+
+        for (EntitySystem system : this.entityEngine.getSystems()) {
             if (system instanceof SelfSubscribingListener) {
-                ((SelfSubscribingListener)system).subscribe(this.entityEngine, this.getMessageSystem());
+                ((SelfSubscribingListener) system).subscribe(this.entityEngine, this.getMessageSystem());
             }
         }
     }
@@ -306,7 +308,7 @@ public class EmergenceGame extends Game implements InputProcessor {
             if (file.isDirectory()) {
                 try {
                     World nextWorld = World.fromDirectory(file);
-                    this.worlds.put(nextWorld.getName(), nextWorld);
+                    this.worlds.put(nextWorld.getName().toUpperCase(), nextWorld);
                 }
                 catch (Exception ex) {
                     if (DEBUG) {
@@ -318,20 +320,59 @@ public class EmergenceGame extends Game implements InputProcessor {
             }
         }
     }
-    
+
     public void startGame(SaveGame save) {
-        this.party = new Party();
-        for(Entity entity : party.getPartyMembers()) {
+        // Remove old party
+        if (this.party != null) {
+            for (Entity entity : party.getPartyMembers()) {
+                this.getCurrentLevel().getEntityLayer().removeEntity(entity);
+            }
+        }
+
+        this.save = save;
+        this.party = this.save.getParty();
+
+        this.entityEngine.removeAllEntities();
+        for (Entity entity : party.getPartyMembers()) {
             this.entityEngine.addEntity(entity);
         }
+
+        game.setWorld(this.save.getWorld()); // The first world in the list
+        game.setLevel(game.getCurrentWorld().getStartingLevel());
+
+        this.setState(GameStates.LEVEL);
     }
-    
+
+    public void startGame(String name, World world) {
+        this.startGame(new SaveGame(name, world));
+    }
+
     public void addInputProcessor(InputProcessor processor) {
         this.inputMultiplexer.addProcessor(processor);
     }
-    
+
     public void removeInputProcessor(InputProcessor processor) {
         this.inputMultiplexer.removeProcessor(processor);
+    }
+
+    /**
+     * When a pause button is pressed - the actual pause() function is used for application close in desktop libGDX
+     */
+    public void suspend() {
+        this.suspended = true;
+        this.timer.pause();
+    }
+
+    /**
+     * Unpause - see suspend()
+     */
+    public void wake() {
+        this.suspended = false;
+        this.timer.resume();
+    }
+
+    public World getWorld(String name) {
+        return this.worlds.get(name.toUpperCase());
     }
 
 
@@ -343,25 +384,29 @@ public class EmergenceGame extends Game implements InputProcessor {
 
         // Create our various screens
         this.loadingScreen = new LoadingScreen(this);
-        this.mainMenuScreen = new MainMenuScreen(this);
+        this.mainMenuScreen = new MainMenuScreen();
         this.levelScreen = new LevelScreen();
 
         // Set the state machine - be careful to not do this until all screens
         //  are initialized!
         this.setState(GameStates.LOADING);
-        
+
         // Take Over Input
         Gdx.input.setInputProcessor(this.inputMultiplexer);
         this.addInputProcessor(this);
+
+        // Start the clock
+        this.timer.start();
     }
 
     @Override
     public void render() {
-        long currentTime = System.nanoTime();
-        float deltaT = (currentTime - this.lastUpdateTime) / 1e9f;
-        this.messageSystem.update(true);
-        this.entityEngine.update(deltaT);
-        this.lastUpdateTime = currentTime;
+        float deltaT = timer.tick();
+
+        if (!this.isSuspended()) {
+            this.messageSystem.update(true);
+            this.entityEngine.update(deltaT);
+        }
 
         super.render();
     }
@@ -394,8 +439,8 @@ public class EmergenceGame extends Game implements InputProcessor {
             this.assetManager.dispose();
         }
     }
-    
-    
+
+
     // InputProcessorImplementation
     @Override
     public boolean keyDown(int i) {
@@ -436,24 +481,29 @@ public class EmergenceGame extends Game implements InputProcessor {
     public boolean scrolled(int i) {
         return false;
     }
-    
-    
+
+
     // Private Methods
     private void saveGame() {
-        File testFile = new File(new File(System.getProperty("user.home")), "party.json");
-        Json json = new Json();
-//        String text = json.prettyPrint(Mappers.position.get(this.getParty().getPartyMembers()[0]));
-        String text = json.prettyPrint(this.party);
+        if (this.save == null) {
+            return;
+        }
         
-        try (FileWriter fw = new FileWriter(testFile);
+        File saveFile = new File(FileLocations.SAVE_DIRECTORY, this.save.getName() + ".json");
+        Json json = new Json();
+        String text = json.prettyPrint(this.save);
+
+        if (!FileLocations.SAVE_DIRECTORY.exists()) {
+            FileLocations.SAVE_DIRECTORY.mkdirs();
+        }
+        
+        try (FileWriter fw = new FileWriter(saveFile);
                 PrintWriter pw = new PrintWriter(fw)) {
             pw.println(text);
         }
         catch (IOException ex) {
-            
+
         }
-        
-        Party party = json.fromJson(Party.class, text);
     }
-    
+
 }

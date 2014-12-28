@@ -23,24 +23,71 @@
  */
 package com.emergence.save;
 
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.Json.Serializable;
+import com.badlogic.gdx.utils.JsonValue;
+import com.emergence.EmergenceGame;
+import com.emergence.entity.Party;
 import com.emergence.world.World;
 
 /**
  * A class representing a save game in the Legends of Omterra game
  * @author Nathan Templon
  */
-public class SaveGame {
+public class SaveGame implements Serializable {
+    
+    // Constants
+    public static final String NAME_KEY = "save-name";
+    public static final String WORLD_KEY = "world-name";
+    public static final String PARTY_KEY = "party";
+    
     
     // Fields
-    private final String worldName;
+    private String name;
+    private World world;
+    private Party party;
     
-    private final World world;
+    
+    // Properties
+    public String getName() {
+        return this.name;
+    }
+    
+    public World getWorld() {
+        return this.world;
+    }
+    
+    public Party getParty() {
+        return this.party;
+    }
     
     
     // Initialization
-    public SaveGame(World world) {
+    public SaveGame() {
+        
+    }
+    
+    public SaveGame(String name, World world) {
+        this.name = name;
         this.world = world;
-        this.worldName = this.world.getName();
+        this.party = new Party();
+    }
+    
+    
+    // Serializable (Json) implementation
+
+    @Override
+    public void write(Json json) {
+        json.writeValue(NAME_KEY, this.name);
+        json.writeValue(WORLD_KEY, this.world.getName());
+        json.writeValue(PARTY_KEY, this.party, Party.class);
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonData) {
+        this.name = jsonData.getString(NAME_KEY);
+        this.world = EmergenceGame.game.getWorld(jsonData.getString(WORLD_KEY));
+        this.party = json.fromJson(Party.class, jsonData.get(PARTY_KEY).toString());
     }
     
 }

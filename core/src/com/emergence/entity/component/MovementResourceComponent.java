@@ -55,6 +55,11 @@ public class MovementResourceComponent extends Component {
     private final TextureRegion castTexture;
     private final TextureRegion deadTexture;
     
+    private TextureRegion nextLeftWalkTexture;
+    private TextureRegion nextRightWalkTexture;
+    private TextureRegion nextBackWalkTexture;
+    private TextureRegion nextFrontWalkTexture;
+    
     
     // Properties
     /**
@@ -191,6 +196,11 @@ public class MovementResourceComponent extends Component {
         
         this.castTexture = atlas.findRegion(spriteSetName + SEPARATION_STRING + CAST_TEXTURE_NAME);
         this.deadTexture = atlas.findRegion(spriteSetName + SEPARATION_STRING + DEAD_TEXTURE_NAME);
+        
+        this.nextBackWalkTexture = this.getBackWalkTexture1();
+        this.nextFrontWalkTexture = this.getFrontWalkTexture1();
+        this.nextLeftWalkTexture = this.getLeftWalkTexture();
+        this.nextRightWalkTexture = this.getRightWalkTexture();
     }
     
     
@@ -210,5 +220,42 @@ public class MovementResourceComponent extends Component {
         }
     }
     
+    public final TextureRegion walkingTextureFont(MovementDirections direction) {
+        switch (direction) {
+            case LEFT:
+                return this.nextLeftWalkTexture;
+            case RIGHT:
+                return this.nextRightWalkTexture;
+            case UP:
+                return this.nextBackWalkTexture;
+            case DOWN:
+                return this.nextFrontWalkTexture;
+            default:
+                return this.getFrontStandTexture();
+        }
+    }
+    
+    public final void incrementWalkingTexture(MovementDirections direction) {
+        switch (direction) {
+            case LEFT:
+                break;
+            case RIGHT:
+                break;
+            case UP:
+                if (this.nextBackWalkTexture.equals(this.getBackWalkTexture1())) {
+                    this.nextBackWalkTexture = this.getBackWalkTexture2();
+                }
+                else {
+                    this.nextBackWalkTexture = this.getBackWalkTexture1();
+                }
+            case DOWN:
+                if (this.nextFrontWalkTexture.equals(this.getFrontWalkTexture1())) {
+                    this.nextFrontWalkTexture = this.getFrontWalkTexture2();
+                }
+                else {
+                    this.nextFrontWalkTexture = this.getFrontWalkTexture1();
+                }
+        }
+    }
     
 }

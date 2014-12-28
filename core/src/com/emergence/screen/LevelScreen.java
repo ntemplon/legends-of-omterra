@@ -26,13 +26,15 @@ package com.emergence.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.emergence.EmergenceGame;
+import com.emergence.entity.Mappers;
 import com.emergence.entity.MovementSystem.MovementDirections;
-import com.emergence.entity.messaging.MovementRequestMessage;
+import com.emergence.entity.messaging.WalkRequestMessage;
+import com.emergence.screen.overlay.PauseMenu;
 import com.emergence.world.Level;
 import java.util.HashSet;
 import java.util.Set;
@@ -41,10 +43,10 @@ import java.util.Set;
  *
  * @author Nathan Templon
  */
-public class LevelScreen implements Screen, InputProcessor {
+public class LevelScreen extends OverlayableScreen {
 
     // Constants
-    private static final Set<Integer> USED_INPUTS = getUsedInputs();
+    private static final Set<Integer> POLLED_INPUTS = getUsedInputs();
     private static final Set<Integer> MOVEMENT_KEYS = getMovementKeys();
 
 
@@ -78,7 +80,8 @@ public class LevelScreen implements Screen, InputProcessor {
     private LevelRenderer mapRender;  // The map renderer for the current map
     private final Set<Integer> keysDown = new HashSet<>();
 
-    private boolean paused = false;  // Whether or not the game is currently paused
+    public int pauseKey = Keys.ESCAPE;
+    private PauseMenu pauseMenu;
 
     private final FPSLogger fpslog = new FPSLogger();
 
@@ -92,11 +95,22 @@ public class LevelScreen implements Screen, InputProcessor {
 
         this.mapRender = new LevelRenderer(this.level);
     }
+    
+    public int getPauseKey() {
+        return this.pauseKey;
+    }
+    
+    public void setPauseKey(int key) {
+        this.pauseKey = key;
+    }
 
 
     // Initialization
     public LevelScreen() {
+        super();
+        
         this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        this.getMultiplexer().addProcessor(new LevelInputProcesser());
     }
 
 
@@ -104,18 +118,23 @@ public class LevelScreen implements Screen, InputProcessor {
     @Override
     public void render(float f) {
         this.updateInput();
-        
+
         // OpenGL code to clear the screen
         Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
         Gdx.gl.glClear(GL_COLOR_BUFFER_BIT);
 
-        camera.update();
+        Sprite focusedSprite = Mappers.render.get(this.level.getControlledEntity()).getSprite();
+        this.camera.position.set(focusedSprite.getX() + focusedSprite.getWidth() / 2.0f,
+                focusedSprite.getY() + focusedSprite.getHeight() / 2.0f, 0);
+        this.camera.update();
 
-        if (this.mapRender != null && !this.paused) {
-            mapRender.setView(camera);
-            mapRender.render();
+        if (this.mapRender != null) {
+            this.mapRender.setView(camera);
+            this.mapRender.getBatch().setColor((this.getTint()));
+            this.mapRender.render();
         }
 
+        this.renderOverlays();
         // Record metrics if in debug mode
 //        if (OmterraGame.DEBUG) {
 //            fpslog.log();
@@ -124,6 +143,8 @@ public class LevelScreen implements Screen, InputProcessor {
 
     @Override
     public void resize(int width, int height) {
+        super.resize(width, height);
+
         this.camera.viewportWidth = width / EmergenceGame.SCALE;
         this.camera.viewportHeight = height / EmergenceGame.SCALE;
         this.camera.update();
@@ -131,7 +152,10 @@ public class LevelScreen implements Screen, InputProcessor {
 
     @Override
     public void show() {
+        super.show();
         
+        this.pauseMenu = new PauseMenu();
+        this.pauseMenu.setExitKey(this.getPauseKey());
     }
 
     @Override
@@ -141,12 +165,12 @@ public class LevelScreen implements Screen, InputProcessor {
 
     @Override
     public void pause() {
-        this.paused = true;
+        
     }
 
     @Override
     public void resume() {
-        this.paused = false;
+        
     }
 
     @Override
@@ -158,74 +182,78 @@ public class LevelScreen implements Screen, InputProcessor {
     }
 
 
-    // InputProcessor Implementation
-    @Override
-    public boolean keyDown(int i) {
-        if (USED_INPUTS.contains(i)) {
-            this.keysDown.add(i);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int i) {
-        return this.keysDown.remove(i);
-    }
-
-    @Override
-    public boolean keyTyped(char c) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int i, int i1, int i2, int i3) {
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int i, int i1, int i2, int i3) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int i, int i1, int i2) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int i, int i1) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int i) {
-        return false;
-    }
-
-
     // Private Methods
     private void updateInput() {
         this.keysDown.stream().forEach((Integer key) -> {
             switch (key) {
                 case Keys.W:
-                    EmergenceGame.game.getMessageSystem().publish(
-                            new MovementRequestMessage(this.level.getControlledEntity(), MovementDirections.UP));
+                    EmergenceGame.game.getMessageSystem().publish(new WalkRequestMessage(this.level.getControlledEntity(), MovementDirections.UP));
                     break;
                 case Keys.A:
-                    EmergenceGame.game.getMessageSystem().publish(
-                            new MovementRequestMessage(this.level.getControlledEntity(), MovementDirections.LEFT));
+                    EmergenceGame.game.getMessageSystem().publish(new WalkRequestMessage(this.level.getControlledEntity(), MovementDirections.LEFT));
                     break;
                 case Keys.S:
-                    EmergenceGame.game.getMessageSystem().publish(
-                            new MovementRequestMessage(this.level.getControlledEntity(), MovementDirections.DOWN));
+                    EmergenceGame.game.getMessageSystem().publish(new WalkRequestMessage(this.level.getControlledEntity(), MovementDirections.DOWN));
                     break;
                 case Keys.D:
-                    EmergenceGame.game.getMessageSystem().publish(
-                            new MovementRequestMessage(this.level.getControlledEntity(), MovementDirections.RIGHT));
+                    EmergenceGame.game.getMessageSystem().publish(new WalkRequestMessage(this.level.getControlledEntity(), MovementDirections.RIGHT));
                     break;
             }
         });
+    }
+
+
+    // Inner Classes
+    private class LevelInputProcesser implements InputProcessor {
+        @Override
+        public boolean keyDown(int i) {
+            if (POLLED_INPUTS.contains(i)) {
+                LevelScreen.this.keysDown.add(i);
+                return true;
+            }
+            else if (i == pauseKey) {
+                if (!EmergenceGame.game.isSuspended()) {
+                    LevelScreen.this.addOverlay(LevelScreen.this.pauseMenu);
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public boolean keyUp(int i) {
+            return LevelScreen.this.keysDown.remove(i);
+        }
+
+        @Override
+        public boolean keyTyped(char c) {
+            return false;
+        }
+
+        @Override
+        public boolean touchDown(int i, int i1, int i2, int i3) {
+            return false;
+        }
+
+        @Override
+        public boolean touchUp(int i, int i1, int i2, int i3) {
+            return false;
+        }
+
+        @Override
+        public boolean touchDragged(int i, int i1, int i2) {
+            return false;
+        }
+
+        @Override
+        public boolean mouseMoved(int i, int i1) {
+            return false;
+        }
+
+        @Override
+        public boolean scrolled(int i) {
+            return false;
+        }
+
     }
 
 }

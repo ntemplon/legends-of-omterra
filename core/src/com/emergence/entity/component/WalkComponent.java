@@ -23,7 +23,7 @@ import java.awt.Point;
 public class WalkComponent extends Component implements Serializable {
 
     // Constants
-    public static final float DEFAULT_WALK_SPEED = 4.0f;
+    public static final float DEFAULT_WALK_SPEED = 5.0f;
     
     public static final String SPEED_KEY = "speed";
     

@@ -25,10 +25,7 @@ package com.emergence.world;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.emergence.entity.Families;
 import com.emergence.entity.Mappers;
 import com.emergence.entity.PositionedEntity;

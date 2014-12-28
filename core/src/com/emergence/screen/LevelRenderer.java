@@ -25,6 +25,7 @@ package com.emergence.screen;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -100,7 +101,9 @@ public class LevelRenderer extends OrthogonalTiledMapRenderer {
             this.layer.getEntities().stream().filter((Entity entity) -> {
                 return Families.renderables.matches(entity);
             }).forEach((Entity entity) -> {
-                Mappers.render.get(entity).getSprite().draw(batch);
+                Sprite sprite = Mappers.render.get(entity).getSprite();
+                sprite.setColor(batch.getColor()); // Required to draw in color (sprites ignore batch color)
+                sprite.draw(batch);
             });
         }
 

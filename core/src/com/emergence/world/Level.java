@@ -29,14 +29,10 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.utils.Disposable;
-import com.emergence.EmergenceGame;
 import com.emergence.geometry.Size;
 import com.emergence.quadtree.Quadtree;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A class representing an individual level (map) in Legends of Omterra
@@ -70,8 +66,6 @@ public class Level implements Disposable {
     private String name;
     private EntityLayer entityLayer;
     private Quadtree<Zone> collision;
-    
-    private final Set<Entity> entitySet;
 
     private int tileWidth, tileHeight;
     private int mapWidth, mapHeight;
@@ -158,7 +152,7 @@ public class Level implements Disposable {
 
     // Initialization
     public Level() {
-        this.entitySet = new HashSet<>();
+        
     }
 
     public Level(String name, TiledMap map) {
@@ -170,19 +164,12 @@ public class Level implements Disposable {
     
     
     // Public Methods
-    public boolean isOpen(Rectangle rectangle) {
-        // Just check for collision right now
-        Collection<Zone> intersecting = this.collision.retrieve(rectangle);
-        
-        return intersecting.isEmpty();
+    public boolean collides(Rectangle rectangle) {
+        return !this.collision.retrieve(rectangle).isEmpty();
     }
     
-    public boolean isOpen(int x, int y) {
-        return this.isOpen(new Rectangle(x, y, 1, 1));
-    }
-    
-    public boolean isOpen(Point point) {
-        return this.isOpen(point.x, point.y);
+    public boolean contains(Rectangle rectangle) {
+        return this.collision.getBounds().contains(rectangle);
     }
 
 
@@ -203,9 +190,14 @@ public class Level implements Disposable {
         for(MapObject obj : layer.getObjects()) {
             if (obj instanceof RectangleMapObject) {
                 com.badlogic.gdx.math.Rectangle pixelCoords = ((RectangleMapObject)obj).getRectangle();
-                Rectangle tileCoords = new Rectangle((int)pixelCoords.x / this.getTileWidth(),
-                        (int)pixelCoords.y / this.getTileHeight(), (int)pixelCoords.width / this.getTileWidth(),
-                        (int)pixelCoords.height / this.getTileHeight());
+                
+                // Convert from pixel coordinates to tile coordinates.
+                // Tmx pixel coordinates have the origin at the top left, libGDX and I use the bottom left for coordinates.
+                int collisionX = (int)(pixelCoords.x / this.getTileHeight());
+                int collisionY = (int)(pixelCoords.y / this.getTileHeight());
+                int collisionWidth = (int)(pixelCoords.width / this.getTileWidth());
+                int collisionHeight = (int)(pixelCoords.height / this.getTileHeight());
+                Rectangle tileCoords = new Rectangle(collisionX, collisionY, collisionWidth, collisionHeight);
                 
                 tree.insert(new Zone(tileCoords));
             }
