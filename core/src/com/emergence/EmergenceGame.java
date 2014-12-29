@@ -46,11 +46,13 @@ import com.emergence.entity.messaging.SelfSubscribingListener;
 import com.emergence.entity.messaging.SimpleMessageSystem;
 import com.emergence.io.FileLocations;
 import com.emergence.io.EmergenceAssetManager;
+import com.emergence.io.FileUtils;
 import com.emergence.save.SaveGame;
 import com.emergence.screen.LevelScreen;
 import com.emergence.screen.LoadingScreen;
 import com.emergence.screen.MainMenuScreen;
 import com.emergence.util.GameTimer;
+import com.emergence.util.Initializable;
 import com.emergence.world.Level;
 import com.emergence.world.World;
 import java.io.File;
@@ -59,7 +61,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class EmergenceGame extends Game implements InputProcessor {
 
@@ -120,8 +124,20 @@ public class EmergenceGame extends Game implements InputProcessor {
 
                     @Override
                     public void enter(EmergenceGame game) {
+                        // Save the Game, if necessary
+                        if (game.save != null) {
+                            game.saveGame();
+                        }
+                        
                         game.setScreen(game.mainMenuScreen);
                         game.addInputProcessor(game.mainMenuScreen);
+                        
+                        // Remove old party
+                        if (game.party != null) {
+                            for (Entity entity : game.party.getPartyMembers()) {
+                                game.getCurrentLevel().getEntityLayer().removeEntity(entity);
+                            }
+                        }
                     }
 
                     @Override
@@ -221,6 +237,7 @@ public class EmergenceGame extends Game implements InputProcessor {
     private boolean suspended;
 
     private SaveGame save;
+    private final Set<String> saveNames = new LinkedHashSet<>();
     private Party party;
 
 
@@ -265,6 +282,18 @@ public class EmergenceGame extends Game implements InputProcessor {
 
     public final boolean isSuspended() {
         return this.suspended;
+    }
+    
+    public World getWorld(String name) {
+        return this.worlds.get(name.toUpperCase());
+    }
+    
+    public String[] getSaveNames() {
+        return this.saveNames.toArray(new String[this.saveNames.size()]);
+    }
+    
+    public String[] getWorldNames() {
+        return this.worlds.keySet().toArray(new String[this.worlds.keySet().size()]);
     }
 
 
@@ -322,23 +351,22 @@ public class EmergenceGame extends Game implements InputProcessor {
     }
 
     public void startGame(SaveGame save) {
-        // Remove old party
-        if (this.party != null) {
-            for (Entity entity : party.getPartyMembers()) {
-                this.getCurrentLevel().getEntityLayer().removeEntity(entity);
-            }
-        }
-
         this.save = save;
         this.party = this.save.getParty();
+        
+        game.setWorld(this.save.getWorld()); // The first world in the list
+        game.setLevel(game.getCurrentWorld().getStartingLevel());
 
         this.entityEngine.removeAllEntities();
         for (Entity entity : party.getPartyMembers()) {
             this.entityEngine.addEntity(entity);
         }
-
-        game.setWorld(this.save.getWorld()); // The first world in the list
-        game.setLevel(game.getCurrentWorld().getStartingLevel());
+        
+        for(EntitySystem system : this.entityEngine.getSystems()) {
+            if (system instanceof Initializable) {
+                ((Initializable)system).initialize();
+            }
+        }
 
         this.setState(GameStates.LEVEL);
     }
@@ -370,10 +398,21 @@ public class EmergenceGame extends Game implements InputProcessor {
         this.suspended = false;
         this.timer.resume();
     }
-
-    public World getWorld(String name) {
-        return this.worlds.get(name.toUpperCase());
+    
+    public void inspectSaves() {
+        this.saveNames.clear();
+        
+        if (!FileLocations.SAVE_DIRECTORY.exists()) {
+            FileLocations.SAVE_DIRECTORY.mkdirs();
+        }
+        for(File saveFile : FileLocations.SAVE_DIRECTORY.listFiles()) {
+            String ext = FileUtils.getExtension(saveFile);
+            if (ext.equals(SaveGame.SAVE_EXTENSION)) {
+                this.saveNames.add(saveFile.getName().replace("." + ext, ""));
+            }
+        }
     }
+
 
 
     // ApplicationAdapter Implementation
@@ -381,6 +420,7 @@ public class EmergenceGame extends Game implements InputProcessor {
     public void create() {
         // Load Resources
         this.assetManager = new EmergenceAssetManager(); // The loading screen will take care of actually loading the resources
+        this.inspectSaves();
 
         // Create our various screens
         this.loadingScreen = new LoadingScreen(this);
@@ -488,22 +528,23 @@ public class EmergenceGame extends Game implements InputProcessor {
         if (this.save == null) {
             return;
         }
-        
-        File saveFile = new File(FileLocations.SAVE_DIRECTORY, this.save.getName() + ".json");
+
+        File saveFile = new File(FileLocations.SAVE_DIRECTORY, this.save.getName() + "." + SaveGame.SAVE_EXTENSION);
         Json json = new Json();
         String text = json.prettyPrint(this.save);
 
         if (!FileLocations.SAVE_DIRECTORY.exists()) {
             FileLocations.SAVE_DIRECTORY.mkdirs();
         }
-        
+
         try (FileWriter fw = new FileWriter(saveFile);
                 PrintWriter pw = new PrintWriter(fw)) {
             pw.println(text);
+            pw.flush();
         }
         catch (IOException ex) {
 
         }
     }
-
+    
 }

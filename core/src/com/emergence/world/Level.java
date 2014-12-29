@@ -32,7 +32,6 @@ import com.badlogic.gdx.utils.Disposable;
 import com.emergence.geometry.Size;
 import com.emergence.quadtree.Quadtree;
 import java.awt.Rectangle;
-import java.util.Collection;
 
 /**
  * A class representing an individual level (map) in Legends of Omterra
@@ -62,6 +61,7 @@ public class Level implements Disposable {
 
 
     // Fields
+    private World world;
     private TiledMap map;
     private String name;
     private EntityLayer entityLayer;
@@ -75,6 +75,10 @@ public class Level implements Disposable {
 
 
     // Properties
+    public World getWorld() {
+        return this.world;
+    }
+    
     public TiledMap getMap() {
         return this.map;
     }
@@ -155,11 +159,12 @@ public class Level implements Disposable {
         
     }
 
-    public Level(String name, TiledMap map) {
+    public Level(String name, TiledMap map, World world) {
         this();
 
         this.name = name;
         this.setMap(map);
+        this.world = world;
     }
     
     

@@ -28,6 +28,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
+import com.emergence.util.Initializable;
 
 /**
  *
@@ -64,6 +65,12 @@ public class EmergenceEntity extends Entity implements Serializable {
                 
             }
         });
+        
+        for(Component comp : this.getComponents()) {
+            if (comp instanceof Initializable) {
+                ((Initializable)comp).initialize();
+            }
+        }
     }
     
 }

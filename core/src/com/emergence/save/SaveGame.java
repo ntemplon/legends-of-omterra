@@ -28,6 +28,7 @@ import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
 import com.emergence.EmergenceGame;
 import com.emergence.entity.Party;
+import com.emergence.world.Level;
 import com.emergence.world.World;
 
 /**
@@ -37,15 +38,19 @@ import com.emergence.world.World;
 public class SaveGame implements Serializable {
     
     // Constants
+    public static final String SAVE_EXTENSION = "esg";
+    
     public static final String NAME_KEY = "save-name";
     public static final String WORLD_KEY = "world-name";
     public static final String PARTY_KEY = "party";
+    public static final String LEVEL_KEY = "current-level";
     
     
     // Fields
     private String name;
     private World world;
     private Party party;
+    private Level level;
     
     
     // Properties
@@ -55,6 +60,10 @@ public class SaveGame implements Serializable {
     
     public World getWorld() {
         return this.world;
+    }
+    
+    public Level getLevel() {
+        return this.level;
     }
     
     public Party getParty() {
@@ -71,6 +80,7 @@ public class SaveGame implements Serializable {
         this.name = name;
         this.world = world;
         this.party = new Party();
+        this.level = this.world.getStartingLevel();
     }
     
     
@@ -78,8 +88,9 @@ public class SaveGame implements Serializable {
 
     @Override
     public void write(Json json) {
-        json.writeValue(NAME_KEY, this.name);
-        json.writeValue(WORLD_KEY, this.world.getName());
+        json.writeValue(NAME_KEY, this.name, String.class);
+        json.writeValue(WORLD_KEY, this.world.getName(), String.class);
+        json.writeValue(LEVEL_KEY, this.getLevel().getName(), String.class);
         json.writeValue(PARTY_KEY, this.party, Party.class);
     }
 
@@ -88,6 +99,7 @@ public class SaveGame implements Serializable {
         this.name = jsonData.getString(NAME_KEY);
         this.world = EmergenceGame.game.getWorld(jsonData.getString(WORLD_KEY));
         this.party = json.fromJson(Party.class, jsonData.get(PARTY_KEY).toString());
+        this.level = this.world.getLevel(jsonData.getString(LEVEL_KEY));
     }
     
 }

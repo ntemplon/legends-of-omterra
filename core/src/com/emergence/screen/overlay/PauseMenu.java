@@ -46,13 +46,13 @@ import java.io.File;
  * @author Nathan Templon
  */
 public class PauseMenu extends Scene2DOverlay {
-    
+
     // Constants
     private static final Color TRANSPARENT = new Color(1, 1, 1, 0);
-    
+
     private static Skin pauseMenuSkin;
-    
-    
+
+
     // Static Methods
     public static Skin getPauseMenuSkin() {
         if (pauseMenuSkin == null) {
@@ -60,7 +60,7 @@ public class PauseMenu extends Scene2DOverlay {
         }
         return pauseMenuSkin;
     }
-    
+
     private static void buildPauseMenuSkin() {
         Skin skin = new Skin();
 
@@ -93,40 +93,42 @@ public class PauseMenu extends Scene2DOverlay {
         textButtonStyle.fontColor = Color.TEAL;
         textButtonStyle.overFontColor = Color.YELLOW;
         textButtonStyle.disabledFontColor = Color.GRAY;
+        textButtonStyle.pressedOffsetX = 2f;
+        textButtonStyle.pressedOffsetY = -3f;
         skin.add("default", textButtonStyle);
 //        
 //        skin = EmergenceGame.game.getAssetManager().get(
 //                new File(FileLocations.SKINS_DIRECTORY, "main_menu.skin").getPath());
         pauseMenuSkin = skin;
     }
-    
-    
+
+
     // Fields
     private int exitKey = Input.Keys.ESCAPE;
-    
+
     private Table buttonTable;
     private TextButton resumeButton;
     private TextButton returnToMenuButton;
     private TextButton exitButton;
-    
-    
+
+
     // Properties
     public final int getExitKey() {
         return this.exitKey;
     }
-    
+
     public final void setExitKey(int key) {
         this.exitKey = key;
     }
-    
-    
+
+
     // Initialization
     public PauseMenu() {
         super(true);
         this.setTint(Color.LIGHT_GRAY);
     }
-    
-    
+
+
     // Public Methods
     @Override
     public boolean keyDown(int keycode) {
@@ -136,20 +138,20 @@ public class PauseMenu extends Scene2DOverlay {
         }
         return super.keyDown(keycode);
     }
-    
+
     @Override
     public void added(OverlayableScreen screen) {
         super.added(screen);
         this.initializeComponents();
     }
-    
-    
+
+
     // Private Methods
     private void initializeComponents() {
         this.buttonTable = new Table();
         this.buttonTable.setFillParent(true);
         this.buttonTable.center();
-        
+
         this.resumeButton = new TextButton("Resume", getPauseMenuSkin());
         this.resumeButton.addListener(new ClickListener() {
             @Override
@@ -159,18 +161,17 @@ public class PauseMenu extends Scene2DOverlay {
                 }
             }
         });
-        
+
         this.returnToMenuButton = new TextButton("Return to Menu", getPauseMenuSkin());
         this.returnToMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (event.getButton() == Input.Buttons.LEFT && !PauseMenu.this.returnToMenuButton.isDisabled()) {
-                    PauseMenu.this.resumeGame();
-                    EmergenceGame.game.setState(EmergenceGame.GameStates.MAIN_MENU);
+                    PauseMenu.this.returnToMenu();
                 }
             }
         });
-        
+
         this.exitButton = new TextButton("Exit", getPauseMenuSkin());
         this.exitButton.addListener(new ClickListener() {
             @Override
@@ -180,7 +181,7 @@ public class PauseMenu extends Scene2DOverlay {
                 }
             }
         });
-        
+
         // Table configuration
         this.buttonTable.add(this.resumeButton).width(225).height(50).space(0);
         this.buttonTable.row();
@@ -188,12 +189,17 @@ public class PauseMenu extends Scene2DOverlay {
         this.buttonTable.row();
         this.buttonTable.add(this.exitButton).width(225).height(50).space(0);
         this.buttonTable.row();
-        
+
         this.getStage().addActor(this.buttonTable);
     }
-    
+
     private void resumeGame() {
         this.getScreen().removeOverlay(this);
     }
-    
+
+    private void returnToMenu() {
+        PauseMenu.this.resumeGame();
+        EmergenceGame.game.setState(EmergenceGame.GameStates.MAIN_MENU);
+    }
+
 }

@@ -8,16 +8,22 @@ package com.emergence.entity.component;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.Json.Serializable;
+import com.badlogic.gdx.utils.JsonValue;
+import com.emergence.EmergenceGame;
 import com.emergence.entity.MovementSystem.MovementDirections;
 
 /**
  *
  * @author Hortator
  */
-public class MovementResourceComponent extends Component {
+public class MovementResourceComponent extends Component implements Serializable {
     
     // Constants
     public static final String SEPARATION_STRING = "-";
+    public static final String ATLAS_PATH_KEY = "atlas-path";
+    public static final String SPRITE_SET_NAME_KEY = "sprite-set";
     
     public static final String FRONT_STAND_TEXTURE_NAME = "stand-front";
     public static final String BACK_STAND_TEXTURE_NAME = "stand-back";
@@ -38,22 +44,25 @@ public class MovementResourceComponent extends Component {
     
     
     // Fields
-    private final TextureRegion frontStandTexture;
-    private final TextureRegion backStandTexture;
-    private final TextureRegion leftStandTexture;
-    private final TextureRegion rightStandTexture;
-    private final TextureRegion frontWalkTexture1;
-    private final TextureRegion frontWalkTexture2;
-    private final TextureRegion backWalkTexture1;
-    private final TextureRegion backWalkTexture2;
-    private final TextureRegion leftWalkTexture;
-    private final TextureRegion rightWalkTexture;
-    private final TextureRegion attackDownTexture;
-    private final TextureRegion attackUpTexture;
-    private final TextureRegion attackRightTexture;
-    private final TextureRegion attackLeftTexture;
-    private final TextureRegion castTexture;
-    private final TextureRegion deadTexture;
+    private String atlasPath;
+    private String spriteSetName;
+    
+    private TextureRegion frontStandTexture;
+    private TextureRegion backStandTexture;
+    private TextureRegion leftStandTexture;
+    private TextureRegion rightStandTexture;
+    private TextureRegion frontWalkTexture1;
+    private TextureRegion frontWalkTexture2;
+    private TextureRegion backWalkTexture1;
+    private TextureRegion backWalkTexture2;
+    private TextureRegion leftWalkTexture;
+    private TextureRegion rightWalkTexture;
+    private TextureRegion attackDownTexture;
+    private TextureRegion attackUpTexture;
+    private TextureRegion attackRightTexture;
+    private TextureRegion attackLeftTexture;
+    private TextureRegion castTexture;
+    private TextureRegion deadTexture;
     
     private TextureRegion nextLeftWalkTexture;
     private TextureRegion nextRightWalkTexture;
@@ -176,31 +185,15 @@ public class MovementResourceComponent extends Component {
     
     
     // Initialization
-    public MovementResourceComponent(TextureAtlas atlas, String spriteSetName) {
-        this.frontStandTexture = atlas.findRegion(spriteSetName + SEPARATION_STRING + FRONT_STAND_TEXTURE_NAME);
-        this.backStandTexture = atlas.findRegion(spriteSetName + SEPARATION_STRING + BACK_STAND_TEXTURE_NAME);
-        this.leftStandTexture = atlas.findRegion(spriteSetName + SEPARATION_STRING + LEFT_STAND_TEXTURE_NAME);
-        this.rightStandTexture = atlas.findRegion(spriteSetName + SEPARATION_STRING + RIGHT_STAND_TEXTURE_NAME);
+    public MovementResourceComponent() {
         
-        this.frontWalkTexture1 = atlas.findRegion(spriteSetName + SEPARATION_STRING + FRONT_WALK_1_TEXTURE_NAME);
-        this.frontWalkTexture2 = atlas.findRegion(spriteSetName + SEPARATION_STRING + FRONT_WALK_2_TEXTURE_NAME);
-        this.backWalkTexture1 = atlas.findRegion(spriteSetName + SEPARATION_STRING + BACK_WALK_1_TEXTURE_NAME);
-        this.backWalkTexture2 = atlas.findRegion(spriteSetName + SEPARATION_STRING + BACK_WALK_2_TEXTURE_NAME);
-        this.leftWalkTexture = atlas.findRegion(spriteSetName + SEPARATION_STRING + LEFT_WALK_TEXTURE_NAME);
-        this.rightWalkTexture = atlas.findRegion(spriteSetName + SEPARATION_STRING + RIGHT_WALK_TEXTURE_NAME);
+    }
+    
+    public MovementResourceComponent(String atlasPath, String spriteSetName) {
+        this.atlasPath = atlasPath;
+        this.spriteSetName = spriteSetName;
         
-        this.attackUpTexture = atlas.findRegion(spriteSetName + SEPARATION_STRING + ATTACK_UP_TEXTURE_NAME);
-        this.attackDownTexture = atlas.findRegion(spriteSetName + SEPARATION_STRING + ATTACK_DOWN_TEXTURE_NAME);
-        this.attackLeftTexture = atlas.findRegion(spriteSetName + SEPARATION_STRING + ATTACK_LEFT_TEXTURE_NAME);
-        this.attackRightTexture = atlas.findRegion(spriteSetName + SEPARATION_STRING + ATTACK_RIGHT_TEXTURE_NAME);
-        
-        this.castTexture = atlas.findRegion(spriteSetName + SEPARATION_STRING + CAST_TEXTURE_NAME);
-        this.deadTexture = atlas.findRegion(spriteSetName + SEPARATION_STRING + DEAD_TEXTURE_NAME);
-        
-        this.nextBackWalkTexture = this.getBackWalkTexture1();
-        this.nextFrontWalkTexture = this.getFrontWalkTexture1();
-        this.nextLeftWalkTexture = this.getLeftWalkTexture();
-        this.nextRightWalkTexture = this.getRightWalkTexture();
+        this.fetchTextures();
     }
     
     
@@ -256,6 +249,52 @@ public class MovementResourceComponent extends Component {
                     this.nextFrontWalkTexture = this.getFrontWalkTexture1();
                 }
         }
+    }
+
+    
+    // Serializable (Json)
+    @Override
+    public void write(Json json) {
+        json.writeValue(ATLAS_PATH_KEY, this.atlasPath);
+        json.writeValue(SPRITE_SET_NAME_KEY, this.spriteSetName);
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonData) {
+        this.atlasPath = jsonData.getString(ATLAS_PATH_KEY);
+        this.spriteSetName = jsonData.getString(SPRITE_SET_NAME_KEY);
+        
+        this.fetchTextures();
+    }
+    
+    
+    // Private Methods
+    private void fetchTextures() {
+        TextureAtlas atlas = EmergenceGame.game.getAssetManager().get(this.atlasPath);
+        this.frontStandTexture = atlas.findRegion(this.spriteSetName + SEPARATION_STRING + FRONT_STAND_TEXTURE_NAME);
+        this.backStandTexture = atlas.findRegion(this.spriteSetName + SEPARATION_STRING + BACK_STAND_TEXTURE_NAME);
+        this.leftStandTexture = atlas.findRegion(this.spriteSetName + SEPARATION_STRING + LEFT_STAND_TEXTURE_NAME);
+        this.rightStandTexture = atlas.findRegion(this.spriteSetName + SEPARATION_STRING + RIGHT_STAND_TEXTURE_NAME);
+        
+        this.frontWalkTexture1 = atlas.findRegion(this.spriteSetName + SEPARATION_STRING + FRONT_WALK_1_TEXTURE_NAME);
+        this.frontWalkTexture2 = atlas.findRegion(this.spriteSetName + SEPARATION_STRING + FRONT_WALK_2_TEXTURE_NAME);
+        this.backWalkTexture1 = atlas.findRegion(this.spriteSetName + SEPARATION_STRING + BACK_WALK_1_TEXTURE_NAME);
+        this.backWalkTexture2 = atlas.findRegion(this.spriteSetName + SEPARATION_STRING + BACK_WALK_2_TEXTURE_NAME);
+        this.leftWalkTexture = atlas.findRegion(this.spriteSetName + SEPARATION_STRING + LEFT_WALK_TEXTURE_NAME);
+        this.rightWalkTexture = atlas.findRegion(this.spriteSetName + SEPARATION_STRING + RIGHT_WALK_TEXTURE_NAME);
+        
+        this.attackUpTexture = atlas.findRegion(this.spriteSetName + SEPARATION_STRING + ATTACK_UP_TEXTURE_NAME);
+        this.attackDownTexture = atlas.findRegion(this.spriteSetName + SEPARATION_STRING + ATTACK_DOWN_TEXTURE_NAME);
+        this.attackLeftTexture = atlas.findRegion(this.spriteSetName + SEPARATION_STRING + ATTACK_LEFT_TEXTURE_NAME);
+        this.attackRightTexture = atlas.findRegion(this.spriteSetName + SEPARATION_STRING + ATTACK_RIGHT_TEXTURE_NAME);
+        
+        this.castTexture = atlas.findRegion(this.spriteSetName + SEPARATION_STRING + CAST_TEXTURE_NAME);
+        this.deadTexture = atlas.findRegion(this.spriteSetName + SEPARATION_STRING + DEAD_TEXTURE_NAME);
+        
+        this.nextBackWalkTexture = this.getBackWalkTexture1();
+        this.nextFrontWalkTexture = this.getFrontWalkTexture1();
+        this.nextLeftWalkTexture = this.getLeftWalkTexture();
+        this.nextRightWalkTexture = this.getRightWalkTexture();
     }
     
 }

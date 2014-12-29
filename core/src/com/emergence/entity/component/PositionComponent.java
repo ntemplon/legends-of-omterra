@@ -28,9 +28,11 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
 import com.emergence.EmergenceGame;
+import com.emergence.entity.MovementSystem.MovementDirections;
 import com.emergence.world.Level;
 import static com.emergence.world.Level.DEFAULT_TILE_HEIGHT;
 import static com.emergence.world.Level.DEFAULT_TILE_WIDTH;
+import com.emergence.world.World;
 import java.awt.Point;
 
 /**
@@ -40,26 +42,37 @@ import java.awt.Point;
 public class PositionComponent extends Component implements Serializable {
 
     // Constants
+    public static final String WORLD_KEY = "world";
     public static final String LEVEL_KEY = "level";
     public static final String TILE_POSITION_X_KEY = "tile-position-x";
     public static final String TILE_POSITION_Y_KEY = "tile-position-y";
     public static final String Z_ORDER_KEY = "z-order";
+    public static final String FACING_KEY = "facing";
     
     
     // Fields
     private Point tilePosition;
     private Point pixelPosition;
+    private World world;
     private Level level;
     private int zOrder;
+    private MovementDirections facing = MovementDirections.DOWN;
 
 
     // Properties
+    public final World getWorld() {
+        return this.world;
+    }
+    
     public final Level getLevel() {
         return this.level;
     }
 
     public final void setLevel(Level level) {
         this.level = level;
+        if (this.level != null) {
+            this.world = this.level.getWorld();
+        }
     }
 
     public final void setTilePosition(Point position) {
@@ -90,6 +103,14 @@ public class PositionComponent extends Component implements Serializable {
     public final int getZOrder() {
         return this.zOrder;
     }
+    
+    public final MovementDirections getFacingDirection() {
+        return this.facing;
+    }
+    
+    public final void setFacingDirection(MovementDirections direction) {
+        this.facing = direction;
+    }
 
 
     // Initialization
@@ -115,22 +136,27 @@ public class PositionComponent extends Component implements Serializable {
     // JsonSerializable implementation
     @Override
     public void write(Json json) {
+        json.writeValue(WORLD_KEY, this.getWorld().getName());
         json.writeValue(LEVEL_KEY, this.getLevel().getName());
         json.writeValue(TILE_POSITION_X_KEY, this.getTilePosition().x);
         json.writeValue(TILE_POSITION_Y_KEY, this.getTilePosition().y);
         json.writeValue(Z_ORDER_KEY, this.getZOrder());
+        json.writeValue(FACING_KEY, this.getFacingDirection().toString());
     }
 
     @Override
     public void read(Json json, JsonValue jsonData) {
+        String worldName = jsonData.getString(WORLD_KEY);
         String levelName = jsonData.getString(LEVEL_KEY);
         int tileX = jsonData.getInt(TILE_POSITION_X_KEY);
         int tileY = jsonData.getInt(TILE_POSITION_Y_KEY);
         int zOrderValue = jsonData.getInt(Z_ORDER_KEY);
         
-        this.setLevel(EmergenceGame.game.getCurrentWorld().getLevel(levelName));
+        this.setLevel(EmergenceGame.game.getWorld(worldName).getLevel(levelName));
         this.setTilePosition(new Point(tileX, tileY));
         this.zOrder = zOrderValue;
+        
+        this.facing = MovementDirections.valueOf(jsonData.getString(FACING_KEY));
     }
 
 }

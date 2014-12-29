@@ -97,7 +97,7 @@ public class World implements Disposable {
                     if (FileUtils.getExtension(file).equalsIgnoreCase(Level.LEVEL_EXTENSION)) {
                         TiledMap map = EmergenceGame.game.getAssetManager().get(file.getPath(), TiledMap.class);
                         String name = file.getName().replace("." + Level.LEVEL_EXTENSION, "");
-                        world.addLevel(new Level(name, map));
+                        world.addLevel(new Level(name, map, world));
                     }
                 }
             }

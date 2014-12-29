@@ -36,13 +36,14 @@ import com.emergence.entity.messaging.MessageSystem;
 import com.emergence.entity.messaging.OffsetUpdatedMessage;
 import com.emergence.entity.messaging.PositionChangedMessage;
 import com.emergence.entity.messaging.SelfSubscribingListener;
+import com.emergence.util.Initializable;
 import java.awt.Point;
 
 /**
  *
  * @author Nathan Templon
  */
-public class RenderingMaintenenceSystem extends IteratingSystem implements MessageListener, EntityListener, SelfSubscribingListener {
+public class RenderingMaintenenceSystem extends IteratingSystem implements MessageListener, EntityListener, SelfSubscribingListener, Initializable {
 
     // Initialization
     public RenderingMaintenenceSystem() {
@@ -69,7 +70,7 @@ public class RenderingMaintenenceSystem extends IteratingSystem implements Messa
                 render.setSprite(new Sprite(Mappers.moveTexture.get(entity).getFrontStandTexture()));
             }
         }
-        
+
         this.updateSpriteData(entity);
     }
 
@@ -77,11 +78,20 @@ public class RenderingMaintenenceSystem extends IteratingSystem implements Messa
     public void entityRemoved(Entity entity) {
 
     }
-    
+
     @Override
     public void subscribe(Engine engine, MessageSystem system) {
         engine.addEntityListener(Families.renderables, this);
         system.subscribe(this, PositionChangedMessage.class, OffsetUpdatedMessage.class);
+    }
+    
+    @Override
+    public void initialize() {
+        for (Entity entity : this.getEntities()) {
+            Mappers.render.get(entity).setSprite(new Sprite(Mappers.moveTexture.get(entity).standingTextureFor(
+                    Mappers.position.get(entity).getFacingDirection())));
+            this.updateSpriteData(entity);
+        }
     }
 
 
@@ -100,7 +110,7 @@ public class RenderingMaintenenceSystem extends IteratingSystem implements Messa
             Sprite sprite = render.getSprite();
 
             // Coordinates of the bottom right corner of the space, where the sprite's origin is
-            sprite.setPosition(loc.x + render.getOffset().x, loc.y+ render.getOffset().y);
+            sprite.setPosition(loc.x + render.getOffset().x, loc.y + render.getOffset().y);
         }
     }
 

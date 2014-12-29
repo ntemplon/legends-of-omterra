@@ -158,6 +158,7 @@ public class MovementSystem extends IteratingSystem implements MessageListener, 
                 render.setOffset(new Point(0, 0));
                 sprite.setRegion(textures.standingTextureFor(walk.getWalkDirection()));
                 this.moveEntityTo(entity, walk.getWalkTarget());
+                Mappers.position.get(entity).setFacingDirection(walk.getWalkDirection());
                 break;
             case STANDING:
                 break;

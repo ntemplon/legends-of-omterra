@@ -45,47 +45,46 @@ import java.io.File;
  * @author Nathan Templon
  */
 public class Party implements Serializable {
-    
+
     // Constants
     public static final String PARTY_MEMBERS_KEY = "party-members";
-    
-    
+
+
     // Fields
     private EmergenceEntity player1;
-    
+
     private EmergenceEntity[] partyMembers;
-    
-    
+
+
     // Properties
     public final EmergenceEntity[] getPartyMembers() {
         return this.partyMembers;
     }
-    
-    
+
+
     // Initialization
     public Party() {
         this.player1 = new EmergenceEntity();
-        
+
         // All the debug code
-        TextureAtlas atlas = EmergenceGame.game.getAssetManager().get(new File(FileLocations.SPRITES_DIRECTORY,
-                "CharacterSprites.atlas").getPath(), TextureAtlas.class);
-        this.player1.add(new MovementResourceComponent(atlas, "champion"));
+        this.player1.add(new MovementResourceComponent(new File(FileLocations.SPRITES_DIRECTORY,
+                "CharacterSprites.atlas").getPath(), "champion"));
         this.player1.add(new PositionComponent(null, new Point(19, 25), 0));
         this.player1.add(new SizeComponent(new Size(1, 1)));
         this.player1.add(new CollisionComponent(Mappers.position.get(this.player1).getTilePosition(), Mappers.size.get(
                 this.player1).getSize()));
         this.player1.add(new WalkComponent());
         this.player1.add(new RenderComponent(new Sprite(Mappers.moveTexture.get(this.player1).getFrontStandTexture())));
-        
-        this.partyMembers = new EmergenceEntity[] {this.player1};
+
+        this.partyMembers = new EmergenceEntity[]{this.player1};
     }
 
-    
+
     // Serializable (Json) implementation
     @Override
     public void write(Json json) {
         json.writeArrayStart(PARTY_MEMBERS_KEY);
-        for(EmergenceEntity entity : this.getPartyMembers()) {
+        for (EmergenceEntity entity : this.getPartyMembers()) {
             json.writeValue(entity, entity.getClass());
         }
         json.writeArrayEnd();
@@ -95,10 +94,10 @@ public class Party implements Serializable {
     public void read(Json json, JsonValue jsonData) {
         JsonValue members = jsonData.get(PARTY_MEMBERS_KEY);
         this.partyMembers = new EmergenceEntity[members.size];
-        
+
         for (int i = 0; i < members.size; i++) {
             this.partyMembers[i] = json.fromJson(EmergenceEntity.class, members.get(i).toString());
         }
     }
-    
+
 }
