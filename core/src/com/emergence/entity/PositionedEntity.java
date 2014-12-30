@@ -25,7 +25,7 @@ package com.emergence.entity;
 
 import com.badlogic.ashley.core.Entity;
 import com.emergence.geometry.Size;
-import com.emergence.quadtree.RectangularBoundedObject;
+import com.emergence.util.RectangularBoundedObject;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Objects;

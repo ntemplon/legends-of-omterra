@@ -36,7 +36,9 @@ import com.emergence.entity.MovementSystem.MovementDirections;
 import com.emergence.entity.messaging.WalkRequestMessage;
 import com.emergence.screen.overlay.PauseMenu;
 import com.emergence.world.Level;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -47,7 +49,7 @@ public class LevelScreen extends OverlayableScreen {
 
     // Constants
     private static final Set<Integer> POLLED_INPUTS = getUsedInputs();
-    private static final Set<Integer> MOVEMENT_KEYS = getMovementKeys();
+    private static final Map<Integer, MovementDirections> MOVEMENT_MAP = getMovementKeys();
 
 
     // Static Methods
@@ -62,13 +64,13 @@ public class LevelScreen extends OverlayableScreen {
         return keys;
     }
 
-    private static Set<Integer> getMovementKeys() {
-        Set<Integer> keys = new HashSet<>();
+    private static Map<Integer, MovementDirections> getMovementKeys() {
+        Map<Integer, MovementDirections> keys = new HashMap<>();
 
-        keys.add(Keys.W);
-        keys.add(Keys.A);
-        keys.add(Keys.S);
-        keys.add(Keys.D);
+        keys.put(Keys.W, MovementDirections.UP);
+        keys.put(Keys.A, MovementDirections.LEFT);
+        keys.put(Keys.S, MovementDirections.DOWN);
+        keys.put(Keys.D, MovementDirections.RIGHT);
 
         return keys;
     }
@@ -95,11 +97,11 @@ public class LevelScreen extends OverlayableScreen {
 
         this.mapRender = new LevelRenderer(this.level);
     }
-    
+
     public int getPauseKey() {
         return this.pauseKey;
     }
-    
+
     public void setPauseKey(int key) {
         this.pauseKey = key;
     }
@@ -108,7 +110,7 @@ public class LevelScreen extends OverlayableScreen {
     // Initialization
     public LevelScreen() {
         super();
-        
+
         this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         this.getMultiplexer().addProcessor(new LevelInputProcesser());
     }
@@ -153,24 +155,26 @@ public class LevelScreen extends OverlayableScreen {
     @Override
     public void show() {
         super.show();
-        
+
         this.pauseMenu = new PauseMenu();
         this.pauseMenu.setExitKey(this.getPauseKey());
+        
+        EmergenceGame.game.getAudioService().playMusic(this.level.getMusicType());
     }
 
     @Override
     public void hide() {
-
+        EmergenceGame.game.getAudioService().stop();
     }
 
     @Override
     public void pause() {
-        
+
     }
 
     @Override
     public void resume() {
-        
+
     }
 
     @Override
@@ -184,27 +188,26 @@ public class LevelScreen extends OverlayableScreen {
 
     // Private Methods
     private void updateInput() {
-        this.keysDown.stream().forEach((Integer key) -> {
-            switch (key) {
-                case Keys.W:
-                    EmergenceGame.game.getMessageSystem().publish(new WalkRequestMessage(this.level.getControlledEntity(), MovementDirections.UP));
-                    break;
-                case Keys.A:
-                    EmergenceGame.game.getMessageSystem().publish(new WalkRequestMessage(this.level.getControlledEntity(), MovementDirections.LEFT));
-                    break;
-                case Keys.S:
-                    EmergenceGame.game.getMessageSystem().publish(new WalkRequestMessage(this.level.getControlledEntity(), MovementDirections.DOWN));
-                    break;
-                case Keys.D:
-                    EmergenceGame.game.getMessageSystem().publish(new WalkRequestMessage(this.level.getControlledEntity(), MovementDirections.RIGHT));
-                    break;
+        int deltaX = 0;
+        int deltaY = 0;
+        for(int key : this.keysDown) {
+            if (MOVEMENT_MAP.containsKey(key)) {
+                MovementDirections direction = MOVEMENT_MAP.get(key);
+                deltaX += direction.deltaX;
+                deltaY += direction.deltaY;
             }
-        });
+        }
+        
+        MovementDirections totalDirection = MovementDirections.getSingleStepDirectionFor(deltaX, deltaY);
+        if (totalDirection != null) {
+            EmergenceGame.game.getMessageSystem().publish(new WalkRequestMessage(this.level.getControlledEntity(), totalDirection));
+        }
     }
 
 
     // Inner Classes
     private class LevelInputProcesser implements InputProcessor {
+
         @Override
         public boolean keyDown(int i) {
             if (POLLED_INPUTS.contains(i)) {

@@ -23,7 +23,7 @@
  */
 package com.emergence.world;
 
-import com.emergence.quadtree.RectangularBoundedObject;
+import com.emergence.util.RectangularBoundedObject;
 import java.awt.Rectangle;
 
 /**

@@ -45,6 +45,8 @@ public final class FileLocations {
     public static final File GRAPHICS_DIRECTORY = new File(ASSET_DIRECTORY, "graphics");
     public static final File SPRITES_DIRECTORY = new File(GRAPHICS_DIRECTORY, "sprites");
     
+    public static final File AUDIO_DIRECTORY = new File(ASSET_DIRECTORY, "audio");
+    
     private static final File USER_HOME = new File(System.getProperty("user.home"));
     private static final File LOCAL_DATA_DIRECTORY = new File(USER_HOME, ".emergence");
     public static final File SAVE_DIRECTORY = new File(LOCAL_DATA_DIRECTORY, "saves");

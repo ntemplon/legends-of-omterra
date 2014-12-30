@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglFrame;
 import com.emergence.EmergenceGame;
+import com.emergence.tools.AtlasPacker;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -23,6 +24,10 @@ public class DesktopLauncher {
 
     // Main Method
     public static void main(String[] arg) {
+        // Debug code
+        AtlasPacker packer = new AtlasPacker();
+        packer.run();
+        
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = DesktopLauncher.getWindowTitle();
         config.resizable = RESIZEABLE;

@@ -64,6 +64,34 @@ public class MovementSystem extends IteratingSystem implements MessageListener, 
         DOWN(0, -1),
         RIGHT(1, 0);
 
+        public static MovementDirections getSingleStepDirectionFor(int x, int y) {
+            if (x == 0) {
+                if (y > 0) {
+                    return UP;
+                }
+                else if (y < 0) {
+                    return DOWN;
+                }
+                else {
+                    return null;
+                }
+            }
+            else if (y == 0) {
+                if (x > 0) {
+                    return RIGHT;
+                }
+                else if (x < 0) {
+                    return LEFT;
+                }
+                else {
+                    return null;
+                }
+            }
+            else {
+                return null;
+            }
+        }
+        
         public final int deltaX;
         public final int deltaY;
 

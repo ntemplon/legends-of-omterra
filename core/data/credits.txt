@@ -1,0 +1,34 @@
+-----------------------------------------------------------------------------------------------------
+----     Music
+-----------------------------------------------------------------------------------------------------
+
+"All This", "Clear Air", "Clenched Teeth", "Constancy Part One", "Dangerous", "Easy Lemon",
+"Exciting Trailer", "Failing Defense", "Five Armies", "Full On", "Heavy Interlude", "Long Note One",
+"Satiate", "The Descent", "Porch Swing Days - slower", "Somewhere Sunny"
+Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 3.0
+http://creativecommons.org/licenses/by/3.0/
+
+
+-----------------------------------------------------------------------------------------------------
+----     Sound Effects
+-----------------------------------------------------------------------------------------------------
+
+Sound effects are provided from the following websites:
+ * http://www.freesfx.co.uk
+ * www.soundjay.com
+
+
+-----------------------------------------------------------------------------------------------------
+----     Graphics
+-----------------------------------------------------------------------------------------------------
+
+The game features the work of DragonDePlatino and his DawnLike tileset, available at:
+	http://opengameart.org/content/dawnlike-16x16-universal-rogue-like-tileset-v18
+Credit goes to DawnBringer, whose DB 16 pallete served as the original palette for DawnLike, and whose
+DB 32 palette is the basis for the current game.  The DB 32 palette is available at:
+	http://www.pixeljoint.com/forum/forum_posts.asp?TID=16247
+The platino sprite is not yet hidden in the game, but it will be before 1.0 :).
+
+All graphical assets in the game are DawnLike, except:
+ * The character sprites.

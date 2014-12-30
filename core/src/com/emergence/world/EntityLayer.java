@@ -30,7 +30,7 @@ import com.emergence.entity.Families;
 import com.emergence.entity.Mappers;
 import com.emergence.entity.PositionedEntity;
 import com.emergence.geometry.Size;
-import com.emergence.quadtree.Quadtree;
+import com.emergence.util.Quadtree;
 import java.awt.Rectangle;
 import java.util.Comparator;
 import java.util.HashSet;

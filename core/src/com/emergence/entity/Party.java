@@ -24,11 +24,9 @@
 package com.emergence.entity;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
-import com.emergence.EmergenceGame;
 import com.emergence.entity.component.CollisionComponent;
 import com.emergence.entity.component.PositionComponent;
 import com.emergence.entity.component.RenderComponent;

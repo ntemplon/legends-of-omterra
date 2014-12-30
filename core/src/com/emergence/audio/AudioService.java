@@ -23,10 +23,27 @@
  */
 package com.emergence.audio;
 
+import com.badlogic.gdx.utils.Disposable;
+
 /**
  *
  * @author Nathan Templon
  */
-public interface AudioService {
+public interface AudioService extends Disposable {
+    
+    public static final String TITLE_MUSIC = "title";
+    public static final String COMBAT_MUSIC = "combat";
+    public static final String DUNGEON_MUSIC = "dungeon";
+    public static final String AMBIENT_MUSIC = "ambient";
+    public static final String DEFAULT_MUSIC = AMBIENT_MUSIC;
+    
+    public static final String[] MUSIC_TYPES = {TITLE_MUSIC, COMBAT_MUSIC, DUNGEON_MUSIC, AMBIENT_MUSIC};
+    public static final String[] MUSIC_EXTENSIONS = {"mp3", "wav"};
+    
+    void playMusic(String type);
+    void setMusicVolume(float volume);
+    void pause();
+    void resume();
+    void stop();
     
 }

@@ -34,16 +34,20 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Json;
@@ -51,6 +55,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.emergence.EmergenceGame;
+import static com.emergence.audio.AudioService.TITLE_MUSIC;
 import com.emergence.io.FileLocations;
 import com.emergence.save.SaveGame;
 import com.emergence.world.World;
@@ -70,19 +75,22 @@ public class MainMenuScreen implements Screen, InputProcessor {
     public static final String BUTTON_FONT = "arial40.fnt";
     public static final String LIST_FONT = "arial32.fnt";
     public static final String TEXT_FIELD_FONT = "arial32.fnt";
+    public static final String INFO_LABEL_FONT = "arial24.fnt";
 
     private static final String DEFAULT_KEY = "default";
+    private static final String INFO_STYLE_KEY = "info";
+
     private static final String SOLID_TEXTURE_KEY = "solid-texture";
     private static final String TITLE_FONT_KEY = "title-font";
     private static final String BUTTON_FONT_KEY = "button-font";
     private static final String TEXT_FIELD_FONT_KEY = "text-field-font";
     private static final String LIST_FONT_KEY = "list-font";
+    private static final String INFO_LABEL_FONT_KEY = "info-label-font";
 
     private static Skin mainMenuSkin;
 
     private static final int TITLE_PADDING = 25;
     private static final int BUTTON_WIDTH = 225;
-    private static final int BUTTON_HEIGHT = 60;
     private static final int BUTTON_SPACING = 0;
 
     private static final Color BACKGROUND_COLOR = new Color(Color.WHITE);
@@ -109,6 +117,8 @@ public class MainMenuScreen implements Screen, InputProcessor {
                 LIST_FONT).getPath()));
         skin.add(TEXT_FIELD_FONT_KEY, EmergenceGame.game.getAssetManager().get(new File(FileLocations.FONTS_DIRECTORY,
                 TEXT_FIELD_FONT).getPath()));
+        skin.add(INFO_LABEL_FONT_KEY, EmergenceGame.game.getAssetManager().get(new File(FileLocations.FONTS_DIRECTORY,
+                INFO_LABEL_FONT).getPath()));
 
         // Set the background texture
         Pixmap pixmap = new Pixmap(1, (int) 1, Pixmap.Format.RGB888);
@@ -121,8 +131,15 @@ public class MainMenuScreen implements Screen, InputProcessor {
         Label.LabelStyle titleStyle = new Label.LabelStyle();
         titleStyle.background = transparentDrawable;
         titleStyle.font = skin.getFont(TITLE_FONT_KEY);
-        titleStyle.fontColor = Color.BLACK;
+        titleStyle.fontColor = new Color(Color.BLACK);
         skin.add(DEFAULT_KEY, titleStyle);
+
+        // Create a Label style for dialogs
+        LabelStyle infoStyle = new LabelStyle();
+        infoStyle.background = transparentDrawable;
+        infoStyle.font = skin.getFont(INFO_LABEL_FONT_KEY);
+        infoStyle.fontColor = new Color(Color.BLACK);
+        skin.add(INFO_STYLE_KEY, infoStyle);
 
         //Create a button style
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
@@ -132,9 +149,9 @@ public class MainMenuScreen implements Screen, InputProcessor {
         textButtonStyle.over = transparentDrawable;
         textButtonStyle.disabled = transparentDrawable;
         textButtonStyle.font = skin.getFont(BUTTON_FONT_KEY);
-        textButtonStyle.fontColor = Color.BLACK;
-        textButtonStyle.overFontColor = Color.BLUE;
-        textButtonStyle.disabledFontColor = Color.GRAY;
+        textButtonStyle.fontColor = new Color(Color.BLACK);
+        textButtonStyle.overFontColor = new Color(Color.BLUE);
+        textButtonStyle.disabledFontColor = new Color(Color.GRAY);
         textButtonStyle.pressedOffsetX = 2f;
         textButtonStyle.pressedOffsetY = -3f;
         skin.add(DEFAULT_KEY, textButtonStyle);
@@ -156,6 +173,19 @@ public class MainMenuScreen implements Screen, InputProcessor {
         listStyle.selection = skin.newDrawable(SOLID_TEXTURE_KEY, SELECTION_COLOR);
         listStyle.background = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0f, 0f, 0f, 0.1f));
         skin.add(DEFAULT_KEY, listStyle);
+
+        // Create a Scroll Pane Style
+        ScrollPaneStyle scrollPaneStyle = new ScrollPaneStyle();
+        scrollPaneStyle.background = transparentDrawable;
+        skin.add(DEFAULT_KEY, scrollPaneStyle);
+
+        // Create a Dialog Style
+        WindowStyle dialogStyle = new WindowStyle();
+        dialogStyle.background = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(Color.WHITE));
+        dialogStyle.stageBackground = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(Color.WHITE));
+        dialogStyle.titleFont = skin.getFont(TITLE_FONT_KEY);
+        dialogStyle.titleFontColor = new Color(Color.BLACK);
+        skin.add(DEFAULT_KEY, dialogStyle);
 //        
 //        skin = EmergenceGame.game.getAssetManager().get(
 //                new File(FileLocations.SKINS_DIRECTORY, "main_menu.skin").getPath());
@@ -173,23 +203,34 @@ public class MainMenuScreen implements Screen, InputProcessor {
     private TextButton loadGameButton;
     private TextButton multiplayerButton;
     private TextButton optionsButton;
+    private TextButton creditsButton;
     private TextButton quitButton;
 
+    private Dialog newGameDialog;
     private Table newGameTable;
     private Label newGameNameLabel;
     private TextField newGameNameField;
     private Label newGameWorldLabel;
     private List newGameWorldList;
+    private ScrollPane newGameWorldPane;
     private Table newGameButtonTable;
     private TextButton newGameOkButton;
     private TextButton newGameCancelButton;
 
+    private Dialog loadGameDialog;
     private Table loadGameTable;
     private Label loadGameLabel;
     private List loadGameList;
+    private ScrollPane loadGameListPane;
     private Table loadGameButtonTable;
     private TextButton loadGameOkButton;
     private TextButton loadGameCancelButton;
+    private TextButton loadGameDeleteButton;
+
+    private Dialog confirmDeleteDialog;
+    private Label confirmDeleteLabel;
+    private TextButton confirmDeleteYesButton;
+    private TextButton confirmDeleteNoButton;
 
 
     // Initialization
@@ -218,11 +259,14 @@ public class MainMenuScreen implements Screen, InputProcessor {
     public void show() {
         EmergenceGame.game.inspectSaves();
         this.init();
+
+        // Play Music
+        EmergenceGame.game.getAudioService().playMusic(TITLE_MUSIC);
     }
 
     @Override
     public void hide() {
-
+        EmergenceGame.game.getAudioService().stop();
     }
 
     @Override
@@ -338,6 +382,17 @@ public class MainMenuScreen implements Screen, InputProcessor {
         });
         this.optionsButton.setDisabled(true);
 
+        this.creditsButton = new TextButton("Credits", skin.get(DEFAULT_KEY, TextButtonStyle.class));
+        this.creditsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (event.getButton() == Input.Buttons.LEFT && !MainMenuScreen.this.creditsButton.isDisabled()) {
+                    MainMenuScreen.this.onCreditsClick();
+                }
+            }
+        });
+        this.creditsButton.setDisabled(true);
+
         this.quitButton = new TextButton("Exit", skin.get(DEFAULT_KEY, TextButtonStyle.class));
         this.quitButton.addListener(new ClickListener() {
             @Override
@@ -349,15 +404,17 @@ public class MainMenuScreen implements Screen, InputProcessor {
         });
 
         // Configure Button Table
-        this.buttonTable.add(this.newGameButton).width(BUTTON_WIDTH).height(BUTTON_HEIGHT).space(BUTTON_SPACING);
+        this.buttonTable.add(this.newGameButton).width(BUTTON_WIDTH).space(BUTTON_SPACING);
         this.buttonTable.row();
-        this.buttonTable.add(this.loadGameButton).width(BUTTON_WIDTH).height(BUTTON_HEIGHT).space(BUTTON_SPACING);
+        this.buttonTable.add(this.loadGameButton).width(BUTTON_WIDTH).space(BUTTON_SPACING);
         this.buttonTable.row();
-        this.buttonTable.add(this.multiplayerButton).width(BUTTON_WIDTH).height(BUTTON_HEIGHT).space(BUTTON_SPACING);
+        this.buttonTable.add(this.multiplayerButton).width(BUTTON_WIDTH).space(BUTTON_SPACING);
         this.buttonTable.row();
-        this.buttonTable.add(this.optionsButton).width(BUTTON_WIDTH).height(BUTTON_HEIGHT).space(BUTTON_SPACING);
+        this.buttonTable.add(this.optionsButton).width(BUTTON_WIDTH).space(BUTTON_SPACING);
         this.buttonTable.row();
-        this.buttonTable.add(this.quitButton).width(BUTTON_WIDTH).height(BUTTON_HEIGHT).space(BUTTON_SPACING);
+        this.buttonTable.add(this.creditsButton).width(BUTTON_WIDTH).space(BUTTON_SPACING);
+        this.buttonTable.row();
+        this.buttonTable.add(this.quitButton).width(BUTTON_WIDTH).space(BUTTON_SPACING);
         this.buttonTable.row();
 
         // Title
@@ -384,6 +441,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
         this.newGameWorldLabel = new Label("World:", skin.get(DEFAULT_KEY, LabelStyle.class));
         this.newGameWorldList = new List(skin.get(DEFAULT_KEY, ListStyle.class));
         this.newGameWorldList.setItems((Object[]) EmergenceGame.game.getWorldNames());
+        this.newGameWorldPane = new ScrollPane(this.newGameWorldList, skin.get(DEFAULT_KEY, ScrollPaneStyle.class));
 
         this.newGameOkButton = new TextButton("Accept", skin.get(DEFAULT_KEY, TextButtonStyle.class));
         this.newGameOkButton.addListener(new ClickListener() {
@@ -414,14 +472,14 @@ public class MainMenuScreen implements Screen, InputProcessor {
         this.newGameTable.row();
         this.newGameTable.add(this.newGameWorldLabel).left();
         this.newGameTable.row();
-        this.newGameTable.add(this.newGameWorldList).colspan(2).height(200).fill();
+        this.newGameTable.add(this.newGameWorldPane).colspan(2).height(300).fill();
         this.newGameTable.row();
         this.newGameTable.add(this.newGameButtonTable).colspan(2).right();
         this.newGameTable.row();
 
-        this.newGameTable.setVisible(false);
-        this.stage.addActor(this.newGameTable);
-
+        this.newGameDialog = new Dialog("", skin.get(DEFAULT_KEY, WindowStyle.class));
+        this.newGameDialog.getContentTable().add(this.newGameTable).expand().fill();
+        
         // Load Game Table
         this.loadGameTable = new Table();
         this.loadGameTable.setFillParent(true);
@@ -430,6 +488,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
         this.loadGameLabel = new Label("Save Games", skin.get(DEFAULT_KEY, LabelStyle.class));
         this.loadGameList = new List(skin.get(DEFAULT_KEY, ListStyle.class));
         this.loadGameList.setItems((Object[]) EmergenceGame.game.getSaveNames());
+        this.loadGameListPane = new ScrollPane(this.loadGameList, skin.get(DEFAULT_KEY, ScrollPaneStyle.class));
 
         this.loadGameOkButton = new TextButton("Accept", skin.get(DEFAULT_KEY, TextButtonStyle.class));
         this.loadGameOkButton.addListener(new ClickListener() {
@@ -451,30 +510,66 @@ public class MainMenuScreen implements Screen, InputProcessor {
             }
         });
 
+        this.loadGameDeleteButton = new TextButton("Delete", skin.get(DEFAULT_KEY, TextButtonStyle.class));
+        this.loadGameDeleteButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (event.getButton() == Buttons.LEFT && !MainMenuScreen.this.loadGameDeleteButton.isDisabled()) {
+                    MainMenuScreen.this.onDeleteSaveGameClick();
+                }
+            }
+        });
+
         this.loadGameButtonTable = new Table();
         this.loadGameButtonTable.add(this.loadGameOkButton).right();
         this.loadGameButtonTable.add(this.loadGameCancelButton).space(20).right();
+        this.loadGameButtonTable.add(this.loadGameDeleteButton).space(20).right();
 
         this.loadGameTable.add(this.loadGameLabel).top().height(50).width(600);
         this.loadGameTable.row();
-        this.loadGameTable.add(this.loadGameList).height(200).fill();
+        this.loadGameTable.add(this.loadGameListPane).height(300).fill();
         this.loadGameTable.row();
         this.loadGameTable.add(this.loadGameButtonTable).right();
         this.loadGameTable.row();
 
-        this.loadGameTable.setVisible(false);
-        this.stage.addActor(this.loadGameTable);
+        this.loadGameDialog = new Dialog("", skin.get(DEFAULT_KEY, WindowStyle.class));
+        this.loadGameDialog.getContentTable().add(this.loadGameTable).expand().fill();
+        
+        // Confirm Delete Dialog
+        this.confirmDeleteDialog = new Dialog("", skin.get(DEFAULT_KEY, WindowStyle.class));
+        this.confirmDeleteLabel = new Label("Are you sure you want to delete this save game?", skin.get(INFO_STYLE_KEY,
+                LabelStyle.class));
+        this.confirmDeleteYesButton = new TextButton("Yes", skin.get(DEFAULT_KEY, TextButtonStyle.class));
+        this.confirmDeleteYesButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (event.getButton() == Buttons.LEFT && !MainMenuScreen.this.confirmDeleteYesButton.isDisabled()) {
+                    MainMenuScreen.this.deleteSaveGame();
+                }
+            }
+        });
+        this.confirmDeleteNoButton = new TextButton("No", skin.get(DEFAULT_KEY, TextButtonStyle.class));
+        this.confirmDeleteNoButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (event.getButton() == Buttons.LEFT && !MainMenuScreen.this.confirmDeleteNoButton.isDisabled()) {
+                    MainMenuScreen.this.confirmDeleteDialog.hide();
+                }
+            }
+        });
+        
+        this.confirmDeleteDialog.text(this.confirmDeleteLabel);
+        this.confirmDeleteDialog.getButtonTable().add(this.confirmDeleteYesButton).right();
+        this.confirmDeleteDialog.getButtonTable().add(this.confirmDeleteNoButton).space(20).right();
     }
 
     private void onNewGameClick() {
-        this.titleTable.setVisible(false);
-        this.newGameTable.setVisible(true);
+        this.newGameDialog.show(this.stage);
         this.newGameNameField.setText("default");
     }
 
     private void onLoadGameClick() {
-        this.titleTable.setVisible(false);
-        this.loadGameTable.setVisible(true);
+        this.loadGameDialog.show(this.stage);
     }
 
     private void onMultiplayerClick() {
@@ -483,6 +578,10 @@ public class MainMenuScreen implements Screen, InputProcessor {
 
     private void onOptionsClick() {
         System.out.println("Options not implemented!");
+    }
+
+    private void onCreditsClick() {
+
     }
 
     private void onQuitClick() {
@@ -501,8 +600,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
     }
 
     private void cancelNewGame() {
-        this.newGameTable.setVisible(false);
-        this.titleTable.setVisible(true);
+        this.newGameDialog.hide();
     }
 
     private void loadGame() {
@@ -512,7 +610,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
             this.cancelLoadGame();
             return;
         }
-        
+
         try (FileReader fr = new FileReader(saveFile);
                 BufferedReader reader = new BufferedReader(fr);) {
             Json json = new Json();
@@ -526,8 +624,20 @@ public class MainMenuScreen implements Screen, InputProcessor {
     }
 
     private void cancelLoadGame() {
-        this.loadGameTable.setVisible(false);
-        this.titleTable.setVisible(true);
+        this.loadGameDialog.hide();
+    }
+
+    private void onDeleteSaveGameClick() {
+        String selection = this.loadGameList.getSelected().toString();
+        this.confirmDeleteLabel.setText("Are you sure you want to delete the save game \"" + selection + "\"?");
+        this.confirmDeleteDialog.show(this.stage);
+    }
+    
+    private void deleteSaveGame() {
+        EmergenceGame.game.deleteSave(this.loadGameList.getSelected().toString());
+        this.loadGameList.setItems((Object[])EmergenceGame.game.getSaveNames());
+        this.loadGameButton.setDisabled(EmergenceGame.game.getSaveNames().length == 0);
+        this.confirmDeleteDialog.hide();
     }
 
 }

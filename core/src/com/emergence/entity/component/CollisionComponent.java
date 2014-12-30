@@ -29,7 +29,7 @@ import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
 import com.emergence.entity.messaging.PositionChangedMessage;
 import com.emergence.geometry.Size;
-import com.emergence.quadtree.RectangularBoundedObject;
+import com.emergence.util.RectangularBoundedObject;
 import java.awt.Point;
 import java.awt.Rectangle;
 

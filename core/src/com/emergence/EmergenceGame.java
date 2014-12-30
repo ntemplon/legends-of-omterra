@@ -36,6 +36,7 @@ import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.utils.Json;
 import com.emergence.audio.AudioService;
+import static com.emergence.audio.AudioService.TITLE_MUSIC;
 import com.emergence.audio.LocalAudioService;
 import com.emergence.entity.CollisionSystem;
 import com.emergence.entity.MovementSystem;
@@ -221,7 +222,7 @@ public class EmergenceGame extends Game implements InputProcessor {
     private MainMenuScreen mainMenuScreen;
     private Map<String, World> worlds;
     private final InputMultiplexer inputMultiplexer = new InputMultiplexer();
-    private final AudioService audio = new LocalAudioService();
+    private AudioService audio;
 
     private World currentWorld;
     private Level currentLevel;
@@ -412,6 +413,14 @@ public class EmergenceGame extends Game implements InputProcessor {
             }
         }
     }
+    
+    public void deleteSave(String save) {
+        File saveFile = new File(FileLocations.SAVE_DIRECTORY, save + "." + SaveGame.SAVE_EXTENSION);
+        if (saveFile.exists()) {
+            saveFile.delete();
+        }
+        this.inspectSaves();
+    }
 
 
 
@@ -420,6 +429,7 @@ public class EmergenceGame extends Game implements InputProcessor {
     public void create() {
         // Load Resources
         this.assetManager = new EmergenceAssetManager(); // The loading screen will take care of actually loading the resources
+        this.audio = new LocalAudioService();
         this.inspectSaves();
 
         // Create our various screens

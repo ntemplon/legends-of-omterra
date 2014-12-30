@@ -29,8 +29,9 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.utils.Disposable;
+import com.emergence.audio.AudioService;
 import com.emergence.geometry.Size;
-import com.emergence.quadtree.Quadtree;
+import com.emergence.util.Quadtree;
 import java.awt.Rectangle;
 
 /**
@@ -56,6 +57,8 @@ public class Level implements Disposable {
     public static final String X_KEY = "x";
     public static final String Y_KEY = "y";
     
+    public static final String MUSIC_PROPERTY = "music";
+    
     public static final int DEFAULT_TILE_WIDTH = 16;
     public static final int DEFAULT_TILE_HEIGHT = 16;
 
@@ -66,6 +69,7 @@ public class Level implements Disposable {
     private String name;
     private EntityLayer entityLayer;
     private Quadtree<Zone> collision;
+    private String musicType = AudioService.DEFAULT_MUSIC;
 
     private int tileWidth, tileHeight;
     private int mapWidth, mapHeight;
@@ -111,6 +115,11 @@ public class Level implements Disposable {
                 layer.setVisible(true);
             }
         }
+        
+        // Get the type of music from the map
+        if (map.getProperties().containsKey(MUSIC_PROPERTY)) {
+            this.musicType = map.getProperties().get(MUSIC_PROPERTY, String.class);
+        }
     }
 
     public String getName() {
@@ -151,6 +160,10 @@ public class Level implements Disposable {
     
     public void setControlledEntity(Entity entity) {
         this.controlledEntity = entity;
+    }
+    
+    public String getMusicType() {
+        return this.musicType;
     }
 
 
