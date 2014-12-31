@@ -24,12 +24,16 @@
 package com.emergence.audio;
 
 import com.badlogic.gdx.utils.Disposable;
+import com.emergence.EmergenceGame;
+import com.emergence.settings.Settings;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  *
  * @author Nathan Templon
  */
-public interface AudioService extends Disposable {
+public abstract class AudioService implements Disposable, PropertyChangeListener {
     
     public static final String TITLE_MUSIC = "title";
     public static final String COMBAT_MUSIC = "combat";
@@ -40,10 +44,21 @@ public interface AudioService extends Disposable {
     public static final String[] MUSIC_TYPES = {TITLE_MUSIC, COMBAT_MUSIC, DUNGEON_MUSIC, AMBIENT_MUSIC};
     public static final String[] MUSIC_EXTENSIONS = {"mp3", "wav"};
     
-    void playMusic(String type);
-    void setMusicVolume(float volume);
-    void pause();
-    void resume();
-    void stop();
+    // Abstract Methods
+    public abstract void playMusic(String type);
+    public abstract void setMusicVolume(float volume);
+    public abstract void pause();
+    public abstract void resume();
+    public abstract void stop();
+    
+    // Public Methods
+    @Override
+    public void propertyChange(PropertyChangeEvent e) {
+        switch(e.getPropertyName()) {
+            case Settings.PROP_MUSICVOLUME:
+                this.setMusicVolume(EmergenceGame.game.getSettings().getMusicVolume());
+                break;
+        }
+    }
     
 }

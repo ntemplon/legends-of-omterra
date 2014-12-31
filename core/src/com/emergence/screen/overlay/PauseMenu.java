@@ -144,6 +144,14 @@ public class PauseMenu extends Scene2DOverlay {
         super.added(screen);
         this.initializeComponents();
     }
+    
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        
+        this.buttonTable.setSize(width, height);
+        this.buttonTable.invalidate();
+    }
 
 
     // Private Methods
@@ -183,11 +191,11 @@ public class PauseMenu extends Scene2DOverlay {
         });
 
         // Table configuration
-        this.buttonTable.add(this.resumeButton).width(225).height(50).space(0);
+        this.buttonTable.add(this.resumeButton);
         this.buttonTable.row();
-        this.buttonTable.add(this.returnToMenuButton).width(225).height(50).space(0);
+        this.buttonTable.add(this.returnToMenuButton);
         this.buttonTable.row();
-        this.buttonTable.add(this.exitButton).width(225).height(50).space(0);
+        this.buttonTable.add(this.exitButton);
         this.buttonTable.row();
 
         this.getStage().addActor(this.buttonTable);

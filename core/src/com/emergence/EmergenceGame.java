@@ -35,8 +35,9 @@ import com.badlogic.gdx.ai.fsm.StackStateMachine;
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.emergence.audio.AudioService;
-import static com.emergence.audio.AudioService.TITLE_MUSIC;
 import com.emergence.audio.LocalAudioService;
 import com.emergence.entity.CollisionSystem;
 import com.emergence.entity.MovementSystem;
@@ -52,19 +53,22 @@ import com.emergence.save.SaveGame;
 import com.emergence.screen.LevelScreen;
 import com.emergence.screen.LoadingScreen;
 import com.emergence.screen.MainMenuScreen;
+import com.emergence.settings.Settings;
 import com.emergence.util.GameTimer;
 import com.emergence.util.Initializable;
 import com.emergence.world.Level;
 import com.emergence.world.World;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class EmergenceGame extends Game implements InputProcessor {
 
@@ -87,6 +91,8 @@ public class EmergenceGame extends Game implements InputProcessor {
     public static final char MOVE_UP_KEY = 'w';
     public static final char MOVE_DOWN_KEY = 's';
 
+    private static final File SETTINGS_FILE = new File(FileLocations.CONFIGURATION_DIRECTORY, "settings.cfg");
+    
     public static final boolean DEBUG = true;
 
 
@@ -230,7 +236,7 @@ public class EmergenceGame extends Game implements InputProcessor {
 
     private EmergenceAssetManager assetManager;
 
-    private MessageSystem messageSystem = new SimpleMessageSystem();
+    private final MessageSystem messageSystem = new SimpleMessageSystem();
     private final MovementSystem movementSystem = new MovementSystem();
     private final CollisionSystem collisionSystem = new CollisionSystem();
     private final RenderingMaintenenceSystem renderingSystem = new RenderingMaintenenceSystem();
@@ -238,7 +244,9 @@ public class EmergenceGame extends Game implements InputProcessor {
     private boolean suspended;
 
     private SaveGame save;
-    private final Set<String> saveNames = new LinkedHashSet<>();
+    private Settings settings;
+    private String credits = "";
+    private final Set<String> saveNames = new TreeSet<>();
     private Party party;
 
 
@@ -295,6 +303,14 @@ public class EmergenceGame extends Game implements InputProcessor {
     
     public String[] getWorldNames() {
         return this.worlds.keySet().toArray(new String[this.worlds.keySet().size()]);
+    }
+    
+    public String getCredits() {
+        return this.credits;
+    }
+    
+    public Settings getSettings() {
+        return this.settings;
     }
 
 
@@ -421,6 +437,18 @@ public class EmergenceGame extends Game implements InputProcessor {
         }
         this.inspectSaves();
     }
+    
+    public void saveSettings() {
+        try (FileWriter fw = new FileWriter(SETTINGS_FILE);
+                PrintWriter pw = new PrintWriter(fw)) {
+            Json json = new Json();
+            pw.println(json.prettyPrint(this.settings));
+            pw.flush();
+        }
+        catch (IOException ex) {
+
+        }
+    }
 
 
 
@@ -431,6 +459,11 @@ public class EmergenceGame extends Game implements InputProcessor {
         this.assetManager = new EmergenceAssetManager(); // The loading screen will take care of actually loading the resources
         this.audio = new LocalAudioService();
         this.inspectSaves();
+        this.loadCredits();
+        this.loadSettings();
+        
+        // Configure Property Change listeners
+        this.settings.addPropertyChangeListener(Settings.PROP_MUSICVOLUME, this.audio);
 
         // Create our various screens
         this.loadingScreen = new LoadingScreen(this);
@@ -467,6 +500,7 @@ public class EmergenceGame extends Game implements InputProcessor {
     @Override
     public void pause() {
         this.saveGame();
+        this.saveSettings();
     }
 
     @Override
@@ -557,4 +591,35 @@ public class EmergenceGame extends Game implements InputProcessor {
         }
     }
     
+    private void loadCredits() {
+        File creditsFile = new File(FileLocations.ASSET_DIRECTORY, "credits.txt");
+        
+        try (FileReader fr = new FileReader(creditsFile);
+                BufferedReader br = new BufferedReader(fr)) {
+            this.credits = "Credits:" + System.lineSeparator();
+            br.lines().forEach((String line) -> {
+                this.credits += line + System.lineSeparator();
+            });
+        }
+        catch (IOException ex) {
+            this.credits = "";
+        }
+    }
+    
+    private void loadSettings() {
+        Json json = new Json();
+        try (FileReader fr = new FileReader(SETTINGS_FILE);
+                BufferedReader reader = new BufferedReader(fr);) {
+            JsonValue value = new JsonReader().parse(reader);
+            this.settings = json.fromJson(Settings.class, value.toString());
+        }
+        catch (Exception ex) {
+            this.settings = new Settings();
+            this.saveSettings();
+        }
+        
+        // Load the settings to their respective systems
+        this.audio.setMusicVolume(this.settings.getMusicVolume());
+    }
+
 }

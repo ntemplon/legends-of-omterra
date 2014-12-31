@@ -34,6 +34,7 @@ import com.emergence.EmergenceGame;
 import com.emergence.entity.Mappers;
 import com.emergence.entity.MovementSystem.MovementDirections;
 import com.emergence.entity.messaging.WalkRequestMessage;
+import com.emergence.screen.overlay.Overlay;
 import com.emergence.screen.overlay.PauseMenu;
 import com.emergence.world.Level;
 import java.util.HashMap;
@@ -150,6 +151,10 @@ public class LevelScreen extends OverlayableScreen {
         this.camera.viewportWidth = width / EmergenceGame.SCALE;
         this.camera.viewportHeight = height / EmergenceGame.SCALE;
         this.camera.update();
+        
+        this.getOverlays().stream().forEach((Overlay overlay) -> {
+            overlay.resize(width, height);
+        });
     }
 
     @Override

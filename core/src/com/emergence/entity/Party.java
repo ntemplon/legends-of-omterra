@@ -27,12 +27,17 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
+import com.emergence.entity.component.AttributesComponent;
 import com.emergence.entity.component.CollisionComponent;
 import com.emergence.entity.component.PositionComponent;
 import com.emergence.entity.component.RenderComponent;
 import com.emergence.entity.component.SizeComponent;
 import com.emergence.entity.component.MovementResourceComponent;
+import com.emergence.entity.component.RaceComponent;
 import com.emergence.entity.component.WalkComponent;
+import com.emergence.entity.stats.CharacterClass;
+import com.emergence.entity.stats.Race;
+import com.emergence.entity.stats.Race.Races;
 import com.emergence.geometry.Size;
 import com.emergence.io.FileLocations;
 import java.awt.Point;
@@ -46,6 +51,23 @@ public class Party implements Serializable {
 
     // Constants
     public static final String PARTY_MEMBERS_KEY = "party-members";
+
+
+    // Static Methods
+    public static final EmergenceEntity createPlayer(CharacterClass charClass, Race race) {
+        EmergenceEntity entity = new EmergenceEntity();
+        entity.add(new MovementResourceComponent(new File(FileLocations.SPRITES_DIRECTORY,
+                "CharacterSprites.atlas").getPath(), "human-champion"));
+        entity.add(new PositionComponent(null, new Point(19, 25), 0));
+        entity.add(new SizeComponent(new Size(1, 1)));
+        entity.add(new CollisionComponent(Mappers.position.get(entity).getTilePosition(), Mappers.size.get(
+                entity).getSize()));
+        entity.add(new WalkComponent());
+        entity.add(new RenderComponent(new Sprite(Mappers.moveTexture.get(entity).getFrontStandTexture())));
+        entity.add(new AttributesComponent());
+        entity.add(new RaceComponent(race));
+        return entity;
+    }
 
 
     // Fields
@@ -62,17 +84,7 @@ public class Party implements Serializable {
 
     // Initialization
     public Party() {
-        this.player1 = new EmergenceEntity();
-
-        // All the debug code
-        this.player1.add(new MovementResourceComponent(new File(FileLocations.SPRITES_DIRECTORY,
-                "CharacterSprites.atlas").getPath(), "champion"));
-        this.player1.add(new PositionComponent(null, new Point(19, 25), 0));
-        this.player1.add(new SizeComponent(new Size(1, 1)));
-        this.player1.add(new CollisionComponent(Mappers.position.get(this.player1).getTilePosition(), Mappers.size.get(
-                this.player1).getSize()));
-        this.player1.add(new WalkComponent());
-        this.player1.add(new RenderComponent(new Sprite(Mappers.moveTexture.get(this.player1).getFrontStandTexture())));
+        this.player1 = createPlayer(null, Races.HUMAN);
 
         this.partyMembers = new EmergenceEntity[]{this.player1};
     }

@@ -23,7 +23,6 @@
  */
 package com.emergence.screen.overlay;
 
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -114,8 +113,8 @@ public class Scene2DOverlay implements Overlay {
     
     @Override
     public void resize(int width, int height) {
-        // True buts 0, 0 at the bottom left corner, false or omission buts 0, 0 at the center
-        this.stage.getViewport().update(width, height, false);
+        // True buts 0, 0 at the bottom left corner, false or omission puts 0, 0 at the center
+        this.stage.getViewport().update(width, height, true);
     }
 
     @Override

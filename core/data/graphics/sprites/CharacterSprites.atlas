@@ -2,448 +2,448 @@ CharacterSprites.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-prowler-walk-front-1
+human-prowler-walk-front-1
   rotate: false
   xy: 0, 0
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-prowler-walk-front-2
+human-prowler-walk-front-2
   rotate: false
   xy: 16, 0
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-prowler-walk-back-1
+human-prowler-walk-back-1
   rotate: false
   xy: 32, 0
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-prowler-walk-back-2
+human-prowler-walk-back-2
   rotate: false
   xy: 48, 0
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-prowler-stand-right
+human-prowler-stand-right
   rotate: false
   xy: 64, 0
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-prowler-walk-right
+human-prowler-walk-right
   rotate: false
   xy: 80, 0
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-prowler-stand-left
+human-prowler-stand-left
   rotate: false
   xy: 96, 0
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-prowler-walk-left
+human-prowler-walk-left
   rotate: false
   xy: 112, 0
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-prowler-stand-front
+human-prowler-stand-front
   rotate: false
   xy: 128, 0
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-prowler-stand-back
+human-prowler-stand-back
   rotate: false
   xy: 144, 0
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-prowler-attack-right
+human-prowler-attack-right
   rotate: false
   xy: 160, 0
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-prowler-attack-left
+human-prowler-attack-left
   rotate: false
   xy: 176, 0
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-prowler-attack-down
+human-prowler-attack-down
   rotate: false
   xy: 192, 0
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-prowler-attack-up
+human-prowler-attack-up
   rotate: false
   xy: 208, 0
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-prowler-cast
+human-prowler-cast
   rotate: false
   xy: 224, 0
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-prowler-dead
+human-prowler-dead
   rotate: false
   xy: 240, 0
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-magus-walk-front-1
+human-magus-walk-front-1
   rotate: false
   xy: 0, 16
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-magus-walk-front-2
+human-magus-walk-front-2
   rotate: false
   xy: 16, 16
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-magus-walk-back-1
+human-magus-walk-back-1
   rotate: false
   xy: 32, 16
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-magus-walk-back-2
+human-magus-walk-back-2
   rotate: false
   xy: 48, 16
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-magus-stand-right
+human-magus-stand-right
   rotate: false
   xy: 64, 16
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-magus-walk-right
+human-magus-walk-right
   rotate: false
   xy: 80, 16
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-magus-stand-left
+human-magus-stand-left
   rotate: false
   xy: 96, 16
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-magus-walk-left
+human-magus-walk-left
   rotate: false
   xy: 112, 16
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-magus-stand-front
+human-magus-stand-front
   rotate: false
   xy: 128, 16
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-magus-stand-back
+human-magus-stand-back
   rotate: false
   xy: 144, 16
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-magus-attack-right
+human-magus-attack-right
   rotate: false
   xy: 160, 16
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-magus-attack-left
+human-magus-attack-left
   rotate: false
   xy: 176, 16
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-magus-attack-down
+human-magus-attack-down
   rotate: false
   xy: 192, 16
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-magus-attack-up
+human-magus-attack-up
   rotate: false
   xy: 208, 16
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-magus-cast
+human-magus-cast
   rotate: false
   xy: 224, 16
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-magus-dead
+human-magus-dead
   rotate: false
   xy: 240, 16
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-champion-walk-front-1
+human-champion-walk-front-1
   rotate: false
   xy: 0, 32
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-champion-walk-front-2
+human-champion-walk-front-2
   rotate: false
   xy: 16, 32
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-champion-walk-back-1
+human-champion-walk-back-1
   rotate: false
   xy: 32, 32
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-champion-walk-back-2
+human-champion-walk-back-2
   rotate: false
   xy: 48, 32
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-champion-stand-right
+human-champion-stand-right
   rotate: false
   xy: 64, 32
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-champion-walk-right
+human-champion-walk-right
   rotate: false
   xy: 80, 32
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-champion-stand-left
+human-champion-stand-left
   rotate: false
   xy: 96, 32
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-champion-walk-left
+human-champion-walk-left
   rotate: false
   xy: 112, 32
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-champion-stand-front
+human-champion-stand-front
   rotate: false
   xy: 128, 32
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-champion-stand-back
+human-champion-stand-back
   rotate: false
   xy: 144, 32
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-champion-attack-right
+human-champion-attack-right
   rotate: false
   xy: 160, 32
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-champion-attack-left
+human-champion-attack-left
   rotate: false
   xy: 176, 32
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-champion-attack-down
+human-champion-attack-down
   rotate: false
   xy: 192, 32
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-champion-attack-up
+human-champion-attack-up
   rotate: false
   xy: 208, 32
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-champion-cast
+human-champion-cast
   rotate: false
   xy: 224, 32
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-champion-dead
+human-champion-dead
   rotate: false
   xy: 240, 32
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-warlock-walk-front-1
+human-warlock-walk-front-1
   rotate: false
   xy: 0, 48
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-warlock-walk-front-2
+human-warlock-walk-front-2
   rotate: false
   xy: 16, 48
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-warlock-walk-back-1
+human-warlock-walk-back-1
   rotate: false
   xy: 32, 48
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-warlock-walk-back-2
+human-warlock-walk-back-2
   rotate: false
   xy: 48, 48
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-warlock-stand-right
+human-warlock-stand-right
   rotate: false
   xy: 64, 48
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-warlock-walk-right
+human-warlock-walk-right
   rotate: false
   xy: 80, 48
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-warlock-stand-left
+human-warlock-stand-left
   rotate: false
   xy: 96, 48
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-warlock-walk-left
+human-warlock-walk-left
   rotate: false
   xy: 112, 48
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-warlock-stand-front
+human-warlock-stand-front
   rotate: false
   xy: 128, 48
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-warlock-stand-back
+human-warlock-stand-back
   rotate: false
   xy: 144, 48
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-warlock-attack-right
+human-warlock-attack-right
   rotate: false
   xy: 160, 48
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-warlock-attack-left
+human-warlock-attack-left
   rotate: false
   xy: 176, 48
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-warlock-attack-down
+human-warlock-attack-down
   rotate: false
   xy: 192, 48
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-warlock-attack-up
+human-warlock-attack-up
   rotate: false
   xy: 208, 48
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-warlock-cast
+human-warlock-cast
   rotate: false
   xy: 224, 48
   size: 16, 16
   orig: 0, 0
   offset: 0, 0
   index: -1
-warlock-dead
+human-warlock-dead
   rotate: false
   xy: 240, 48
   size: 16, 16

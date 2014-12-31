@@ -31,12 +31,8 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.emergence.EmergenceGame;
-import com.emergence.io.FileLocations;
 import com.emergence.screen.overlay.Overlay;
-import java.io.File;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -62,6 +58,10 @@ public abstract class OverlayableScreen implements Screen, InputProcessor {
     
     public final Batch getOverlayBatch() {
         return this.overlayBatch;
+    }
+    
+    public final Set<Overlay> getOverlays() {
+        return this.overlays;
     }
     
     public final Color getTint() {

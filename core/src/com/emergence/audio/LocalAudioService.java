@@ -40,7 +40,7 @@ import java.util.Set;
  *
  * @author Nathan Templon
  */
-public class LocalAudioService implements AudioService {
+public class LocalAudioService extends AudioService {
     
     // Constants
     private final float MASTER_VOLUME_ADJUSTMENT = 1f;
@@ -132,7 +132,9 @@ public class LocalAudioService implements AudioService {
     @Override
     public void setMusicVolume(float volume) {
         this.musicVolume = volume * MASTER_VOLUME_ADJUSTMENT;
-        this.currentTrack.setVolume(this.musicVolume);
+        if (this.currentTrack != null) {
+            this.currentTrack.setVolume(this.musicVolume);
+        }
     }
     
     @Override

@@ -5,10 +5,10 @@ atlas: [
 		image: "CharacterSprites.png",
 		size: 16,
 		rows: [
-			"prowler",
-			"magus",
-			"champion",
-			"warlock"
+			"human-prowler",
+			"human-magus",
+			"human-champion",
+			"human-warlock"
 		],
 		columns: [
 			"walk-front-1",
