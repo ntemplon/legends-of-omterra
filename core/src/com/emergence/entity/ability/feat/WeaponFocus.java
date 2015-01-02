@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Nathan Templon.
+ * Copyright 2015 Nathan Templon.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,12 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emergence.entity.stats;
+package com.emergence.entity.ability.feat;
+
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
+import com.emergence.entity.ability.AbilityQualifications;
 
 /**
  *
  * @author Nathan Templon
  */
-public class CharacterClass {
+public class WeaponFocus extends Feat {
+
+    // Properties
+    @Override
+    public AbilityQualifications getQualifications() {
+        return (Entity entity) -> true;
+    }
+    
+    
+    // Serializable (Json) Implementation
+    @Override
+    public void write(Json json) {
+        
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonData) {
+        
+    }
     
 }

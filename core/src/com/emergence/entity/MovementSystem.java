@@ -88,8 +88,14 @@ public class MovementSystem extends IteratingSystem implements MessageListener, 
                 }
             }
             else {
-                return null;
+                if (x > 0) {
+                    return RIGHT;
+                }
+                else if (x < 0) {
+                    return LEFT;
+                }
             }
+            return null;
         }
         
         public final int deltaX;
@@ -159,6 +165,7 @@ public class MovementSystem extends IteratingSystem implements MessageListener, 
             }
             else {
                 Mappers.render.get(entity).getSprite().setRegion(Mappers.moveTexture.get(entity).standingTextureFor(direction));
+                Mappers.position.get(entity).setFacingDirection(direction);
             }
         }
     }

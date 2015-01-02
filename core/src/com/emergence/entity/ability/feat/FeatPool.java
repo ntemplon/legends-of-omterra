@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Nathan Templon.
+ * Copyright 2015 Nathan Templon.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,35 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emergence.entity;
+package com.emergence.entity.ability.feat;
 
-import com.emergence.entity.component.CollisionComponent;
-import com.badlogic.ashley.core.Family;
-import com.emergence.entity.component.PositionComponent;
-import com.emergence.entity.component.RenderComponent;
-import com.emergence.entity.component.SizeComponent;
-import com.emergence.entity.component.MovementResourceComponent;
-import com.emergence.entity.component.RaceComponent;
-import com.emergence.entity.component.WalkComponent;
+import com.badlogic.ashley.core.Entity;
+import com.emergence.entity.ability.AbilityPool;
 
 /**
  *
  * @author Nathan Templon
  */
-public final class Families {
-    
-    // Constants
-    public static final Family collidables = Family.all(CollisionComponent.class).get();
-    public static final Family positionables = Family.all(PositionComponent.class, SizeComponent.class).get();
-    public static final Family raced = Family.all(RaceComponent.class).get();
-    public static final Family renderables = Family.all(RenderComponent.class).get();
-    public static final Family walkables = Family.all(PositionComponent.class, SizeComponent.class, WalkComponent.class,
-            MovementResourceComponent.class).get();
-    
+public class FeatPool extends AbilityPool<Feat> {
     
     // Initialization
-    private Families() {
-        
+    public FeatPool() {
+        this.loadInitialSources();
+    }
+    
+    public FeatPool(Entity entity) {
+        super(entity);
+        this.loadInitialSources();
+    }
+    
+    
+    // Private Methods
+    private void loadInitialSources() {
+        Feat.FEAT_TYPES.stream().forEach((Class<? extends Feat> type) -> {
+            try {
+                Feat instance = type.newInstance();
+                this.addSource(instance);
+            }
+            catch (IllegalAccessException | InstantiationException ex) {
+                
+            }
+        });
     }
     
 }

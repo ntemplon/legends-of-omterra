@@ -21,35 +21,56 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emergence.entity;
+package com.emergence.entity.component;
 
-import com.emergence.entity.component.CollisionComponent;
-import com.badlogic.ashley.core.Family;
-import com.emergence.entity.component.PositionComponent;
-import com.emergence.entity.component.RenderComponent;
-import com.emergence.entity.component.SizeComponent;
-import com.emergence.entity.component.MovementResourceComponent;
-import com.emergence.entity.component.RaceComponent;
-import com.emergence.entity.component.WalkComponent;
+import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.Json.Serializable;
+import com.badlogic.gdx.utils.JsonValue;
 
 /**
  *
  * @author Nathan Templon
  */
-public final class Families {
-    
+public class NameComponent extends Component implements Serializable {
+
     // Constants
-    public static final Family collidables = Family.all(CollisionComponent.class).get();
-    public static final Family positionables = Family.all(PositionComponent.class, SizeComponent.class).get();
-    public static final Family raced = Family.all(RaceComponent.class).get();
-    public static final Family renderables = Family.all(RenderComponent.class).get();
-    public static final Family walkables = Family.all(PositionComponent.class, SizeComponent.class, WalkComponent.class,
-            MovementResourceComponent.class).get();
+    private final String NAME_KEY = "name";
+    
+    
+    // Fields
+    private String name;
+    
+    
+    // Properties
+    public String getName() {
+        return this.name;
+    }
     
     
     // Initialization
-    private Families() {
-        
+    public NameComponent() {
+        this.name = "default";
     }
+    
+    public NameComponent(String name) {
+        this.name = name;
+    }
+    
+    
+    // Serializable (Json) implementation
+    @Override
+    public void write(Json json) {
+        json.writeValue(NAME_KEY, this.getName());
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonData) {
+        if (jsonData.has(NAME_KEY)) {
+            this.name = jsonData.getString(NAME_KEY);
+        }
+    }
+    
+    
     
 }

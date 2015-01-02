@@ -21,56 +21,99 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emergence.entity.component;
+package com.emergence.entity.stats.characterclass;
 
-import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
-import com.emergence.entity.stats.race.Race;
-import com.emergence.entity.stats.race.Race.Races;
+import com.emergence.entity.ability.AbilityPool;
 
 /**
  *
  * @author Nathan Templon
  */
-public class RaceComponent extends Component implements Serializable {
-
-    // Constants
-    private final String RACE_KEY = "race";
-    
-    
-    // Fields
-    private Race race;
-    
+public class Champion extends CharacterClass {
     
     // Properties
-    public final Race getRace() {
-        return this.race;
+    @Override
+    public String getTextureSetName() {
+        return "champion";
     }
-    
-    
+
+    @Override
+    public int getHealthPerLevel() {
+        return 6;
+    }
+
+    @Override
+    public int getStartingHealth() {
+        return 20;
+    }
+
+    @Override
+    public int getSkillPointsPerLevel() {
+        return 0;
+    }
+
+    @Override
+    public int getAttackBonus() {
+        return CharacterClass.goodAttackBonus(this.getLevel());
+    }
+
+    @Override
+    public int getFortitude() {
+        return CharacterClass.goodSave(this.getLevel());
+    }
+
+    @Override
+    public int getReflexes() {
+        return CharacterClass.poorSave(this.getLevel());
+    }
+
+    @Override
+    public int getWill() {
+        return CharacterClass.goodSave(this.getLevel());
+    }
+
+
     // Initialization
-    public RaceComponent() {
-        
+    public Champion() {
+
     }
     
-    public RaceComponent(Race race) {
-        this.race = race;
+    @Override
+    public void create() {
+        super.create();
+        this.getFeatPool().increaseCapacity(1);
+    }
+    
+    @Override
+    public void initialize() {
+        super.initialize();
+    }
+
+
+    // Public Methods
+    @Override
+    public void levelUp() {
+        if (this.getLevel() < MAX_LEVEL) {
+            super.levelUp();
+            
+            if (this.getLevel() % 4 == 0) {
+                this.getFeatPool().increaseCapacity(1);
+            }
+        }
     }
     
     
     // Serializable (Json) Implementation
     @Override
     public void write(Json json) {
-        json.writeValue(RACE_KEY, this.getRace().toString());
+        super.write(json);
     }
 
     @Override
     public void read(Json json, JsonValue jsonData) {
-        if (jsonData.has(RACE_KEY)) {
-            this.race = Races.valueOf(jsonData.getString(RACE_KEY));
-        }
+        super.read(json, jsonData);
     }
-    
+
 }

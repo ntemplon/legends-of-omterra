@@ -28,20 +28,29 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
 import com.emergence.entity.component.AttributesComponent;
+import com.emergence.entity.component.CharacterClassComponent;
 import com.emergence.entity.component.CollisionComponent;
 import com.emergence.entity.component.PositionComponent;
 import com.emergence.entity.component.RenderComponent;
 import com.emergence.entity.component.SizeComponent;
 import com.emergence.entity.component.MovementResourceComponent;
+import com.emergence.entity.component.NameComponent;
 import com.emergence.entity.component.RaceComponent;
 import com.emergence.entity.component.WalkComponent;
-import com.emergence.entity.stats.CharacterClass;
-import com.emergence.entity.stats.Race;
-import com.emergence.entity.stats.Race.Races;
+import com.emergence.entity.stats.Attributes;
+import com.emergence.entity.stats.characterclass.Champion;
+import com.emergence.entity.stats.characterclass.CharacterClass;
+import com.emergence.entity.stats.race.Race;
+import com.emergence.entity.stats.race.Race.Races;
 import com.emergence.geometry.Size;
 import com.emergence.io.FileLocations;
 import java.awt.Point;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -51,11 +60,20 @@ public class Party implements Serializable {
 
     // Constants
     public static final String PARTY_MEMBERS_KEY = "party-members";
+    public static final String ACTIVE_PARTY_MEMBERS_KEY = "active-party-members";
 
 
     // Static Methods
-    public static final EmergenceEntity createPlayer(CharacterClass charClass, Race race) {
+    public final EmergenceEntity createPlayer(String name, Class<? extends CharacterClass> charClass, Race race, Attributes attributes) {
+        // NOTE: Order of component creation is important!
         EmergenceEntity entity = new EmergenceEntity();
+
+        entity.add(new NameComponent(name));
+        entity.add(new RaceComponent(race));
+        
+        CharacterClassComponent classComponent = new CharacterClassComponent(charClass, entity);
+        String textureSetName = race.getTextureString() + "-" + classComponent.getCharacterClass().getTextureSetName();
+
         entity.add(new MovementResourceComponent(new File(FileLocations.SPRITES_DIRECTORY,
                 "CharacterSprites.atlas").getPath(), "human-champion"));
         entity.add(new PositionComponent(null, new Point(19, 25), 0));
@@ -64,8 +82,13 @@ public class Party implements Serializable {
                 entity).getSize()));
         entity.add(new WalkComponent());
         entity.add(new RenderComponent(new Sprite(Mappers.moveTexture.get(entity).getFrontStandTexture())));
-        entity.add(new AttributesComponent());
-        entity.add(new RaceComponent(race));
+        entity.add(new AttributesComponent(attributes));
+        entity.add(classComponent);
+        
+        entity.initializeComponents();
+
+        this.partyMembers.put(name, entity);
+
         return entity;
     }
 
@@ -73,40 +96,51 @@ public class Party implements Serializable {
     // Fields
     private EmergenceEntity player1;
 
-    private EmergenceEntity[] partyMembers;
+    private List<EmergenceEntity> activePartyMembers = new ArrayList<>();
+    private Map<String, EmergenceEntity> partyMembers = new HashMap<>();
 
 
     // Properties
-    public final EmergenceEntity[] getPartyMembers() {
-        return this.partyMembers;
+    public final EmergenceEntity[] getActivePartyMembers() {
+        return this.activePartyMembers.toArray(new EmergenceEntity[this.activePartyMembers.size()]);
     }
 
 
     // Initialization
     public Party() {
-        this.player1 = createPlayer(null, Races.HUMAN);
+        this(false);
+    }
 
-        this.partyMembers = new EmergenceEntity[]{this.player1};
+    public Party(boolean createNew) {
+        if (createNew) {
+            this.player1 = this.createPlayer("Tharivol", Champion.class, Races.HUMAN, new Attributes());
+            this.activePartyMembers.add(this.player1);
+        }
     }
 
 
     // Serializable (Json) implementation
     @Override
     public void write(Json json) {
-        json.writeArrayStart(PARTY_MEMBERS_KEY);
-        for (EmergenceEntity entity : this.getPartyMembers()) {
-            json.writeValue(entity, entity.getClass());
+        json.writeValue(PARTY_MEMBERS_KEY, this.partyMembers, HashMap.class);
+
+        json.writeArrayStart(ACTIVE_PARTY_MEMBERS_KEY);
+        for (EmergenceEntity entity : this.getActivePartyMembers()) {
+            json.writeValue(Mappers.name.get(entity).getName());
         }
         json.writeArrayEnd();
     }
 
     @Override
     public void read(Json json, JsonValue jsonData) {
-        JsonValue members = jsonData.get(PARTY_MEMBERS_KEY);
-        this.partyMembers = new EmergenceEntity[members.size];
+        if (jsonData.has(PARTY_MEMBERS_KEY)) {
+            this.partyMembers = json.fromJson(HashMap.class, jsonData.get(PARTY_MEMBERS_KEY).toString());
+        }
+
+        JsonValue members = jsonData.get(ACTIVE_PARTY_MEMBERS_KEY);
 
         for (int i = 0; i < members.size; i++) {
-            this.partyMembers[i] = json.fromJson(EmergenceEntity.class, members.get(i).toString());
+            this.activePartyMembers.add(this.partyMembers.get(members.getString(i)));
         }
     }
 

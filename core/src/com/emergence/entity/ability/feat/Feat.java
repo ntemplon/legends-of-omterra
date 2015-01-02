@@ -21,35 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emergence.entity;
+package com.emergence.entity.ability.feat;
 
-import com.emergence.entity.component.CollisionComponent;
-import com.badlogic.ashley.core.Family;
-import com.emergence.entity.component.PositionComponent;
-import com.emergence.entity.component.RenderComponent;
-import com.emergence.entity.component.SizeComponent;
-import com.emergence.entity.component.MovementResourceComponent;
-import com.emergence.entity.component.RaceComponent;
-import com.emergence.entity.component.WalkComponent;
+import com.emergence.entity.ability.Ability;
+import java.util.Set;
+import org.reflections.Reflections;
 
 /**
  *
  * @author Nathan Templon
  */
-public final class Families {
+public abstract class Feat extends Ability {
     
     // Constants
-    public static final Family collidables = Family.all(CollisionComponent.class).get();
-    public static final Family positionables = Family.all(PositionComponent.class, SizeComponent.class).get();
-    public static final Family raced = Family.all(RaceComponent.class).get();
-    public static final Family renderables = Family.all(RenderComponent.class).get();
-    public static final Family walkables = Family.all(PositionComponent.class, SizeComponent.class, WalkComponent.class,
-            MovementResourceComponent.class).get();
-    
-    
-    // Initialization
-    private Families() {
-        
-    }
+    public static final Set<Class<? extends Feat>> FEAT_TYPES = new Reflections("com.emergence").getSubTypesOf(Feat.class);
     
 }

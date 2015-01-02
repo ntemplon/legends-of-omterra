@@ -28,6 +28,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
+import com.emergence.EmergenceGame;
 import com.emergence.util.Initializable;
 
 /**
@@ -38,39 +39,64 @@ public class EmergenceEntity extends Entity implements Serializable {
 
     // Constants
     public static final String COMPONENTS_KEY = "components";
-    public static final String CLASS_KEY = "class";
-    public static final String DATA_KEY = "data";
+    public static final String OLD_ID_KEY = "id";
+    public static final String COMPONENT_CLASS_KEY = "component-class";
+    public static final String COMPONENT_DATA_KEY = "component-data";
+
+
+    // Public Methods
+    public void initializeComponents() {
+        for(Component component : this.getComponents()) {
+            if (component instanceof Initializable) {
+                ((Initializable)component).initialize();
+            }
+        }
+    }
     
-    
+
     // Serializable (Json) Implementation
     @Override
     public void write(Json json) {
+        json.writeValue(OLD_ID_KEY, this.getId());
+
+        json.writeArrayStart(COMPONENTS_KEY);
         for (Component component : this.getComponents()) {
             if (component instanceof Serializable) {
-                json.writeValue(component.getClass().getName(), component, component.getClass());
+                json.writeObjectStart();
+                json.writeValue(COMPONENT_CLASS_KEY, component.getClass().getName());
+                json.writeValue(COMPONENT_DATA_KEY, component, component.getClass());
+                json.writeObjectEnd();
             }
         }
+        json.writeArrayEnd();
     }
 
     @Override
     public void read(Json json, JsonValue jsonData) {
-        jsonData.iterator().forEach((JsonValue value) -> {
-            try {
-                Class<?> type = Class.forName(value.name());
-                if (Component.class.isAssignableFrom(type)) {
-                    this.add((Component)json.fromJson(type, value.toString()));
+        if (jsonData.has(OLD_ID_KEY)) {
+            long oldID = jsonData.getLong(OLD_ID_KEY);
+            EmergenceGame.game.lastIdMapping.put(oldID, this);
+        }
+
+        if (jsonData.has(COMPONENTS_KEY)) {
+            JsonValue componentsValue = jsonData.get(COMPONENTS_KEY);
+
+            componentsValue.iterator().forEach((JsonValue value) -> {
+                try {
+                    if (value.has(COMPONENT_CLASS_KEY)) {
+                        Class<?> type = Class.forName(value.getString(COMPONENT_CLASS_KEY));
+                        if (Component.class.isAssignableFrom(type)) {
+                            this.add((Component) json.fromJson(type, value.get(COMPONENT_DATA_KEY).toString()));
+                        }
+                    }
                 }
-            }
-            catch (ClassNotFoundException ex) {
-                
-            }
-        });
-        
-        for(Component comp : this.getComponents()) {
-            if (comp instanceof Initializable) {
-                ((Initializable)comp).initialize();
-            }
+                catch (ClassNotFoundException ex) {
+
+                }
+            });
+
+            this.initializeComponents();
         }
     }
-    
+
 }

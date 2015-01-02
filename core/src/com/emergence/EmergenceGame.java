@@ -141,7 +141,7 @@ public class EmergenceGame extends Game implements InputProcessor {
                         
                         // Remove old party
                         if (game.party != null) {
-                            for (Entity entity : game.party.getPartyMembers()) {
+                            for (Entity entity : game.party.getActivePartyMembers()) {
                                 game.getCurrentLevel().getEntityLayer().removeEntity(entity);
                             }
                         }
@@ -221,6 +221,7 @@ public class EmergenceGame extends Game implements InputProcessor {
 
     // Fields
     public final Engine entityEngine = new Engine(); // Ashley entity framework engine
+    public final Map<Long, Entity> lastIdMapping = new HashMap<>();
     private final GameTimer timer = new GameTimer();
 
     private LevelScreen levelScreen;
@@ -274,11 +275,11 @@ public class EmergenceGame extends Game implements InputProcessor {
     public final void setLevel(Level level) {
         this.currentLevel = level;
 
-        for (Entity entity : this.party.getPartyMembers()) {
+        for (Entity entity : this.party.getActivePartyMembers()) {
             this.currentLevel.getEntityLayer().addEntity(entity);
         }
 
-        this.currentLevel.setControlledEntity(this.getParty().getPartyMembers()[0]);
+        this.currentLevel.setControlledEntity(this.getParty().getActivePartyMembers()[0]);
     }
 
     public final MessageSystem getMessageSystem() {
@@ -375,7 +376,7 @@ public class EmergenceGame extends Game implements InputProcessor {
         game.setLevel(game.getCurrentWorld().getStartingLevel());
 
         this.entityEngine.removeAllEntities();
-        for (Entity entity : party.getPartyMembers()) {
+        for (Entity entity : party.getActivePartyMembers()) {
             this.entityEngine.addEntity(entity);
         }
         

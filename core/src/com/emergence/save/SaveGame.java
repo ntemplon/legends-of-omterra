@@ -79,7 +79,7 @@ public class SaveGame implements Serializable {
     public SaveGame(String name, World world) {
         this.name = name;
         this.world = world;
-        this.party = new Party();
+        this.party = new Party(true);
         this.level = this.world.getStartingLevel();
     }
     
