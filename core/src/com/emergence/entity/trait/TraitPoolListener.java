@@ -21,12 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emergence.entity.ability;
+package com.emergence.entity.trait;
 
 /**
  *
  * @author Nathan Templon
+ * @param <T>
  */
-public interface Ability {
+@FunctionalInterface
+public interface TraitPoolListener<T extends Trait> {
+    
+    void traitSelected(TraitPool<T> pool, T trait);
     
 }

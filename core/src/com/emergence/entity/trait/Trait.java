@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2015 Nathan Templon.
+ * Copyright 2014 Nathan Templon.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,12 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emergence.entity.ability;
+package com.emergence.entity.trait;
+
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.utils.Json.Serializable;
+import com.emergence.entity.effects.Effect;
 
 /**
  *
  * @author Nathan Templon
  */
-public interface Ability {
+public interface Trait extends Serializable {
+    
+    // Properties
+    Qualifications getQualifications();
+    Sprite getIcon();
+    String getName();
+    String getDescription();
+    Effect getEffect();
     
 }

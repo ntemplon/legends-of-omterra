@@ -40,6 +40,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.emergence.audio.AudioService;
 import com.emergence.audio.LocalAudioService;
 import com.emergence.entity.CollisionSystem;
+import com.emergence.entity.EffectsSystem;
 import com.emergence.entity.MovementSystem;
 import com.emergence.entity.Party;
 import com.emergence.entity.RenderingMaintenenceSystem;
@@ -85,6 +86,7 @@ public class EmergenceGame extends Game implements InputProcessor {
     public static final int MOVEMENT_SYSTEM_PRIORITY = 1;
     public static final int COLLISION_SYSTEM_PRIORITY = 9;
     public static final int RENDERING_SYSTEM_PRIORITY = 10;
+    public static final int EFFECTS_SYSTEM_PRIORITY = 20;
 
     public static final char MOVE_RIGHT_KEY = 'd';
     public static final char MOVE_LEFT_KEY = 'a';
@@ -240,6 +242,7 @@ public class EmergenceGame extends Game implements InputProcessor {
     private final MessageSystem messageSystem = new SimpleMessageSystem();
     private final MovementSystem movementSystem = new MovementSystem();
     private final CollisionSystem collisionSystem = new CollisionSystem();
+    private final EffectsSystem effectsSystem = new EffectsSystem();
     private final RenderingMaintenenceSystem renderingSystem = new RenderingMaintenenceSystem();
 
     private boolean suspended;
@@ -319,13 +322,16 @@ public class EmergenceGame extends Game implements InputProcessor {
     private EmergenceGame() {
         this.stateMachine = new StackStateMachine<>(this);
 
-        // Add systems to the engine        this.movementSystem.priority = MOVEMENT_SYSTEM_PRIORITY;
+        // Add systems to the engine
+        this.movementSystem.priority = MOVEMENT_SYSTEM_PRIORITY;
         this.collisionSystem.priority = COLLISION_SYSTEM_PRIORITY;
         this.renderingSystem.priority = RENDERING_SYSTEM_PRIORITY;
+        this.effectsSystem.priority = EFFECTS_SYSTEM_PRIORITY;
 
         this.entityEngine.addSystem(this.movementSystem);
         this.entityEngine.addSystem(this.collisionSystem);
         this.entityEngine.addSystem(this.renderingSystem);
+        this.entityEngine.addSystem(this.effectsSystem);
 
         for (EntitySystem system : this.entityEngine.getSystems()) {
             if (system instanceof SelfSubscribingListener) {

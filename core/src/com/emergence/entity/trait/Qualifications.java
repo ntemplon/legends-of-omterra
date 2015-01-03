@@ -21,12 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emergence.entity.ability;
+package com.emergence.entity.trait;
+
+import com.badlogic.ashley.core.Entity;
 
 /**
  *
  * @author Nathan Templon
  */
-public interface Ability {
+@FunctionalInterface
+public interface Qualifications {
+    
+    boolean qualifies(Entity entity);
     
 }

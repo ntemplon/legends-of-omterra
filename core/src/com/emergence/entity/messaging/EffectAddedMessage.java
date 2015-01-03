@@ -21,12 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emergence.entity.ability;
+package com.emergence.entity.messaging;
+
+import com.badlogic.ashley.core.Entity;
+import com.emergence.entity.effects.Effect;
 
 /**
  *
  * @author Nathan Templon
  */
-public interface Ability {
+public class EffectAddedMessage extends StateChangeMessage {
+    
+    // Fields
+    public final Entity entity;
+    public final Effect effect;
+    
+    
+    public EffectAddedMessage(Entity entity, Effect effect) {
+        this.entity = entity;
+        this.effect = effect;
+    }
     
 }

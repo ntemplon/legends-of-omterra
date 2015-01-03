@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Nathan Templon.
+ * Copyright 2015 Nathan Templon.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,19 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emergence.entity.ability.feat;
+package com.emergence.entity.messaging;
 
-import com.emergence.entity.ability.Ability;
-import java.util.Set;
-import org.reflections.Reflections;
+import com.badlogic.ashley.core.Entity;
+import com.emergence.entity.effects.Effect;
 
 /**
  *
  * @author Nathan Templon
  */
-public abstract class Feat extends Ability {
+public class RequestEffectAddMessage extends RequestMessage {
     
-    // Constants
-    public static final Set<Class<? extends Feat>> FEAT_TYPES = new Reflections("com.emergence").getSubTypesOf(Feat.class);
+    // Fields
+    public final Entity entity;
+    public final Effect effect;
+    
+    
+    // Initialization
+    public RequestEffectAddMessage(Entity entity, Effect effect) {
+        this.entity = entity;
+        this.effect = effect;
+    }
     
 }

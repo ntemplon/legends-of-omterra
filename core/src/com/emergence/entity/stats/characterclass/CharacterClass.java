@@ -30,9 +30,12 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.emergence.EmergenceGame;
 import com.emergence.entity.Families;
 import com.emergence.entity.Mappers;
-import com.emergence.entity.ability.AbilityPool;
-import com.emergence.entity.ability.feat.FeatPool;
+import com.emergence.entity.messaging.RequestEffectAddMessage;
+import com.emergence.entity.trait.TraitPool;
+import com.emergence.entity.trait.feat.FeatPool;
 import com.emergence.entity.stats.race.Race;
+import com.emergence.entity.trait.TraitPoolListener;
+import com.emergence.entity.trait.feat.Feat;
 import com.emergence.util.Initializable;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -42,94 +45,105 @@ import java.util.Set;
  * @author Nathan Templon
  */
 public abstract class CharacterClass implements Serializable, Initializable {
-    
+
     // Constants
     public static final int MAX_LEVEL = 20;
-    
+
     private static final String LEVEL_KEY = "level";
     private static final String OWNER_ID_KEY = "owner-id";
     private static final String FEAT_POOL_KEY = "feats";
-    
-    
+
+
     // Static Methods
     public static int goodSave(int level) {
-        return (int)(10.0 + (50.0 * ((level - 1.0) / (MAX_LEVEL - 1.0))));
+        return (int) (10.0 + (50.0 * ((level - 1.0) / (MAX_LEVEL - 1.0))));
     }
-    
+
     public static int poorSave(int level) {
-        return (int)(30.0 * ((level - 1.0) / (MAX_LEVEL - 1.0)));
+        return (int) (30.0 * ((level - 1.0) / (MAX_LEVEL - 1.0)));
     }
-    
+
     public static int goodAttackBonus(int level) {
         double totalBonus = 0.0;
         double currentBonus = level;
-        
+
         while (currentBonus > 0) {
             totalBonus += 5 * currentBonus;
             currentBonus -= 5;
         }
-        
-        return (int)Math.round(totalBonus);
+
+        return (int) Math.round(totalBonus);
     }
-    
+
     public static int averageAttackBonus(int level) {
         double totalBonus = 0.0;
         double currentBonus = level * 0.75;
-        
+
         while (currentBonus > 0) {
             totalBonus += 5 * currentBonus;
             currentBonus -= 5;
         }
-        
-        return (int)Math.round(totalBonus);
+
+        return (int) Math.round(totalBonus);
     }
-    
+
     public static int poorAttackBonus(int level) {
         double totalBonus = 0.0;
         double currentBonus = level * 0.5;
-        
+
         while (currentBonus > 0) {
             totalBonus += 5 * currentBonus;
             currentBonus -= 5;
         }
-        
-        return (int)Math.round(totalBonus);
+
+        return (int) Math.round(totalBonus);
     }
-    
-    
+
+
     // Fields
     private int level;
     private long ownerId = -1;
     private Entity owner;
-    private final Set<AbilityPool<?>> abilityPools = new LinkedHashSet<>();
+    private final Set<TraitPool<?>> abilityPools = new LinkedHashSet<>();
     private FeatPool featPool;
-    
-    
+
+
     // Properties
     public int getLevel() {
         return this.level;
     }
-    
+
     public abstract int getHealthPerLevel();
+
     public abstract int getStartingHealth();
+
     public abstract int getSkillPointsPerLevel();
-    
+
     public abstract int getAttackBonus();
+
     public abstract int getFortitude();
+
     public abstract int getReflexes();
+
     public abstract int getWill();
-    
-    public Set<AbilityPool<?>> getAbilityPools() {
+
+    public Set<TraitPool<?>> getAbilityPools() {
         return this.abilityPools;
     }
-    
+
     public Entity getOwner() {
         return this.owner;
     }
-    
+
     public void setOwner(Entity owner) {
         this.owner = owner;
-        
+
+        this.abilityPools.stream().forEach((TraitPool<?> pool) -> {
+            pool.setOwner(this.owner);
+            pool.setAutoQualify(true);
+            pool.reassesQualifications();
+        });
+
         if (Families.raced.matches(owner)) {
             Race race = Mappers.race.get(owner).getRace();
             if (race != null) {
@@ -139,54 +153,66 @@ public abstract class CharacterClass implements Serializable, Initializable {
             }
         }
     }
-    
+
     public FeatPool getFeatPool() {
         return this.featPool;
     }
-    
-    
+
+
     // Initialization
     public CharacterClass() {
         this.level = 1;
     }
-    
+
     public void create() {
         this.featPool = new FeatPool();
         this.featPool.increaseCapacity(1);
+
+//        this.initialize();
     }
-    
+
     @Override
     public void initialize() {
         if (this.featPool == null) {
             this.featPool = new FeatPool();
         }
-        
+
         this.abilityPools.add(this.featPool);
-        
+
         if (this.ownerId > 0) {
             this.owner = EmergenceGame.game.lastIdMapping.get(this.ownerId);
-            
-            this.abilityPools.stream().forEach((AbilityPool<?> pool) -> pool.setOwner(this.owner));
         }
+
+        if (this.owner != null) {
+            this.abilityPools.stream().forEach((TraitPool<?> pool) -> {
+                pool.setOwner(this.owner);
+                pool.setAutoQualify(true);
+                pool.reassesQualifications();
+            });
+        }
+
+        this.featPool.addListener((TraitPool<Feat> pool, Feat feat) -> {
+            EmergenceGame.game.getMessageSystem().publish(new RequestEffectAddMessage(this.owner, feat.getEffect()));
+        });
     }
-    
-    
+
+
     // Abstract Methods
     public abstract String getTextureSetName();
-    
-    
+
+
     // Public Methods
     public void levelUp() {
         if (this.level < MAX_LEVEL) {
             this.level++;
-            
+
             if (this.level % 3 == 0) {
                 this.featPool.increaseCapacity(1);
             }
         }
     }
-    
-    
+
+
     // Serializable (Json) Implementation
     @Override
     public void write(Json json) {
@@ -200,14 +226,14 @@ public abstract class CharacterClass implements Serializable, Initializable {
         if (jsonData.has(LEVEL_KEY)) {
             this.level = jsonData.getInt(LEVEL_KEY);
         }
-        
+
         if (jsonData.has(OWNER_ID_KEY)) {
             this.ownerId = jsonData.getLong(OWNER_ID_KEY);
         }
-        
+
         if (jsonData.has(FEAT_POOL_KEY)) {
             this.featPool = json.fromJson(FeatPool.class, jsonData.get(FEAT_POOL_KEY).toString());
         }
     }
-    
+
 }

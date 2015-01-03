@@ -21,27 +21,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emergence.entity.ability.feat;
+package com.emergence.entity.trait.feat;
 
-import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
-import com.emergence.entity.ability.AbilityQualifications;
+import com.emergence.entity.effects.AttributeModifierEffect;
+import com.emergence.entity.effects.Effect;
+import com.emergence.entity.trait.Qualifications;
+import com.emergence.entity.trait.FeatNotPresentQualifications;
 
 /**
  *
  * @author Nathan Templon
  */
-public class WeaponFocus extends Feat {
+public class ImprovedInitiative implements Feat {
 
-    // Properties
+    // Fields
+    private final Qualifications qualifications = new FeatNotPresentQualifications(ImprovedInitiative.class);
+    private final Effect effect = new ImprovedInitiativeEffect();
+    
+    
     @Override
-    public AbilityQualifications getQualifications() {
-        return (Entity entity) -> true;
+    public Qualifications getQualifications() {
+        return this.qualifications;
     }
     
-    
-    // Serializable (Json) Implementation
+    @Override
+    public Effect getEffect() {
+        return this.effect;
+    }
+
+    @Override
+    public Sprite getIcon() {
+        return new Sprite();
+    }
+
+    @Override
+    public String getName() {
+        return "Improved Initiative";
+    }
+
+    @Override
+    public String getDescription() {
+        return "You gain a +4 bonus to your Initative";
+    }
+
     @Override
     public void write(Json json) {
         
@@ -50,6 +75,15 @@ public class WeaponFocus extends Feat {
     @Override
     public void read(Json json, JsonValue jsonData) {
         
+    }
+    
+    
+    // Effect
+    private static class ImprovedInitiativeEffect extends AttributeModifierEffect {
+        @Override
+        public int getInitiativeModifier() {
+            return 4;
+        }
     }
     
 }

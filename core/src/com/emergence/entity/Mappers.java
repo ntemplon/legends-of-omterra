@@ -26,6 +26,8 @@ package com.emergence.entity;
 import com.emergence.entity.component.CollisionComponent;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.emergence.entity.component.AttributesComponent;
+import com.emergence.entity.component.CharacterClassComponent;
+import com.emergence.entity.component.EffectsComponent;
 import com.emergence.entity.component.PositionComponent;
 import com.emergence.entity.component.RenderComponent;
 import com.emergence.entity.component.SizeComponent;
@@ -42,7 +44,9 @@ public final class Mappers {
     
     // Constants
     public static final ComponentMapper<AttributesComponent> attributes = ComponentMapper.getFor(AttributesComponent.class);
+    public static final ComponentMapper<CharacterClassComponent> characterClass = ComponentMapper.getFor(CharacterClassComponent.class);
     public static final ComponentMapper<CollisionComponent> collision = ComponentMapper.getFor(CollisionComponent.class);
+    public static final ComponentMapper<EffectsComponent> effects = ComponentMapper.getFor(EffectsComponent.class);
     public static final ComponentMapper<MovementResourceComponent> moveTexture = ComponentMapper.getFor(MovementResourceComponent.class);
     public static final ComponentMapper<NameComponent> name = ComponentMapper.getFor(NameComponent.class);
     public static final ComponentMapper<PositionComponent> position = ComponentMapper.getFor(PositionComponent.class);

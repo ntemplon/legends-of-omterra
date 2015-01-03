@@ -21,12 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emergence.entity.ability;
+package com.emergence.entity.trait;
+
+import com.badlogic.ashley.core.Entity;
+import com.emergence.entity.Families;
+import com.emergence.entity.Mappers;
+import com.emergence.entity.trait.feat.Feat;
+import com.emergence.entity.stats.characterclass.CharacterClass;
 
 /**
  *
  * @author Nathan Templon
  */
-public interface Ability {
+public class FeatPresentQualifications implements Qualifications {
+    
+    // Fields
+    private final Class<? extends Feat> type;
+
+
+    // Initialization
+    public FeatPresentQualifications(Class<? extends Feat> type) {
+        this.type = type;
+    }
+
+
+    @Override
+    public boolean qualifies(Entity entity) {
+        if (Families.classed.matches(entity)) {
+            CharacterClass charClass = Mappers.characterClass.get(entity).getCharacterClass();
+            if (charClass != null) {
+                return !charClass.getFeatPool().getSelections().stream().noneMatch((Feat feat) ->
+                        (type.isAssignableFrom(feat.getClass())));
+            }
+        }
+        return false;
+    }
     
 }

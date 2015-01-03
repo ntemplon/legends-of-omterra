@@ -50,6 +50,10 @@ public class AttributesComponent extends Component implements Serializable {
         return this.baseAttributes;
     }
     
+    public final Attributes getCurrentAttributes() {
+        return this.currentAttributes;
+    }
+    
     
     // Initialization
     public AttributesComponent() {

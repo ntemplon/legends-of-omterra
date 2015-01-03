@@ -27,9 +27,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
+import com.emergence.entity.trait.feat.Feat;
+import com.emergence.entity.trait.feat.FeatPool;
 import com.emergence.entity.component.AttributesComponent;
 import com.emergence.entity.component.CharacterClassComponent;
 import com.emergence.entity.component.CollisionComponent;
+import com.emergence.entity.component.EffectsComponent;
 import com.emergence.entity.component.PositionComponent;
 import com.emergence.entity.component.RenderComponent;
 import com.emergence.entity.component.SizeComponent;
@@ -48,7 +51,6 @@ import java.awt.Point;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -69,13 +71,14 @@ public class Party implements Serializable {
         EmergenceEntity entity = new EmergenceEntity();
 
         entity.add(new NameComponent(name));
+        entity.add(new EffectsComponent());
         entity.add(new RaceComponent(race));
-        
+
         CharacterClassComponent classComponent = new CharacterClassComponent(charClass, entity);
         String textureSetName = race.getTextureString() + "-" + classComponent.getCharacterClass().getTextureSetName();
 
         entity.add(new MovementResourceComponent(new File(FileLocations.SPRITES_DIRECTORY,
-                "CharacterSprites.atlas").getPath(), "human-champion"));
+                "CharacterSprites.atlas").getPath(), textureSetName));
         entity.add(new PositionComponent(null, new Point(19, 25), 0));
         entity.add(new SizeComponent(new Size(1, 1)));
         entity.add(new CollisionComponent(Mappers.position.get(entity).getTilePosition(), Mappers.size.get(
@@ -84,7 +87,7 @@ public class Party implements Serializable {
         entity.add(new RenderComponent(new Sprite(Mappers.moveTexture.get(entity).getFrontStandTexture())));
         entity.add(new AttributesComponent(attributes));
         entity.add(classComponent);
-        
+
         entity.initializeComponents();
 
         this.partyMembers.put(name, entity);
@@ -115,6 +118,18 @@ public class Party implements Serializable {
         if (createNew) {
             this.player1 = this.createPlayer("Tharivol", Champion.class, Races.HUMAN, new Attributes());
             this.activePartyMembers.add(this.player1);
+
+            // DEBUG - Assign Default Feats
+            CharacterClass charClass = Mappers.characterClass.get(this.player1).getCharacterClass();
+            FeatPool feats = charClass.getFeatPool();
+
+            feats.setAutoQualify(true);
+            feats.getSources().stream().filter((Feat source) -> {
+                return feats.getNumberOfSelections() < feats.getCapacity();
+            }).forEach(
+                    (Feat source) -> {
+                        feats.select(source);
+                    });
         }
     }
 

@@ -21,12 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emergence.entity.ability;
+package com.emergence.entity.trait.feat;
+
+import com.badlogic.ashley.core.Entity;
+import com.emergence.entity.trait.TraitPool;
 
 /**
  *
  * @author Nathan Templon
  */
-public interface Ability {
+public class FeatPool extends TraitPool<Feat> {
+    
+    // Initialization
+    public FeatPool() {
+        this.loadInitialSources();
+    }
+    
+    public FeatPool(Entity entity) {
+        super(entity);
+        this.loadInitialSources();
+    }
+    
+    
+    // Private Methods
+    private void loadInitialSources() {
+        Feat.FEAT_TYPES.stream().forEach((Class<? extends Feat> type) -> {
+            try {
+                Feat instance = type.newInstance();
+                this.addSource(instance);
+            }
+            catch (IllegalAccessException | InstantiationException ex) {
+                
+            }
+        });
+    }
     
 }

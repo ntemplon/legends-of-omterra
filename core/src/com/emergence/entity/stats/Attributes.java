@@ -47,6 +47,7 @@ public class Attributes implements Serializable {
     
     private final String ATTACK_BONUS_KEY = "attack-bonus";
     private final String ARMOR_CLASS_KEY = "armor-class";
+    private final String INITIATIVE_KEY = "initiative";
     private final String SPELL_POWER_KEY = "spell-power";
     private final String SPELL_RESISTANCE_KEY = "spell-resistance";
     
@@ -66,6 +67,7 @@ public class Attributes implements Serializable {
     
     private int attackBonus;
     private int armorClass;
+    private int initiative;
     private int spellPower;
     private int spellResistance;
 
@@ -224,6 +226,20 @@ public class Attributes implements Serializable {
     public void setArmorClass(int armorClass) {
         this.armorClass = armorClass;
     }
+    
+    /**
+     * @return the initiative
+     */
+    public int getInitiative() {
+        return initiative;
+    }
+
+    /**
+     * @param initiative the initiative to set
+     */
+    public void setInitiative(int initiative) {
+        this.initiative = initiative;
+    }
 
     /**
      * @return the spellPower
@@ -294,6 +310,7 @@ public class Attributes implements Serializable {
         
         json.writeValue(ATTACK_BONUS_KEY, this.getAttackBonus());
         json.writeValue(ARMOR_CLASS_KEY, this.getArmorClass());
+        json.writeValue(INITIATIVE_KEY, this.getInitiative());
         json.writeValue(SPELL_POWER_KEY, this.getSpellPower());
         json.writeValue(SPELL_RESISTANCE_KEY, this.getSpellResistance());
     }
@@ -334,6 +351,9 @@ public class Attributes implements Serializable {
         }
         if (jsonData.has(ARMOR_CLASS_KEY)) {
             this.setArmorClass(jsonData.getInt(ARMOR_CLASS_KEY));
+        }
+        if (jsonData.has(INITIATIVE_KEY)) {
+            this.setInitiative(jsonData.getInt(INTELLIGENCE_KEY));
         }
         if (jsonData.has(SPELL_POWER_KEY)) {
             this.setSpellPower(jsonData.getInt(SPELL_POWER_KEY));

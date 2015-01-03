@@ -25,7 +25,6 @@ package com.emergence.entity.stats.characterclass;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
-import com.emergence.entity.ability.AbilityPool;
 
 /**
  *

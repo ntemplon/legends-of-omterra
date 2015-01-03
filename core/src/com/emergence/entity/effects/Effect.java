@@ -21,12 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emergence.entity.ability;
+package com.emergence.entity.effects;
+
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Json.Serializable;
 
 /**
  *
  * @author Nathan Templon
  */
-public interface Ability {
+public interface Effect extends Serializable {
+    
+    void onAdded(Entity entity);
+    void onRemove(Entity entity);
+    void update(float deltaT);
+    void onCombatTurnStart();
+    void onCombatTurnEnd();
+    void onOutOfCombatTurn();
     
 }

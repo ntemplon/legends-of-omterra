@@ -25,6 +25,9 @@ package com.emergence.entity;
 
 import com.emergence.entity.component.CollisionComponent;
 import com.badlogic.ashley.core.Family;
+import com.emergence.entity.component.AttributesComponent;
+import com.emergence.entity.component.CharacterClassComponent;
+import com.emergence.entity.component.EffectsComponent;
 import com.emergence.entity.component.PositionComponent;
 import com.emergence.entity.component.RenderComponent;
 import com.emergence.entity.component.SizeComponent;
@@ -39,7 +42,10 @@ import com.emergence.entity.component.WalkComponent;
 public final class Families {
     
     // Constants
+    public static final Family attributed = Family.all(AttributesComponent.class).get();
+    public static final Family classed = Family.all(CharacterClassComponent.class).get();
     public static final Family collidables = Family.all(CollisionComponent.class).get();
+    public static final Family affectables = Family.all(EffectsComponent.class).get();
     public static final Family positionables = Family.all(PositionComponent.class, SizeComponent.class).get();
     public static final Family raced = Family.all(RaceComponent.class).get();
     public static final Family renderables = Family.all(RenderComponent.class).get();

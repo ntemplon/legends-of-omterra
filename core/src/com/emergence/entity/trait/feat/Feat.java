@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2015 Nathan Templon.
+ * Copyright 2014 Nathan Templon.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,39 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emergence.entity.ability.feat;
+package com.emergence.entity.trait.feat;
 
-import com.badlogic.ashley.core.Entity;
-import com.emergence.entity.ability.AbilityPool;
+import com.emergence.entity.trait.Trait;
+import java.util.Set;
+import org.reflections.Reflections;
 
 /**
  *
  * @author Nathan Templon
  */
-public class FeatPool extends AbilityPool<Feat> {
+public interface Feat extends Trait {
     
-    // Initialization
-    public FeatPool() {
-        this.loadInitialSources();
-    }
-    
-    public FeatPool(Entity entity) {
-        super(entity);
-        this.loadInitialSources();
-    }
-    
-    
-    // Private Methods
-    private void loadInitialSources() {
-        Feat.FEAT_TYPES.stream().forEach((Class<? extends Feat> type) -> {
-            try {
-                Feat instance = type.newInstance();
-                this.addSource(instance);
-            }
-            catch (IllegalAccessException | InstantiationException ex) {
-                
-            }
-        });
-    }
+    // Constants
+    public static final Set<Class<? extends Feat>> FEAT_TYPES = new Reflections("com.emergence").getSubTypesOf(Feat.class);
     
 }
