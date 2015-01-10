@@ -1,0 +1,20 @@
+
+main_menu.png
+size: 1024,128
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+slider-background-main_menu
+  rotate: false
+  xy: 2, 84
+  size: 602, 30
+  orig: 602, 30
+  offset: 0, 0
+  index: -1
+slider-knob-main_menu
+  rotate: false
+  xy: 2, 2
+  size: 20, 80
+  orig: 20, 80
+  offset: 0, 0
+  index: -1

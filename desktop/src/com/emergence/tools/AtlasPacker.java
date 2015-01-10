@@ -23,15 +23,17 @@
  */
 package com.emergence.tools;
 
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
-import com.emergence.io.FileLocations;
-import java.io.File;
-import java.io.FileWriter;
+import com.jupiter.europa.io.FileLocations;
+import static com.jupiter.europa.screen.MainMenuScreen.MAIN_MENU_SKIN_DIRECTORY;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  *
@@ -52,12 +54,12 @@ public class AtlasPacker implements Runnable {
     // Public Methods
     @Override
     public void run() {
-        File configFile = new File(FileLocations.SPRITES_DIRECTORY, CONFIGURATION_FILE);
+        Path configFile = FileLocations.SPRITES_DIRECTORY.resolve(CONFIGURATION_FILE);
         JsonReader reader = new JsonReader();
         String contents = "";
 
         try {
-            contents = new String(Files.readAllBytes(configFile.toPath()), StandardCharsets.UTF_8);
+            contents = new String(Files.readAllBytes(configFile), StandardCharsets.UTF_8);
         }
         catch (IOException ex) {
             System.out.println("Atlas building failed.");
@@ -74,23 +76,22 @@ public class AtlasPacker implements Runnable {
             int size = currentAtlas.getInt("size");
             String[] rows = currentAtlas.get("rows").asStringArray();
             String[] columns = currentAtlas.get("columns").asStringArray();
-            
-//            String imageName = fileName.replace(".atlas", ".png");
 
-            File output = new File(FileLocations.SPRITES_DIRECTORY, fileName);
-            try (FileWriter fw = new FileWriter(output);
-                    PrintWriter pw = new PrintWriter(fw)) {
+//            String imageName = fileName.replace(".atlas", ".png");
+            Path output = FileLocations.SPRITES_DIRECTORY.resolve(fileName);
+            try (BufferedWriter bw = Files.newBufferedWriter(output);
+                    PrintWriter pw = new PrintWriter(bw)) {
                 pw.println(imageName);
                 pw.println("format: RGBA8888");
                 pw.println("filter: Nearest,Nearest");
                 pw.println("repeat: none");
-                
-                for(int row = 0; row < rows.length; row++) {
-                    for(int column = 0; column < columns.length; column++) {
+
+                for (int row = 0; row < rows.length; row++) {
+                    for (int column = 0; column < columns.length; column++) {
                         String patchName = rows[row] + "-" + columns[column];
                         int x = column * size;
                         int y = row * size;
-                        
+
                         pw.println(patchName);
                         pw.println("  rotate: false");
                         pw.println("  xy: " + x + ", " + y);
@@ -105,6 +106,8 @@ public class AtlasPacker implements Runnable {
                 System.out.println("Problem with atlas for " + fileName);
             }
         }
+
+        TexturePacker.process(MAIN_MENU_SKIN_DIRECTORY.toString(), MAIN_MENU_SKIN_DIRECTORY.toString(), "main_menu.atlas");
 
         System.out.println("Atlas building completed.");
     }

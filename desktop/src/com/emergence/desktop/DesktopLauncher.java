@@ -3,7 +3,7 @@ package com.emergence.desktop;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglFrame;
-import com.emergence.EmergenceGame;
+import com.jupiter.europa.EuropaGame;
 import com.emergence.tools.AtlasPacker;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
@@ -18,7 +18,7 @@ public class DesktopLauncher {
 
     // Static Methods
     public static String getWindowTitle() {
-        return EmergenceGame.TITLE + " " + EmergenceGame.VERSION;
+        return EuropaGame.TITLE + " " + EuropaGame.VERSION;
     }
 
 
@@ -32,7 +32,7 @@ public class DesktopLauncher {
         config.title = DesktopLauncher.getWindowTitle();
         config.resizable = RESIZEABLE;
 
-        final EmergenceGame game = EmergenceGame.game;
+        final EuropaGame game = EuropaGame.game;
         
         LwjglFrame frame = new LwjglFrame(game, config);
 

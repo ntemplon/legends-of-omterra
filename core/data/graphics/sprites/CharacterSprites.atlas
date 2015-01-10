@@ -450,3 +450,4931 @@ human-warlock-dead
   orig: 0, 0
   offset: 0, 0
   index: -1
+human-berserker-walk-front-1
+  rotate: false
+  xy: 0, 64
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-berserker-walk-front-2
+  rotate: false
+  xy: 16, 64
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-berserker-walk-back-1
+  rotate: false
+  xy: 32, 64
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-berserker-walk-back-2
+  rotate: false
+  xy: 48, 64
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-berserker-stand-right
+  rotate: false
+  xy: 64, 64
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-berserker-walk-right
+  rotate: false
+  xy: 80, 64
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-berserker-stand-left
+  rotate: false
+  xy: 96, 64
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-berserker-walk-left
+  rotate: false
+  xy: 112, 64
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-berserker-stand-front
+  rotate: false
+  xy: 128, 64
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-berserker-stand-back
+  rotate: false
+  xy: 144, 64
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-berserker-attack-right
+  rotate: false
+  xy: 160, 64
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-berserker-attack-left
+  rotate: false
+  xy: 176, 64
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-berserker-attack-down
+  rotate: false
+  xy: 192, 64
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-berserker-attack-up
+  rotate: false
+  xy: 208, 64
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-berserker-cast
+  rotate: false
+  xy: 224, 64
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-berserker-dead
+  rotate: false
+  xy: 240, 64
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-templar-walk-front-1
+  rotate: false
+  xy: 0, 80
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-templar-walk-front-2
+  rotate: false
+  xy: 16, 80
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-templar-walk-back-1
+  rotate: false
+  xy: 32, 80
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-templar-walk-back-2
+  rotate: false
+  xy: 48, 80
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-templar-stand-right
+  rotate: false
+  xy: 64, 80
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-templar-walk-right
+  rotate: false
+  xy: 80, 80
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-templar-stand-left
+  rotate: false
+  xy: 96, 80
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-templar-walk-left
+  rotate: false
+  xy: 112, 80
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-templar-stand-front
+  rotate: false
+  xy: 128, 80
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-templar-stand-back
+  rotate: false
+  xy: 144, 80
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-templar-attack-right
+  rotate: false
+  xy: 160, 80
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-templar-attack-left
+  rotate: false
+  xy: 176, 80
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-templar-attack-down
+  rotate: false
+  xy: 192, 80
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-templar-attack-up
+  rotate: false
+  xy: 208, 80
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-templar-cast
+  rotate: false
+  xy: 224, 80
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-templar-dead
+  rotate: false
+  xy: 240, 80
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-priest-walk-front-1
+  rotate: false
+  xy: 0, 96
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-priest-walk-front-2
+  rotate: false
+  xy: 16, 96
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-priest-walk-back-1
+  rotate: false
+  xy: 32, 96
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-priest-walk-back-2
+  rotate: false
+  xy: 48, 96
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-priest-stand-right
+  rotate: false
+  xy: 64, 96
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-priest-walk-right
+  rotate: false
+  xy: 80, 96
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-priest-stand-left
+  rotate: false
+  xy: 96, 96
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-priest-walk-left
+  rotate: false
+  xy: 112, 96
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-priest-stand-front
+  rotate: false
+  xy: 128, 96
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-priest-stand-back
+  rotate: false
+  xy: 144, 96
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-priest-attack-right
+  rotate: false
+  xy: 160, 96
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-priest-attack-left
+  rotate: false
+  xy: 176, 96
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-priest-attack-down
+  rotate: false
+  xy: 192, 96
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-priest-attack-up
+  rotate: false
+  xy: 208, 96
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-priest-cast
+  rotate: false
+  xy: 224, 96
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-priest-dead
+  rotate: false
+  xy: 240, 96
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-sorcerer-walk-front-1
+  rotate: false
+  xy: 0, 112
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-sorcerer-walk-front-2
+  rotate: false
+  xy: 16, 112
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-sorcerer-walk-back-1
+  rotate: false
+  xy: 32, 112
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-sorcerer-walk-back-2
+  rotate: false
+  xy: 48, 112
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-sorcerer-stand-right
+  rotate: false
+  xy: 64, 112
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-sorcerer-walk-right
+  rotate: false
+  xy: 80, 112
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-sorcerer-stand-left
+  rotate: false
+  xy: 96, 112
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-sorcerer-walk-left
+  rotate: false
+  xy: 112, 112
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-sorcerer-stand-front
+  rotate: false
+  xy: 128, 112
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-sorcerer-stand-back
+  rotate: false
+  xy: 144, 112
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-sorcerer-attack-right
+  rotate: false
+  xy: 160, 112
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-sorcerer-attack-left
+  rotate: false
+  xy: 176, 112
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-sorcerer-attack-down
+  rotate: false
+  xy: 192, 112
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-sorcerer-attack-up
+  rotate: false
+  xy: 208, 112
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-sorcerer-cast
+  rotate: false
+  xy: 224, 112
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-sorcerer-dead
+  rotate: false
+  xy: 240, 112
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-archer-walk-front-1
+  rotate: false
+  xy: 0, 128
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-archer-walk-front-2
+  rotate: false
+  xy: 16, 128
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-archer-walk-back-1
+  rotate: false
+  xy: 32, 128
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-archer-walk-back-2
+  rotate: false
+  xy: 48, 128
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-archer-stand-right
+  rotate: false
+  xy: 64, 128
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-archer-walk-right
+  rotate: false
+  xy: 80, 128
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-archer-stand-left
+  rotate: false
+  xy: 96, 128
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-archer-walk-left
+  rotate: false
+  xy: 112, 128
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-archer-stand-front
+  rotate: false
+  xy: 128, 128
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-archer-stand-back
+  rotate: false
+  xy: 144, 128
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-archer-attack-right
+  rotate: false
+  xy: 160, 128
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-archer-attack-left
+  rotate: false
+  xy: 176, 128
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-archer-attack-down
+  rotate: false
+  xy: 192, 128
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-archer-attack-up
+  rotate: false
+  xy: 208, 128
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-archer-cast
+  rotate: false
+  xy: 224, 128
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-archer-dead
+  rotate: false
+  xy: 240, 128
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-ninja-walk-front-1
+  rotate: false
+  xy: 0, 144
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-ninja-walk-front-2
+  rotate: false
+  xy: 16, 144
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-ninja-walk-back-1
+  rotate: false
+  xy: 32, 144
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-ninja-walk-back-2
+  rotate: false
+  xy: 48, 144
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-ninja-stand-right
+  rotate: false
+  xy: 64, 144
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-ninja-walk-right
+  rotate: false
+  xy: 80, 144
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-ninja-stand-left
+  rotate: false
+  xy: 96, 144
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-ninja-walk-left
+  rotate: false
+  xy: 112, 144
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-ninja-stand-front
+  rotate: false
+  xy: 128, 144
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-ninja-stand-back
+  rotate: false
+  xy: 144, 144
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-ninja-attack-right
+  rotate: false
+  xy: 160, 144
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-ninja-attack-left
+  rotate: false
+  xy: 176, 144
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-ninja-attack-down
+  rotate: false
+  xy: 192, 144
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-ninja-attack-up
+  rotate: false
+  xy: 208, 144
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-ninja-cast
+  rotate: false
+  xy: 224, 144
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-ninja-dead
+  rotate: false
+  xy: 240, 144
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-mindweaver-walk-front-1
+  rotate: false
+  xy: 0, 160
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-mindweaver-walk-front-2
+  rotate: false
+  xy: 16, 160
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-mindweaver-walk-back-1
+  rotate: false
+  xy: 32, 160
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-mindweaver-walk-back-2
+  rotate: false
+  xy: 48, 160
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-mindweaver-stand-right
+  rotate: false
+  xy: 64, 160
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-mindweaver-walk-right
+  rotate: false
+  xy: 80, 160
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-mindweaver-stand-left
+  rotate: false
+  xy: 96, 160
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-mindweaver-walk-left
+  rotate: false
+  xy: 112, 160
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-mindweaver-stand-front
+  rotate: false
+  xy: 128, 160
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-mindweaver-stand-back
+  rotate: false
+  xy: 144, 160
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-mindweaver-attack-right
+  rotate: false
+  xy: 160, 160
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-mindweaver-attack-left
+  rotate: false
+  xy: 176, 160
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-mindweaver-attack-down
+  rotate: false
+  xy: 192, 160
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-mindweaver-attack-up
+  rotate: false
+  xy: 208, 160
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-mindweaver-cast
+  rotate: false
+  xy: 224, 160
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-mindweaver-dead
+  rotate: false
+  xy: 240, 160
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-shaman-walk-front-1
+  rotate: false
+  xy: 0, 176
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-shaman-walk-front-2
+  rotate: false
+  xy: 16, 176
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-shaman-walk-back-1
+  rotate: false
+  xy: 32, 176
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-shaman-walk-back-2
+  rotate: false
+  xy: 48, 176
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-shaman-stand-right
+  rotate: false
+  xy: 64, 176
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-shaman-walk-right
+  rotate: false
+  xy: 80, 176
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-shaman-stand-left
+  rotate: false
+  xy: 96, 176
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-shaman-walk-left
+  rotate: false
+  xy: 112, 176
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-shaman-stand-front
+  rotate: false
+  xy: 128, 176
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-shaman-stand-back
+  rotate: false
+  xy: 144, 176
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-shaman-attack-right
+  rotate: false
+  xy: 160, 176
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-shaman-attack-left
+  rotate: false
+  xy: 176, 176
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-shaman-attack-down
+  rotate: false
+  xy: 192, 176
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-shaman-attack-up
+  rotate: false
+  xy: 208, 176
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-shaman-cast
+  rotate: false
+  xy: 224, 176
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+human-shaman-dead
+  rotate: false
+  xy: 240, 176
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-prowler-walk-front-1
+  rotate: false
+  xy: 0, 192
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-prowler-walk-front-2
+  rotate: false
+  xy: 16, 192
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-prowler-walk-back-1
+  rotate: false
+  xy: 32, 192
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-prowler-walk-back-2
+  rotate: false
+  xy: 48, 192
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-prowler-stand-right
+  rotate: false
+  xy: 64, 192
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-prowler-walk-right
+  rotate: false
+  xy: 80, 192
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-prowler-stand-left
+  rotate: false
+  xy: 96, 192
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-prowler-walk-left
+  rotate: false
+  xy: 112, 192
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-prowler-stand-front
+  rotate: false
+  xy: 128, 192
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-prowler-stand-back
+  rotate: false
+  xy: 144, 192
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-prowler-attack-right
+  rotate: false
+  xy: 160, 192
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-prowler-attack-left
+  rotate: false
+  xy: 176, 192
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-prowler-attack-down
+  rotate: false
+  xy: 192, 192
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-prowler-attack-up
+  rotate: false
+  xy: 208, 192
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-prowler-cast
+  rotate: false
+  xy: 224, 192
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-prowler-dead
+  rotate: false
+  xy: 240, 192
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-magus-walk-front-1
+  rotate: false
+  xy: 0, 208
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-magus-walk-front-2
+  rotate: false
+  xy: 16, 208
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-magus-walk-back-1
+  rotate: false
+  xy: 32, 208
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-magus-walk-back-2
+  rotate: false
+  xy: 48, 208
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-magus-stand-right
+  rotate: false
+  xy: 64, 208
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-magus-walk-right
+  rotate: false
+  xy: 80, 208
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-magus-stand-left
+  rotate: false
+  xy: 96, 208
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-magus-walk-left
+  rotate: false
+  xy: 112, 208
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-magus-stand-front
+  rotate: false
+  xy: 128, 208
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-magus-stand-back
+  rotate: false
+  xy: 144, 208
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-magus-attack-right
+  rotate: false
+  xy: 160, 208
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-magus-attack-left
+  rotate: false
+  xy: 176, 208
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-magus-attack-down
+  rotate: false
+  xy: 192, 208
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-magus-attack-up
+  rotate: false
+  xy: 208, 208
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-magus-cast
+  rotate: false
+  xy: 224, 208
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-magus-dead
+  rotate: false
+  xy: 240, 208
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-champion-walk-front-1
+  rotate: false
+  xy: 0, 224
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-champion-walk-front-2
+  rotate: false
+  xy: 16, 224
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-champion-walk-back-1
+  rotate: false
+  xy: 32, 224
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-champion-walk-back-2
+  rotate: false
+  xy: 48, 224
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-champion-stand-right
+  rotate: false
+  xy: 64, 224
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-champion-walk-right
+  rotate: false
+  xy: 80, 224
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-champion-stand-left
+  rotate: false
+  xy: 96, 224
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-champion-walk-left
+  rotate: false
+  xy: 112, 224
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-champion-stand-front
+  rotate: false
+  xy: 128, 224
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-champion-stand-back
+  rotate: false
+  xy: 144, 224
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-champion-attack-right
+  rotate: false
+  xy: 160, 224
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-champion-attack-left
+  rotate: false
+  xy: 176, 224
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-champion-attack-down
+  rotate: false
+  xy: 192, 224
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-champion-attack-up
+  rotate: false
+  xy: 208, 224
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-champion-cast
+  rotate: false
+  xy: 224, 224
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-champion-dead
+  rotate: false
+  xy: 240, 224
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-warlock-walk-front-1
+  rotate: false
+  xy: 0, 240
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-warlock-walk-front-2
+  rotate: false
+  xy: 16, 240
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-warlock-walk-back-1
+  rotate: false
+  xy: 32, 240
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-warlock-walk-back-2
+  rotate: false
+  xy: 48, 240
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-warlock-stand-right
+  rotate: false
+  xy: 64, 240
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-warlock-walk-right
+  rotate: false
+  xy: 80, 240
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-warlock-stand-left
+  rotate: false
+  xy: 96, 240
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-warlock-walk-left
+  rotate: false
+  xy: 112, 240
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-warlock-stand-front
+  rotate: false
+  xy: 128, 240
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-warlock-stand-back
+  rotate: false
+  xy: 144, 240
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-warlock-attack-right
+  rotate: false
+  xy: 160, 240
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-warlock-attack-left
+  rotate: false
+  xy: 176, 240
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-warlock-attack-down
+  rotate: false
+  xy: 192, 240
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-warlock-attack-up
+  rotate: false
+  xy: 208, 240
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-warlock-cast
+  rotate: false
+  xy: 224, 240
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-warlock-dead
+  rotate: false
+  xy: 240, 240
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-berserker-walk-front-1
+  rotate: false
+  xy: 0, 256
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-berserker-walk-front-2
+  rotate: false
+  xy: 16, 256
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-berserker-walk-back-1
+  rotate: false
+  xy: 32, 256
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-berserker-walk-back-2
+  rotate: false
+  xy: 48, 256
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-berserker-stand-right
+  rotate: false
+  xy: 64, 256
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-berserker-walk-right
+  rotate: false
+  xy: 80, 256
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-berserker-stand-left
+  rotate: false
+  xy: 96, 256
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-berserker-walk-left
+  rotate: false
+  xy: 112, 256
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-berserker-stand-front
+  rotate: false
+  xy: 128, 256
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-berserker-stand-back
+  rotate: false
+  xy: 144, 256
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-berserker-attack-right
+  rotate: false
+  xy: 160, 256
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-berserker-attack-left
+  rotate: false
+  xy: 176, 256
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-berserker-attack-down
+  rotate: false
+  xy: 192, 256
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-berserker-attack-up
+  rotate: false
+  xy: 208, 256
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-berserker-cast
+  rotate: false
+  xy: 224, 256
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-berserker-dead
+  rotate: false
+  xy: 240, 256
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-templar-walk-front-1
+  rotate: false
+  xy: 0, 272
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-templar-walk-front-2
+  rotate: false
+  xy: 16, 272
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-templar-walk-back-1
+  rotate: false
+  xy: 32, 272
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-templar-walk-back-2
+  rotate: false
+  xy: 48, 272
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-templar-stand-right
+  rotate: false
+  xy: 64, 272
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-templar-walk-right
+  rotate: false
+  xy: 80, 272
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-templar-stand-left
+  rotate: false
+  xy: 96, 272
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-templar-walk-left
+  rotate: false
+  xy: 112, 272
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-templar-stand-front
+  rotate: false
+  xy: 128, 272
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-templar-stand-back
+  rotate: false
+  xy: 144, 272
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-templar-attack-right
+  rotate: false
+  xy: 160, 272
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-templar-attack-left
+  rotate: false
+  xy: 176, 272
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-templar-attack-down
+  rotate: false
+  xy: 192, 272
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-templar-attack-up
+  rotate: false
+  xy: 208, 272
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-templar-cast
+  rotate: false
+  xy: 224, 272
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-templar-dead
+  rotate: false
+  xy: 240, 272
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-priest-walk-front-1
+  rotate: false
+  xy: 0, 288
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-priest-walk-front-2
+  rotate: false
+  xy: 16, 288
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-priest-walk-back-1
+  rotate: false
+  xy: 32, 288
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-priest-walk-back-2
+  rotate: false
+  xy: 48, 288
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-priest-stand-right
+  rotate: false
+  xy: 64, 288
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-priest-walk-right
+  rotate: false
+  xy: 80, 288
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-priest-stand-left
+  rotate: false
+  xy: 96, 288
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-priest-walk-left
+  rotate: false
+  xy: 112, 288
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-priest-stand-front
+  rotate: false
+  xy: 128, 288
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-priest-stand-back
+  rotate: false
+  xy: 144, 288
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-priest-attack-right
+  rotate: false
+  xy: 160, 288
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-priest-attack-left
+  rotate: false
+  xy: 176, 288
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-priest-attack-down
+  rotate: false
+  xy: 192, 288
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-priest-attack-up
+  rotate: false
+  xy: 208, 288
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-priest-cast
+  rotate: false
+  xy: 224, 288
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-priest-dead
+  rotate: false
+  xy: 240, 288
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-sorcerer-walk-front-1
+  rotate: false
+  xy: 0, 304
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-sorcerer-walk-front-2
+  rotate: false
+  xy: 16, 304
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-sorcerer-walk-back-1
+  rotate: false
+  xy: 32, 304
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-sorcerer-walk-back-2
+  rotate: false
+  xy: 48, 304
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-sorcerer-stand-right
+  rotate: false
+  xy: 64, 304
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-sorcerer-walk-right
+  rotate: false
+  xy: 80, 304
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-sorcerer-stand-left
+  rotate: false
+  xy: 96, 304
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-sorcerer-walk-left
+  rotate: false
+  xy: 112, 304
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-sorcerer-stand-front
+  rotate: false
+  xy: 128, 304
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-sorcerer-stand-back
+  rotate: false
+  xy: 144, 304
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-sorcerer-attack-right
+  rotate: false
+  xy: 160, 304
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-sorcerer-attack-left
+  rotate: false
+  xy: 176, 304
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-sorcerer-attack-down
+  rotate: false
+  xy: 192, 304
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-sorcerer-attack-up
+  rotate: false
+  xy: 208, 304
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-sorcerer-cast
+  rotate: false
+  xy: 224, 304
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-sorcerer-dead
+  rotate: false
+  xy: 240, 304
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-archer-walk-front-1
+  rotate: false
+  xy: 0, 320
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-archer-walk-front-2
+  rotate: false
+  xy: 16, 320
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-archer-walk-back-1
+  rotate: false
+  xy: 32, 320
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-archer-walk-back-2
+  rotate: false
+  xy: 48, 320
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-archer-stand-right
+  rotate: false
+  xy: 64, 320
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-archer-walk-right
+  rotate: false
+  xy: 80, 320
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-archer-stand-left
+  rotate: false
+  xy: 96, 320
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-archer-walk-left
+  rotate: false
+  xy: 112, 320
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-archer-stand-front
+  rotate: false
+  xy: 128, 320
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-archer-stand-back
+  rotate: false
+  xy: 144, 320
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-archer-attack-right
+  rotate: false
+  xy: 160, 320
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-archer-attack-left
+  rotate: false
+  xy: 176, 320
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-archer-attack-down
+  rotate: false
+  xy: 192, 320
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-archer-attack-up
+  rotate: false
+  xy: 208, 320
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-archer-cast
+  rotate: false
+  xy: 224, 320
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-archer-dead
+  rotate: false
+  xy: 240, 320
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-ninja-walk-front-1
+  rotate: false
+  xy: 0, 336
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-ninja-walk-front-2
+  rotate: false
+  xy: 16, 336
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-ninja-walk-back-1
+  rotate: false
+  xy: 32, 336
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-ninja-walk-back-2
+  rotate: false
+  xy: 48, 336
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-ninja-stand-right
+  rotate: false
+  xy: 64, 336
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-ninja-walk-right
+  rotate: false
+  xy: 80, 336
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-ninja-stand-left
+  rotate: false
+  xy: 96, 336
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-ninja-walk-left
+  rotate: false
+  xy: 112, 336
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-ninja-stand-front
+  rotate: false
+  xy: 128, 336
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-ninja-stand-back
+  rotate: false
+  xy: 144, 336
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-ninja-attack-right
+  rotate: false
+  xy: 160, 336
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-ninja-attack-left
+  rotate: false
+  xy: 176, 336
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-ninja-attack-down
+  rotate: false
+  xy: 192, 336
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-ninja-attack-up
+  rotate: false
+  xy: 208, 336
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-ninja-cast
+  rotate: false
+  xy: 224, 336
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-ninja-dead
+  rotate: false
+  xy: 240, 336
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-mindweaver-walk-front-1
+  rotate: false
+  xy: 0, 352
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-mindweaver-walk-front-2
+  rotate: false
+  xy: 16, 352
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-mindweaver-walk-back-1
+  rotate: false
+  xy: 32, 352
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-mindweaver-walk-back-2
+  rotate: false
+  xy: 48, 352
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-mindweaver-stand-right
+  rotate: false
+  xy: 64, 352
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-mindweaver-walk-right
+  rotate: false
+  xy: 80, 352
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-mindweaver-stand-left
+  rotate: false
+  xy: 96, 352
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-mindweaver-walk-left
+  rotate: false
+  xy: 112, 352
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-mindweaver-stand-front
+  rotate: false
+  xy: 128, 352
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-mindweaver-stand-back
+  rotate: false
+  xy: 144, 352
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-mindweaver-attack-right
+  rotate: false
+  xy: 160, 352
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-mindweaver-attack-left
+  rotate: false
+  xy: 176, 352
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-mindweaver-attack-down
+  rotate: false
+  xy: 192, 352
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-mindweaver-attack-up
+  rotate: false
+  xy: 208, 352
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-mindweaver-cast
+  rotate: false
+  xy: 224, 352
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-mindweaver-dead
+  rotate: false
+  xy: 240, 352
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-shaman-walk-front-1
+  rotate: false
+  xy: 0, 368
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-shaman-walk-front-2
+  rotate: false
+  xy: 16, 368
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-shaman-walk-back-1
+  rotate: false
+  xy: 32, 368
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-shaman-walk-back-2
+  rotate: false
+  xy: 48, 368
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-shaman-stand-right
+  rotate: false
+  xy: 64, 368
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-shaman-walk-right
+  rotate: false
+  xy: 80, 368
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-shaman-stand-left
+  rotate: false
+  xy: 96, 368
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-shaman-walk-left
+  rotate: false
+  xy: 112, 368
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-shaman-stand-front
+  rotate: false
+  xy: 128, 368
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-shaman-stand-back
+  rotate: false
+  xy: 144, 368
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-shaman-attack-right
+  rotate: false
+  xy: 160, 368
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-shaman-attack-left
+  rotate: false
+  xy: 176, 368
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-shaman-attack-down
+  rotate: false
+  xy: 192, 368
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-shaman-attack-up
+  rotate: false
+  xy: 208, 368
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-shaman-cast
+  rotate: false
+  xy: 224, 368
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+goblin-shaman-dead
+  rotate: false
+  xy: 240, 368
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-prowler-walk-front-1
+  rotate: false
+  xy: 0, 384
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-prowler-walk-front-2
+  rotate: false
+  xy: 16, 384
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-prowler-walk-back-1
+  rotate: false
+  xy: 32, 384
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-prowler-walk-back-2
+  rotate: false
+  xy: 48, 384
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-prowler-stand-right
+  rotate: false
+  xy: 64, 384
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-prowler-walk-right
+  rotate: false
+  xy: 80, 384
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-prowler-stand-left
+  rotate: false
+  xy: 96, 384
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-prowler-walk-left
+  rotate: false
+  xy: 112, 384
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-prowler-stand-front
+  rotate: false
+  xy: 128, 384
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-prowler-stand-back
+  rotate: false
+  xy: 144, 384
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-prowler-attack-right
+  rotate: false
+  xy: 160, 384
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-prowler-attack-left
+  rotate: false
+  xy: 176, 384
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-prowler-attack-down
+  rotate: false
+  xy: 192, 384
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-prowler-attack-up
+  rotate: false
+  xy: 208, 384
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-prowler-cast
+  rotate: false
+  xy: 224, 384
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-prowler-dead
+  rotate: false
+  xy: 240, 384
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-magus-walk-front-1
+  rotate: false
+  xy: 0, 400
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-magus-walk-front-2
+  rotate: false
+  xy: 16, 400
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-magus-walk-back-1
+  rotate: false
+  xy: 32, 400
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-magus-walk-back-2
+  rotate: false
+  xy: 48, 400
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-magus-stand-right
+  rotate: false
+  xy: 64, 400
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-magus-walk-right
+  rotate: false
+  xy: 80, 400
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-magus-stand-left
+  rotate: false
+  xy: 96, 400
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-magus-walk-left
+  rotate: false
+  xy: 112, 400
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-magus-stand-front
+  rotate: false
+  xy: 128, 400
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-magus-stand-back
+  rotate: false
+  xy: 144, 400
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-magus-attack-right
+  rotate: false
+  xy: 160, 400
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-magus-attack-left
+  rotate: false
+  xy: 176, 400
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-magus-attack-down
+  rotate: false
+  xy: 192, 400
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-magus-attack-up
+  rotate: false
+  xy: 208, 400
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-magus-cast
+  rotate: false
+  xy: 224, 400
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-magus-dead
+  rotate: false
+  xy: 240, 400
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-champion-walk-front-1
+  rotate: false
+  xy: 0, 416
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-champion-walk-front-2
+  rotate: false
+  xy: 16, 416
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-champion-walk-back-1
+  rotate: false
+  xy: 32, 416
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-champion-walk-back-2
+  rotate: false
+  xy: 48, 416
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-champion-stand-right
+  rotate: false
+  xy: 64, 416
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-champion-walk-right
+  rotate: false
+  xy: 80, 416
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-champion-stand-left
+  rotate: false
+  xy: 96, 416
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-champion-walk-left
+  rotate: false
+  xy: 112, 416
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-champion-stand-front
+  rotate: false
+  xy: 128, 416
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-champion-stand-back
+  rotate: false
+  xy: 144, 416
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-champion-attack-right
+  rotate: false
+  xy: 160, 416
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-champion-attack-left
+  rotate: false
+  xy: 176, 416
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-champion-attack-down
+  rotate: false
+  xy: 192, 416
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-champion-attack-up
+  rotate: false
+  xy: 208, 416
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-champion-cast
+  rotate: false
+  xy: 224, 416
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-champion-dead
+  rotate: false
+  xy: 240, 416
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-warlock-walk-front-1
+  rotate: false
+  xy: 0, 432
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-warlock-walk-front-2
+  rotate: false
+  xy: 16, 432
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-warlock-walk-back-1
+  rotate: false
+  xy: 32, 432
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-warlock-walk-back-2
+  rotate: false
+  xy: 48, 432
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-warlock-stand-right
+  rotate: false
+  xy: 64, 432
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-warlock-walk-right
+  rotate: false
+  xy: 80, 432
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-warlock-stand-left
+  rotate: false
+  xy: 96, 432
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-warlock-walk-left
+  rotate: false
+  xy: 112, 432
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-warlock-stand-front
+  rotate: false
+  xy: 128, 432
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-warlock-stand-back
+  rotate: false
+  xy: 144, 432
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-warlock-attack-right
+  rotate: false
+  xy: 160, 432
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-warlock-attack-left
+  rotate: false
+  xy: 176, 432
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-warlock-attack-down
+  rotate: false
+  xy: 192, 432
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-warlock-attack-up
+  rotate: false
+  xy: 208, 432
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-warlock-cast
+  rotate: false
+  xy: 224, 432
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-warlock-dead
+  rotate: false
+  xy: 240, 432
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-berserker-walk-front-1
+  rotate: false
+  xy: 0, 448
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-berserker-walk-front-2
+  rotate: false
+  xy: 16, 448
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-berserker-walk-back-1
+  rotate: false
+  xy: 32, 448
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-berserker-walk-back-2
+  rotate: false
+  xy: 48, 448
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-berserker-stand-right
+  rotate: false
+  xy: 64, 448
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-berserker-walk-right
+  rotate: false
+  xy: 80, 448
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-berserker-stand-left
+  rotate: false
+  xy: 96, 448
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-berserker-walk-left
+  rotate: false
+  xy: 112, 448
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-berserker-stand-front
+  rotate: false
+  xy: 128, 448
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-berserker-stand-back
+  rotate: false
+  xy: 144, 448
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-berserker-attack-right
+  rotate: false
+  xy: 160, 448
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-berserker-attack-left
+  rotate: false
+  xy: 176, 448
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-berserker-attack-down
+  rotate: false
+  xy: 192, 448
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-berserker-attack-up
+  rotate: false
+  xy: 208, 448
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-berserker-cast
+  rotate: false
+  xy: 224, 448
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-berserker-dead
+  rotate: false
+  xy: 240, 448
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-templar-walk-front-1
+  rotate: false
+  xy: 0, 464
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-templar-walk-front-2
+  rotate: false
+  xy: 16, 464
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-templar-walk-back-1
+  rotate: false
+  xy: 32, 464
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-templar-walk-back-2
+  rotate: false
+  xy: 48, 464
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-templar-stand-right
+  rotate: false
+  xy: 64, 464
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-templar-walk-right
+  rotate: false
+  xy: 80, 464
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-templar-stand-left
+  rotate: false
+  xy: 96, 464
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-templar-walk-left
+  rotate: false
+  xy: 112, 464
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-templar-stand-front
+  rotate: false
+  xy: 128, 464
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-templar-stand-back
+  rotate: false
+  xy: 144, 464
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-templar-attack-right
+  rotate: false
+  xy: 160, 464
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-templar-attack-left
+  rotate: false
+  xy: 176, 464
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-templar-attack-down
+  rotate: false
+  xy: 192, 464
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-templar-attack-up
+  rotate: false
+  xy: 208, 464
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-templar-cast
+  rotate: false
+  xy: 224, 464
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-templar-dead
+  rotate: false
+  xy: 240, 464
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-priest-walk-front-1
+  rotate: false
+  xy: 0, 480
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-priest-walk-front-2
+  rotate: false
+  xy: 16, 480
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-priest-walk-back-1
+  rotate: false
+  xy: 32, 480
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-priest-walk-back-2
+  rotate: false
+  xy: 48, 480
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-priest-stand-right
+  rotate: false
+  xy: 64, 480
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-priest-walk-right
+  rotate: false
+  xy: 80, 480
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-priest-stand-left
+  rotate: false
+  xy: 96, 480
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-priest-walk-left
+  rotate: false
+  xy: 112, 480
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-priest-stand-front
+  rotate: false
+  xy: 128, 480
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-priest-stand-back
+  rotate: false
+  xy: 144, 480
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-priest-attack-right
+  rotate: false
+  xy: 160, 480
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-priest-attack-left
+  rotate: false
+  xy: 176, 480
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-priest-attack-down
+  rotate: false
+  xy: 192, 480
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-priest-attack-up
+  rotate: false
+  xy: 208, 480
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-priest-cast
+  rotate: false
+  xy: 224, 480
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-priest-dead
+  rotate: false
+  xy: 240, 480
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-sorcerer-walk-front-1
+  rotate: false
+  xy: 0, 496
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-sorcerer-walk-front-2
+  rotate: false
+  xy: 16, 496
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-sorcerer-walk-back-1
+  rotate: false
+  xy: 32, 496
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-sorcerer-walk-back-2
+  rotate: false
+  xy: 48, 496
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-sorcerer-stand-right
+  rotate: false
+  xy: 64, 496
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-sorcerer-walk-right
+  rotate: false
+  xy: 80, 496
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-sorcerer-stand-left
+  rotate: false
+  xy: 96, 496
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-sorcerer-walk-left
+  rotate: false
+  xy: 112, 496
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-sorcerer-stand-front
+  rotate: false
+  xy: 128, 496
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-sorcerer-stand-back
+  rotate: false
+  xy: 144, 496
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-sorcerer-attack-right
+  rotate: false
+  xy: 160, 496
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-sorcerer-attack-left
+  rotate: false
+  xy: 176, 496
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-sorcerer-attack-down
+  rotate: false
+  xy: 192, 496
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-sorcerer-attack-up
+  rotate: false
+  xy: 208, 496
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-sorcerer-cast
+  rotate: false
+  xy: 224, 496
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-sorcerer-dead
+  rotate: false
+  xy: 240, 496
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-archer-walk-front-1
+  rotate: false
+  xy: 0, 512
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-archer-walk-front-2
+  rotate: false
+  xy: 16, 512
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-archer-walk-back-1
+  rotate: false
+  xy: 32, 512
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-archer-walk-back-2
+  rotate: false
+  xy: 48, 512
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-archer-stand-right
+  rotate: false
+  xy: 64, 512
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-archer-walk-right
+  rotate: false
+  xy: 80, 512
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-archer-stand-left
+  rotate: false
+  xy: 96, 512
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-archer-walk-left
+  rotate: false
+  xy: 112, 512
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-archer-stand-front
+  rotate: false
+  xy: 128, 512
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-archer-stand-back
+  rotate: false
+  xy: 144, 512
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-archer-attack-right
+  rotate: false
+  xy: 160, 512
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-archer-attack-left
+  rotate: false
+  xy: 176, 512
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-archer-attack-down
+  rotate: false
+  xy: 192, 512
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-archer-attack-up
+  rotate: false
+  xy: 208, 512
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-archer-cast
+  rotate: false
+  xy: 224, 512
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-archer-dead
+  rotate: false
+  xy: 240, 512
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-ninja-walk-front-1
+  rotate: false
+  xy: 0, 528
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-ninja-walk-front-2
+  rotate: false
+  xy: 16, 528
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-ninja-walk-back-1
+  rotate: false
+  xy: 32, 528
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-ninja-walk-back-2
+  rotate: false
+  xy: 48, 528
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-ninja-stand-right
+  rotate: false
+  xy: 64, 528
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-ninja-walk-right
+  rotate: false
+  xy: 80, 528
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-ninja-stand-left
+  rotate: false
+  xy: 96, 528
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-ninja-walk-left
+  rotate: false
+  xy: 112, 528
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-ninja-stand-front
+  rotate: false
+  xy: 128, 528
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-ninja-stand-back
+  rotate: false
+  xy: 144, 528
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-ninja-attack-right
+  rotate: false
+  xy: 160, 528
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-ninja-attack-left
+  rotate: false
+  xy: 176, 528
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-ninja-attack-down
+  rotate: false
+  xy: 192, 528
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-ninja-attack-up
+  rotate: false
+  xy: 208, 528
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-ninja-cast
+  rotate: false
+  xy: 224, 528
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-ninja-dead
+  rotate: false
+  xy: 240, 528
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-mindweaver-walk-front-1
+  rotate: false
+  xy: 0, 544
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-mindweaver-walk-front-2
+  rotate: false
+  xy: 16, 544
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-mindweaver-walk-back-1
+  rotate: false
+  xy: 32, 544
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-mindweaver-walk-back-2
+  rotate: false
+  xy: 48, 544
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-mindweaver-stand-right
+  rotate: false
+  xy: 64, 544
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-mindweaver-walk-right
+  rotate: false
+  xy: 80, 544
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-mindweaver-stand-left
+  rotate: false
+  xy: 96, 544
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-mindweaver-walk-left
+  rotate: false
+  xy: 112, 544
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-mindweaver-stand-front
+  rotate: false
+  xy: 128, 544
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-mindweaver-stand-back
+  rotate: false
+  xy: 144, 544
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-mindweaver-attack-right
+  rotate: false
+  xy: 160, 544
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-mindweaver-attack-left
+  rotate: false
+  xy: 176, 544
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-mindweaver-attack-down
+  rotate: false
+  xy: 192, 544
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-mindweaver-attack-up
+  rotate: false
+  xy: 208, 544
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-mindweaver-cast
+  rotate: false
+  xy: 224, 544
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-mindweaver-dead
+  rotate: false
+  xy: 240, 544
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-shaman-walk-front-1
+  rotate: false
+  xy: 0, 560
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-shaman-walk-front-2
+  rotate: false
+  xy: 16, 560
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-shaman-walk-back-1
+  rotate: false
+  xy: 32, 560
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-shaman-walk-back-2
+  rotate: false
+  xy: 48, 560
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-shaman-stand-right
+  rotate: false
+  xy: 64, 560
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-shaman-walk-right
+  rotate: false
+  xy: 80, 560
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-shaman-stand-left
+  rotate: false
+  xy: 96, 560
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-shaman-walk-left
+  rotate: false
+  xy: 112, 560
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-shaman-stand-front
+  rotate: false
+  xy: 128, 560
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-shaman-stand-back
+  rotate: false
+  xy: 144, 560
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-shaman-attack-right
+  rotate: false
+  xy: 160, 560
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-shaman-attack-left
+  rotate: false
+  xy: 176, 560
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-shaman-attack-down
+  rotate: false
+  xy: 192, 560
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-shaman-attack-up
+  rotate: false
+  xy: 208, 560
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-shaman-cast
+  rotate: false
+  xy: 224, 560
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+elf-shaman-dead
+  rotate: false
+  xy: 240, 560
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-prowler-walk-front-1
+  rotate: false
+  xy: 0, 576
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-prowler-walk-front-2
+  rotate: false
+  xy: 16, 576
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-prowler-walk-back-1
+  rotate: false
+  xy: 32, 576
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-prowler-walk-back-2
+  rotate: false
+  xy: 48, 576
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-prowler-stand-right
+  rotate: false
+  xy: 64, 576
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-prowler-walk-right
+  rotate: false
+  xy: 80, 576
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-prowler-stand-left
+  rotate: false
+  xy: 96, 576
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-prowler-walk-left
+  rotate: false
+  xy: 112, 576
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-prowler-stand-front
+  rotate: false
+  xy: 128, 576
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-prowler-stand-back
+  rotate: false
+  xy: 144, 576
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-prowler-attack-right
+  rotate: false
+  xy: 160, 576
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-prowler-attack-left
+  rotate: false
+  xy: 176, 576
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-prowler-attack-down
+  rotate: false
+  xy: 192, 576
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-prowler-attack-up
+  rotate: false
+  xy: 208, 576
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-prowler-cast
+  rotate: false
+  xy: 224, 576
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-prowler-dead
+  rotate: false
+  xy: 240, 576
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-magus-walk-front-1
+  rotate: false
+  xy: 0, 592
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-magus-walk-front-2
+  rotate: false
+  xy: 16, 592
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-magus-walk-back-1
+  rotate: false
+  xy: 32, 592
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-magus-walk-back-2
+  rotate: false
+  xy: 48, 592
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-magus-stand-right
+  rotate: false
+  xy: 64, 592
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-magus-walk-right
+  rotate: false
+  xy: 80, 592
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-magus-stand-left
+  rotate: false
+  xy: 96, 592
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-magus-walk-left
+  rotate: false
+  xy: 112, 592
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-magus-stand-front
+  rotate: false
+  xy: 128, 592
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-magus-stand-back
+  rotate: false
+  xy: 144, 592
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-magus-attack-right
+  rotate: false
+  xy: 160, 592
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-magus-attack-left
+  rotate: false
+  xy: 176, 592
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-magus-attack-down
+  rotate: false
+  xy: 192, 592
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-magus-attack-up
+  rotate: false
+  xy: 208, 592
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-magus-cast
+  rotate: false
+  xy: 224, 592
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-magus-dead
+  rotate: false
+  xy: 240, 592
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-champion-walk-front-1
+  rotate: false
+  xy: 0, 608
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-champion-walk-front-2
+  rotate: false
+  xy: 16, 608
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-champion-walk-back-1
+  rotate: false
+  xy: 32, 608
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-champion-walk-back-2
+  rotate: false
+  xy: 48, 608
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-champion-stand-right
+  rotate: false
+  xy: 64, 608
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-champion-walk-right
+  rotate: false
+  xy: 80, 608
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-champion-stand-left
+  rotate: false
+  xy: 96, 608
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-champion-walk-left
+  rotate: false
+  xy: 112, 608
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-champion-stand-front
+  rotate: false
+  xy: 128, 608
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-champion-stand-back
+  rotate: false
+  xy: 144, 608
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-champion-attack-right
+  rotate: false
+  xy: 160, 608
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-champion-attack-left
+  rotate: false
+  xy: 176, 608
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-champion-attack-down
+  rotate: false
+  xy: 192, 608
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-champion-attack-up
+  rotate: false
+  xy: 208, 608
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-champion-cast
+  rotate: false
+  xy: 224, 608
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-champion-dead
+  rotate: false
+  xy: 240, 608
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-warlock-walk-front-1
+  rotate: false
+  xy: 0, 624
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-warlock-walk-front-2
+  rotate: false
+  xy: 16, 624
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-warlock-walk-back-1
+  rotate: false
+  xy: 32, 624
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-warlock-walk-back-2
+  rotate: false
+  xy: 48, 624
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-warlock-stand-right
+  rotate: false
+  xy: 64, 624
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-warlock-walk-right
+  rotate: false
+  xy: 80, 624
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-warlock-stand-left
+  rotate: false
+  xy: 96, 624
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-warlock-walk-left
+  rotate: false
+  xy: 112, 624
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-warlock-stand-front
+  rotate: false
+  xy: 128, 624
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-warlock-stand-back
+  rotate: false
+  xy: 144, 624
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-warlock-attack-right
+  rotate: false
+  xy: 160, 624
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-warlock-attack-left
+  rotate: false
+  xy: 176, 624
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-warlock-attack-down
+  rotate: false
+  xy: 192, 624
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-warlock-attack-up
+  rotate: false
+  xy: 208, 624
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-warlock-cast
+  rotate: false
+  xy: 224, 624
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-warlock-dead
+  rotate: false
+  xy: 240, 624
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-berserker-walk-front-1
+  rotate: false
+  xy: 0, 640
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-berserker-walk-front-2
+  rotate: false
+  xy: 16, 640
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-berserker-walk-back-1
+  rotate: false
+  xy: 32, 640
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-berserker-walk-back-2
+  rotate: false
+  xy: 48, 640
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-berserker-stand-right
+  rotate: false
+  xy: 64, 640
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-berserker-walk-right
+  rotate: false
+  xy: 80, 640
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-berserker-stand-left
+  rotate: false
+  xy: 96, 640
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-berserker-walk-left
+  rotate: false
+  xy: 112, 640
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-berserker-stand-front
+  rotate: false
+  xy: 128, 640
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-berserker-stand-back
+  rotate: false
+  xy: 144, 640
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-berserker-attack-right
+  rotate: false
+  xy: 160, 640
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-berserker-attack-left
+  rotate: false
+  xy: 176, 640
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-berserker-attack-down
+  rotate: false
+  xy: 192, 640
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-berserker-attack-up
+  rotate: false
+  xy: 208, 640
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-berserker-cast
+  rotate: false
+  xy: 224, 640
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-berserker-dead
+  rotate: false
+  xy: 240, 640
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-templar-walk-front-1
+  rotate: false
+  xy: 0, 656
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-templar-walk-front-2
+  rotate: false
+  xy: 16, 656
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-templar-walk-back-1
+  rotate: false
+  xy: 32, 656
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-templar-walk-back-2
+  rotate: false
+  xy: 48, 656
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-templar-stand-right
+  rotate: false
+  xy: 64, 656
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-templar-walk-right
+  rotate: false
+  xy: 80, 656
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-templar-stand-left
+  rotate: false
+  xy: 96, 656
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-templar-walk-left
+  rotate: false
+  xy: 112, 656
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-templar-stand-front
+  rotate: false
+  xy: 128, 656
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-templar-stand-back
+  rotate: false
+  xy: 144, 656
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-templar-attack-right
+  rotate: false
+  xy: 160, 656
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-templar-attack-left
+  rotate: false
+  xy: 176, 656
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-templar-attack-down
+  rotate: false
+  xy: 192, 656
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-templar-attack-up
+  rotate: false
+  xy: 208, 656
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-templar-cast
+  rotate: false
+  xy: 224, 656
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-templar-dead
+  rotate: false
+  xy: 240, 656
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-priest-walk-front-1
+  rotate: false
+  xy: 0, 672
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-priest-walk-front-2
+  rotate: false
+  xy: 16, 672
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-priest-walk-back-1
+  rotate: false
+  xy: 32, 672
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-priest-walk-back-2
+  rotate: false
+  xy: 48, 672
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-priest-stand-right
+  rotate: false
+  xy: 64, 672
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-priest-walk-right
+  rotate: false
+  xy: 80, 672
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-priest-stand-left
+  rotate: false
+  xy: 96, 672
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-priest-walk-left
+  rotate: false
+  xy: 112, 672
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-priest-stand-front
+  rotate: false
+  xy: 128, 672
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-priest-stand-back
+  rotate: false
+  xy: 144, 672
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-priest-attack-right
+  rotate: false
+  xy: 160, 672
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-priest-attack-left
+  rotate: false
+  xy: 176, 672
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-priest-attack-down
+  rotate: false
+  xy: 192, 672
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-priest-attack-up
+  rotate: false
+  xy: 208, 672
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-priest-cast
+  rotate: false
+  xy: 224, 672
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-priest-dead
+  rotate: false
+  xy: 240, 672
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-sorcerer-walk-front-1
+  rotate: false
+  xy: 0, 688
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-sorcerer-walk-front-2
+  rotate: false
+  xy: 16, 688
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-sorcerer-walk-back-1
+  rotate: false
+  xy: 32, 688
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-sorcerer-walk-back-2
+  rotate: false
+  xy: 48, 688
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-sorcerer-stand-right
+  rotate: false
+  xy: 64, 688
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-sorcerer-walk-right
+  rotate: false
+  xy: 80, 688
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-sorcerer-stand-left
+  rotate: false
+  xy: 96, 688
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-sorcerer-walk-left
+  rotate: false
+  xy: 112, 688
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-sorcerer-stand-front
+  rotate: false
+  xy: 128, 688
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-sorcerer-stand-back
+  rotate: false
+  xy: 144, 688
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-sorcerer-attack-right
+  rotate: false
+  xy: 160, 688
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-sorcerer-attack-left
+  rotate: false
+  xy: 176, 688
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-sorcerer-attack-down
+  rotate: false
+  xy: 192, 688
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-sorcerer-attack-up
+  rotate: false
+  xy: 208, 688
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-sorcerer-cast
+  rotate: false
+  xy: 224, 688
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-sorcerer-dead
+  rotate: false
+  xy: 240, 688
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-archer-walk-front-1
+  rotate: false
+  xy: 0, 704
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-archer-walk-front-2
+  rotate: false
+  xy: 16, 704
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-archer-walk-back-1
+  rotate: false
+  xy: 32, 704
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-archer-walk-back-2
+  rotate: false
+  xy: 48, 704
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-archer-stand-right
+  rotate: false
+  xy: 64, 704
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-archer-walk-right
+  rotate: false
+  xy: 80, 704
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-archer-stand-left
+  rotate: false
+  xy: 96, 704
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-archer-walk-left
+  rotate: false
+  xy: 112, 704
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-archer-stand-front
+  rotate: false
+  xy: 128, 704
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-archer-stand-back
+  rotate: false
+  xy: 144, 704
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-archer-attack-right
+  rotate: false
+  xy: 160, 704
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-archer-attack-left
+  rotate: false
+  xy: 176, 704
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-archer-attack-down
+  rotate: false
+  xy: 192, 704
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-archer-attack-up
+  rotate: false
+  xy: 208, 704
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-archer-cast
+  rotate: false
+  xy: 224, 704
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-archer-dead
+  rotate: false
+  xy: 240, 704
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-ninja-walk-front-1
+  rotate: false
+  xy: 0, 720
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-ninja-walk-front-2
+  rotate: false
+  xy: 16, 720
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-ninja-walk-back-1
+  rotate: false
+  xy: 32, 720
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-ninja-walk-back-2
+  rotate: false
+  xy: 48, 720
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-ninja-stand-right
+  rotate: false
+  xy: 64, 720
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-ninja-walk-right
+  rotate: false
+  xy: 80, 720
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-ninja-stand-left
+  rotate: false
+  xy: 96, 720
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-ninja-walk-left
+  rotate: false
+  xy: 112, 720
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-ninja-stand-front
+  rotate: false
+  xy: 128, 720
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-ninja-stand-back
+  rotate: false
+  xy: 144, 720
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-ninja-attack-right
+  rotate: false
+  xy: 160, 720
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-ninja-attack-left
+  rotate: false
+  xy: 176, 720
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-ninja-attack-down
+  rotate: false
+  xy: 192, 720
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-ninja-attack-up
+  rotate: false
+  xy: 208, 720
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-ninja-cast
+  rotate: false
+  xy: 224, 720
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-ninja-dead
+  rotate: false
+  xy: 240, 720
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-mindweaver-walk-front-1
+  rotate: false
+  xy: 0, 736
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-mindweaver-walk-front-2
+  rotate: false
+  xy: 16, 736
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-mindweaver-walk-back-1
+  rotate: false
+  xy: 32, 736
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-mindweaver-walk-back-2
+  rotate: false
+  xy: 48, 736
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-mindweaver-stand-right
+  rotate: false
+  xy: 64, 736
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-mindweaver-walk-right
+  rotate: false
+  xy: 80, 736
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-mindweaver-stand-left
+  rotate: false
+  xy: 96, 736
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-mindweaver-walk-left
+  rotate: false
+  xy: 112, 736
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-mindweaver-stand-front
+  rotate: false
+  xy: 128, 736
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-mindweaver-stand-back
+  rotate: false
+  xy: 144, 736
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-mindweaver-attack-right
+  rotate: false
+  xy: 160, 736
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-mindweaver-attack-left
+  rotate: false
+  xy: 176, 736
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-mindweaver-attack-down
+  rotate: false
+  xy: 192, 736
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-mindweaver-attack-up
+  rotate: false
+  xy: 208, 736
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-mindweaver-cast
+  rotate: false
+  xy: 224, 736
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-mindweaver-dead
+  rotate: false
+  xy: 240, 736
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-shaman-walk-front-1
+  rotate: false
+  xy: 0, 752
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-shaman-walk-front-2
+  rotate: false
+  xy: 16, 752
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-shaman-walk-back-1
+  rotate: false
+  xy: 32, 752
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-shaman-walk-back-2
+  rotate: false
+  xy: 48, 752
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-shaman-stand-right
+  rotate: false
+  xy: 64, 752
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-shaman-walk-right
+  rotate: false
+  xy: 80, 752
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-shaman-stand-left
+  rotate: false
+  xy: 96, 752
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-shaman-walk-left
+  rotate: false
+  xy: 112, 752
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-shaman-stand-front
+  rotate: false
+  xy: 128, 752
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-shaman-stand-back
+  rotate: false
+  xy: 144, 752
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-shaman-attack-right
+  rotate: false
+  xy: 160, 752
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-shaman-attack-left
+  rotate: false
+  xy: 176, 752
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-shaman-attack-down
+  rotate: false
+  xy: 192, 752
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-shaman-attack-up
+  rotate: false
+  xy: 208, 752
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-shaman-cast
+  rotate: false
+  xy: 224, 752
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+dwarf-shaman-dead
+  rotate: false
+  xy: 240, 752
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
