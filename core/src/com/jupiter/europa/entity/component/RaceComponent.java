@@ -28,7 +28,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
 import com.jupiter.europa.entity.stats.race.Race;
-import com.jupiter.europa.entity.stats.race.Race.Races;
+import com.jupiter.europa.entity.stats.race.Race.PlayerRaces;
 
 /**
  *
@@ -69,7 +69,7 @@ public class RaceComponent extends Component implements Serializable {
     @Override
     public void read(Json json, JsonValue jsonData) {
         if (jsonData.has(RACE_KEY)) {
-            this.race = Races.valueOf(jsonData.getString(RACE_KEY));
+            this.race = PlayerRaces.valueOf(jsonData.getString(RACE_KEY));
         }
     }
     

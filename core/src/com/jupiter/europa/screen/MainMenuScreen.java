@@ -72,7 +72,7 @@ import com.jupiter.europa.entity.component.MovementResourceComponent;
 import com.jupiter.europa.entity.stats.AttributeSet;
 import com.jupiter.europa.entity.stats.characterclass.CharacterClass;
 import com.jupiter.europa.entity.stats.race.Race;
-import com.jupiter.europa.entity.stats.race.Race.Races;
+import com.jupiter.europa.entity.stats.race.Race.PlayerRaces;
 import com.jupiter.europa.io.FileLocations;
 import static com.jupiter.europa.io.FileLocations.SKINS_DIRECTORY;
 import com.jupiter.europa.save.SaveGame;
@@ -586,7 +586,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
         this.raceClassPreview.setScale(3);
         
         this.raceSelectBox = new SelectBox(skin.get(DEFAULT_KEY, SelectBoxStyle.class));
-        this.raceSelectBox.setItems(Races.values());
+        this.raceSelectBox.setItems(PlayerRaces.values());
         this.raceSelectBox.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {

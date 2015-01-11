@@ -86,7 +86,7 @@ public class EuropaEntity extends Entity implements Serializable {
                     if (value.has(COMPONENT_CLASS_KEY)) {
                         Class<?> type = Class.forName(value.getString(COMPONENT_CLASS_KEY));
                         if (Component.class.isAssignableFrom(type)) {
-                            this.add((Component) json.fromJson(type, value.get(COMPONENT_DATA_KEY).toString()));
+                            this.add((Component) json.fromJson(type, value.get(COMPONENT_DATA_KEY).prettyPrint(EuropaGame.PRINT_SETTINGS)));
                         }
                     }
                 }

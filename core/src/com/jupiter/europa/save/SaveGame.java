@@ -26,6 +26,7 @@ package com.jupiter.europa.save;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.entity.Party;
 import com.jupiter.europa.world.Level;
@@ -98,7 +99,7 @@ public class SaveGame implements Serializable {
     public void read(Json json, JsonValue jsonData) {
         this.name = jsonData.getString(NAME_KEY);
         this.world = EuropaGame.game.getWorld(jsonData.getString(WORLD_KEY));
-        this.party = json.fromJson(Party.class, jsonData.get(PARTY_KEY).toString());
+        this.party = json.fromJson(Party.class, jsonData.get(PARTY_KEY).prettyPrint(EuropaGame.PRINT_SETTINGS));
         this.level = this.world.getLevel(jsonData.getString(LEVEL_KEY));
     }
     

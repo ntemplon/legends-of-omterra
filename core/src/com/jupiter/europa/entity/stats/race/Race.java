@@ -29,7 +29,7 @@ package com.jupiter.europa.entity.stats.race;
  */
 public interface Race {
    
-    public enum Races implements Race {
+    public enum PlayerRaces implements Race {
         Human() {
             @Override
             public String getTextureString() { return "human"; }

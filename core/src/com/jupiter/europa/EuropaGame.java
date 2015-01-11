@@ -37,6 +37,8 @@ import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonValue.PrettyPrintSettings;
+import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.jupiter.europa.audio.AudioService;
 import com.jupiter.europa.audio.LocalAudioService;
 import com.jupiter.europa.entity.CollisionSystem;
@@ -100,6 +102,10 @@ public class EuropaGame extends Game implements InputProcessor {
 
     // Static Fields
     public static final EuropaGame game = new EuropaGame();
+    public static final PrettyPrintSettings PRINT_SETTINGS = new PrettyPrintSettings();
+    static {
+        PRINT_SETTINGS.outputType = OutputType.json;
+    }
 
 
     // Enumerations
@@ -471,13 +477,13 @@ public class EuropaGame extends Game implements InputProcessor {
                 Files.createDirectories(SETTINGS_FILE.getParent());
             }
             catch (IOException ex) {
-                
+
             }
         }
-        
+
         try (BufferedWriter bw = Files.newBufferedWriter(SETTINGS_FILE)) {
             Json json = new Json();
-            bw.write(json.prettyPrint(this.settings) + System.lineSeparator());
+            bw.write(json.prettyPrint(this.settings, PRINT_SETTINGS) + System.lineSeparator());
             bw.flush();
         }
         catch (IOException ex) {
@@ -611,7 +617,7 @@ public class EuropaGame extends Game implements InputProcessor {
 
         Path savePath = FileLocations.SAVE_DIRECTORY.resolve(this.save.getName() + "." + SaveGame.SAVE_EXTENSION);
         Json json = new Json();
-        String text = json.prettyPrint(this.save);
+        String text = json.prettyPrint(this.save, PRINT_SETTINGS);
 
         if (!Files.exists(FileLocations.SAVE_DIRECTORY)) {
             try {

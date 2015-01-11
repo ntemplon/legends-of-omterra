@@ -28,6 +28,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
+import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.entity.stats.characterclass.Champion;
 import com.jupiter.europa.entity.stats.characterclass.CharacterClass;
 import com.jupiter.europa.util.Initializable;
@@ -94,7 +95,7 @@ public class CharacterClassComponent extends Component implements Serializable, 
                     Class<?> classType = Class.forName(className);
                     if (CharacterClass.class.isAssignableFrom(classType)) {
                         this.characterClass = (CharacterClass) json.fromJson(classType, jsonData.get(
-                                CHARACTER_CLASS_INSTANCE_KEY).toString());
+                                CHARACTER_CLASS_INSTANCE_KEY).prettyPrint(EuropaGame.PRINT_SETTINGS));
                     }
                 }
                 catch (ClassNotFoundException ex) {

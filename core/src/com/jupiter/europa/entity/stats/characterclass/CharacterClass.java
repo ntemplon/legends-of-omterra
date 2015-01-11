@@ -253,7 +253,7 @@ public abstract class CharacterClass implements Serializable, Initializable {
         }
 
         if (jsonData.has(FEAT_POOL_KEY)) {
-            this.featPool = json.fromJson(FeatPool.class, jsonData.get(FEAT_POOL_KEY).toString());
+            this.featPool = json.fromJson(FeatPool.class, jsonData.get(FEAT_POOL_KEY).prettyPrint(EuropaGame.PRINT_SETTINGS));
         }
     }
 

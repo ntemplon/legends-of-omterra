@@ -27,6 +27,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
+import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.entity.stats.AttributeSet;
 
 /**
@@ -77,10 +78,10 @@ public class AttributesComponent extends Component implements Serializable {
     @Override
     public void read(Json json, JsonValue jsonData) {
         if (jsonData.has(BASE_ATTRIBUTES_KEY)) {
-            this.baseAttributes = json.fromJson(AttributeSet.class, jsonData.get(BASE_ATTRIBUTES_KEY).toString());
+            this.baseAttributes = json.fromJson(AttributeSet.class, jsonData.get(BASE_ATTRIBUTES_KEY).prettyPrint(EuropaGame.PRINT_SETTINGS));
         }
         if (jsonData.has(CURRENT_ATTRIBUTES_KEY)) {
-            this.currentAttributes = json.fromJson(AttributeSet.class, jsonData.get(CURRENT_ATTRIBUTES_KEY).toString());
+            this.currentAttributes = json.fromJson(AttributeSet.class, jsonData.get(CURRENT_ATTRIBUTES_KEY).prettyPrint(EuropaGame.PRINT_SETTINGS));
         }
     }
     

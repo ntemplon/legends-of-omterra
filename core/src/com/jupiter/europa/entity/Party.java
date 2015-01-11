@@ -27,6 +27,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
+import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.entity.trait.feat.Feat;
 import com.jupiter.europa.entity.trait.feat.FeatPool;
 import com.jupiter.europa.entity.component.AttributesComponent;
@@ -44,7 +45,7 @@ import com.jupiter.europa.entity.stats.AttributeSet;
 import com.jupiter.europa.entity.stats.characterclass.Champion;
 import com.jupiter.europa.entity.stats.characterclass.CharacterClass;
 import com.jupiter.europa.entity.stats.race.Race;
-import com.jupiter.europa.entity.stats.race.Race.Races;
+import com.jupiter.europa.entity.stats.race.Race.PlayerRaces;
 import com.jupiter.europa.geometry.Size;
 import com.jupiter.europa.io.FileLocations;
 import java.awt.Point;
@@ -84,7 +85,7 @@ public class Party implements Serializable {
 
     public Party(boolean createNew) {
         if (createNew) {
-            this.player1 = this.createPlayer("Tharivol", Champion.class, Races.Human, new AttributeSet());
+            this.player1 = this.createPlayer("Tharivol", Champion.class, PlayerRaces.Human, new AttributeSet());
             this.activePartyMembers.add(this.player1);
 
             // DEBUG - Assign Default Feats
@@ -150,7 +151,7 @@ public class Party implements Serializable {
     @Override
     public void read(Json json, JsonValue jsonData) {
         if (jsonData.has(PARTY_MEMBERS_KEY)) {
-            this.partyMembers = json.fromJson(HashMap.class, jsonData.get(PARTY_MEMBERS_KEY).toString());
+            this.partyMembers = json.fromJson(HashMap.class, jsonData.get(PARTY_MEMBERS_KEY).prettyPrint(EuropaGame.PRINT_SETTINGS));
         }
 
         JsonValue members = jsonData.get(ACTIVE_PARTY_MEMBERS_KEY);
