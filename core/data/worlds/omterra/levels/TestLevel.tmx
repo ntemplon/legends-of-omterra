@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="30" tilewidth="16" tileheight="16">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="30" tilewidth="16" tileheight="16" nextobjectid="20">
  <properties>
   <property name="music" value="dungeon"/>
  </properties>
@@ -28,27 +28,27 @@
   </data>
  </layer>
  <objectgroup name="Entities">
-  <object name="PS" type="player-spawn" x="304" y="80" width="32" height="32"/>
+  <object id="1" name="PS" type="player-spawn" x="304" y="64" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="Collision">
-  <object x="272" y="0" width="528" height="64"/>
-  <object x="272" y="64" width="32" height="192"/>
-  <object x="624" y="64" width="176" height="32"/>
-  <object x="272" y="256" width="432" height="48"/>
-  <object x="624" y="160" width="80" height="96"/>
-  <object x="80" y="304" width="624" height="96"/>
-  <object x="784" y="96" width="16" height="384"/>
-  <object x="0" y="464" width="784" height="16"/>
-  <object x="0" y="0" width="272" height="16"/>
-  <object x="0" y="16" width="16" height="448"/>
-  <object x="32" y="48" width="16" height="16"/>
-  <object x="128" y="16" width="16" height="16"/>
-  <object x="160" y="16" width="16" height="16"/>
-  <object x="96" y="16" width="16" height="16"/>
-  <object x="320" y="224" width="48" height="16"/>
-  <object x="448" y="240" width="48" height="16"/>
-  <object x="592" y="224" width="16" height="16"/>
-  <object x="592" y="80" width="16" height="16"/>
+  <object id="2" x="272" y="0" width="528" height="64"/>
+  <object id="3" x="272" y="64" width="32" height="192"/>
+  <object id="4" x="624" y="64" width="176" height="32"/>
+  <object id="5" x="272" y="256" width="432" height="48"/>
+  <object id="6" x="624" y="160" width="80" height="96"/>
+  <object id="7" x="80" y="304" width="624" height="96"/>
+  <object id="8" x="784" y="96" width="16" height="384"/>
+  <object id="9" x="0" y="464" width="784" height="16"/>
+  <object id="10" x="0" y="0" width="272" height="16"/>
+  <object id="11" x="0" y="16" width="16" height="448"/>
+  <object id="12" x="32" y="48" width="16" height="16"/>
+  <object id="13" x="128" y="16" width="16" height="16"/>
+  <object id="14" x="160" y="16" width="16" height="16"/>
+  <object id="15" x="96" y="16" width="16" height="16"/>
+  <object id="16" x="320" y="224" width="48" height="16"/>
+  <object id="17" x="448" y="240" width="48" height="16"/>
+  <object id="18" x="592" y="224" width="16" height="16"/>
+  <object id="19" x="592" y="80" width="16" height="16"/>
  </objectgroup>
  <objectgroup name="Zones"/>
 </map>

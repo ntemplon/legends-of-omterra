@@ -32,9 +32,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -45,7 +44,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox.SelectBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
@@ -56,9 +54,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
@@ -68,15 +66,11 @@ import com.jupiter.europa.EuropaGame;
 import static com.jupiter.europa.audio.AudioService.TITLE_MUSIC;
 import com.jupiter.europa.entity.EuropaEntity;
 import com.jupiter.europa.entity.Party;
-import com.jupiter.europa.entity.component.MovementResourceComponent;
-import com.jupiter.europa.entity.stats.AttributeSet;
-import com.jupiter.europa.entity.stats.characterclass.CharacterClass;
-import com.jupiter.europa.entity.stats.race.Race;
-import com.jupiter.europa.entity.stats.race.Race.PlayerRaces;
 import com.jupiter.europa.io.FileLocations;
 import static com.jupiter.europa.io.FileLocations.SKINS_DIRECTORY;
 import com.jupiter.europa.save.SaveGame;
 import com.jupiter.europa.scene2d.ui.TabbedPane;
+import com.jupiter.europa.screen.dialog.CreateCharacterDialog;
 import com.jupiter.europa.world.World;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -92,16 +86,17 @@ public class MainMenuScreen implements Screen, InputProcessor {
     // Constants
     public static final Path MAIN_MENU_SKIN_DIRECTORY = SKINS_DIRECTORY.resolve("main_menu");
 
-    public static final String TITLE_FONT = "arial48-bold.fnt";
-    public static final String BUTTON_FONT = "arial40.fnt";
-    public static final String LIST_FONT = "arial32.fnt";
-    public static final String TEXT_FIELD_FONT = "arial32.fnt";
-    public static final String INFO_LABEL_FONT = "arial24.fnt";
+    public static final String TITLE_FONT = "MagicMedieval48-bold.fnt";
+    public static final String BUTTON_FONT = "MagicMedieval40.fnt";
+    public static final String LIST_FONT = "MagicMedieval32.fnt";
+    public static final String TEXT_FIELD_FONT = "MagicMedieval32.fnt";
+    public static final String INFO_LABEL_FONT = "MagicMedieval24.fnt";
 
     private static final String DEFAULT_KEY = "default";
     private static final String INFO_STYLE_KEY = "info";
     private static final String TAB_STYLE_KEY = "tab-style";
 
+    private static final String BACKGROUND_FILE_NAME = FileLocations.UI_IMAGES_DIRECTORY.resolve("main_menu_background.png").toString();
     private static final String ATLAS_KEY = "main_menu.atlas";
     private static final String SOLID_TEXTURE_KEY = "solid-texture";
     private static final String SLIDER_BACKGROUND_KEY = "slider-background-main_menu";
@@ -178,7 +173,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
         textButtonStyle.pressedOffsetX = 2f;
         textButtonStyle.pressedOffsetY = -3f;
         skin.add(DEFAULT_KEY, textButtonStyle);
-
+//        listStyle.background = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0f, 0f, 0f, 0.1f));
         // Tab Button Style
         TextButtonStyle tabButtonStyle = new TextButtonStyle();
         tabButtonStyle.up = transparentDrawable;
@@ -209,7 +204,6 @@ public class MainMenuScreen implements Screen, InputProcessor {
         listStyle.fontColorSelected = Color.BLACK;
         listStyle.fontColorUnselected = Color.BLACK;
         listStyle.selection = skin.newDrawable(SOLID_TEXTURE_KEY, SELECTION_COLOR);
-//        listStyle.background = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0f, 0f, 0f, 0.1f));
         listStyle.background = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(Color.WHITE));
         skin.add(DEFAULT_KEY, listStyle);
 
@@ -220,7 +214,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
 
         // Create a Dialog Style
         WindowStyle dialogStyle = new WindowStyle();
-        dialogStyle.background = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(Color.WHITE));
+        dialogStyle.background = new SpriteDrawable(new Sprite(EuropaGame.game.getAssetManager().get(BACKGROUND_FILE_NAME, Texture.class)));
         dialogStyle.stageBackground = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(Color.WHITE));
         dialogStyle.titleFont = skin.getFont(TITLE_FONT_KEY);
         dialogStyle.titleFontColor = new Color(Color.BLACK);
@@ -249,6 +243,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
 
     // Fields
     private Stage stage;
+    private Image background;
 
     private Table titleTable;
     private Table buttonTable;
@@ -270,17 +265,6 @@ public class MainMenuScreen implements Screen, InputProcessor {
     private Table newGameButtonTable;
     private TextButton newGameOkButton;
     private TextButton newGameCancelButton;
-
-    private Dialog selectRaceClassDialog;
-    private Table selectRaceClassTable;
-    private Table selectRaceClassBoxTable;
-    private SelectBox<Race> raceSelectBox;
-    private SelectBox<String> classSelectBox;
-    private Label raceLabel;
-    private Label classLabel;
-    private Image raceClassPreview;
-    private TextButton raceClassBackButton;
-    private TextButton raceClassNextButton;
 
     private Dialog loadGameDialog;
     private Table loadGameTable;
@@ -313,6 +297,8 @@ public class MainMenuScreen implements Screen, InputProcessor {
     private ScrollPane creditsScrollPane;
     private Label creditsLabel;
     private TextButton creditsOkButton;
+    
+    private CreateCharacterDialog createCharacterDialog;
 
 
     // Initialization
@@ -342,13 +328,11 @@ public class MainMenuScreen implements Screen, InputProcessor {
         this.confirmDeleteDialog.setSize(width, height);
         this.optionsDialog.setSize(width, height);
         this.creditsDialog.setSize(width, height);
-        this.selectRaceClassDialog.setSize(width, height);
         this.newGameDialog.invalidate();
         this.loadGameDialog.invalidate();
         this.confirmDeleteDialog.invalidate();
         this.creditsDialog.invalidate();
         this.optionsDialog.invalidate();
-        this.selectRaceClassDialog.invalidate();
     }
 
     @Override
@@ -431,6 +415,11 @@ public class MainMenuScreen implements Screen, InputProcessor {
     private void init() {
         this.stage = new Stage(new ScreenViewport());
         Skin skin = getMainMenuSkin();
+        
+        // Background
+        this.background = new Image(EuropaGame.game.getAssetManager().get(BACKGROUND_FILE_NAME, Texture.class));
+        this.background.setFillParent(true);
+        this.stage.addActor(this.background);
 
         // Create Buttons
         this.buttonTable = new Table();
@@ -576,75 +565,6 @@ public class MainMenuScreen implements Screen, InputProcessor {
 
         this.newGameDialog = new Dialog("", skin.get(DEFAULT_KEY, WindowStyle.class));
         this.newGameDialog.getContentTable().add(this.newGameTable).expand().fill();
-
-        //   Race Select Screen
-        this.selectRaceClassDialog = new Dialog("", skin.get(DEFAULT_KEY, WindowStyle.class));
-        this.raceLabel = new Label("Race:", skin.get(DEFAULT_KEY, LabelStyle.class));
-        this.classLabel = new Label("Class:", skin.get(DEFAULT_KEY, LabelStyle.class));
-        this.raceClassPreview = new Image(EuropaGame.game.getAssetManager().get(FileLocations.SPRITES_DIRECTORY.resolve("CharacterSprites.atlas").toString(),
-                TextureAtlas.class).findRegion("human-champion-" + MovementResourceComponent.FRONT_STAND_TEXTURE_NAME));
-        this.raceClassPreview.setScale(3);
-        
-        this.raceSelectBox = new SelectBox(skin.get(DEFAULT_KEY, SelectBoxStyle.class));
-        this.raceSelectBox.setItems(PlayerRaces.values());
-        this.raceSelectBox.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                MainMenuScreen.this.updateNewCharacterPreview();
-            }
-        });
-
-        this.classSelectBox = new SelectBox(skin.get(DEFAULT_KEY, SelectBoxStyle.class));
-        this.classSelectBox.setItems(CharacterClass.AVAILABLE_CLASSES);
-        this.classSelectBox.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                MainMenuScreen.this.updateNewCharacterPreview();
-            }
-        });
-
-        this.raceClassBackButton = new TextButton("Back", skin.get(DEFAULT_KEY, TextButtonStyle.class));
-        this.raceClassBackButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Buttons.LEFT && !MainMenuScreen.this.raceClassBackButton.isDisabled()) {
-                    MainMenuScreen.this.onRaceClassBackButton();
-                }
-            }
-        });
-
-        this.raceClassNextButton = new TextButton("Next", skin.get(DEFAULT_KEY, TextButtonStyle.class));
-        this.raceClassNextButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Buttons.LEFT && !MainMenuScreen.this.raceClassNextButton.isDisabled()) {
-                    MainMenuScreen.this.onRaceClassNextButton();
-                }
-            }
-        });
-
-        this.selectRaceClassTable = new Table();
-
-        this.selectRaceClassBoxTable = new Table();
-        this.selectRaceClassBoxTable.add(this.raceLabel).left();
-        this.selectRaceClassBoxTable.row();
-        this.selectRaceClassBoxTable.add(this.raceSelectBox).left();
-        this.selectRaceClassBoxTable.row();
-        this.selectRaceClassBoxTable.add(this.classLabel).left();
-        this.selectRaceClassBoxTable.row();
-        this.selectRaceClassBoxTable.add(this.classSelectBox).left();
-        this.selectRaceClassBoxTable.row();
-
-        this.selectRaceClassTable.add(this.selectRaceClassBoxTable).left();
-        this.selectRaceClassTable.add(this.raceClassPreview).expandX().center();
-        this.selectRaceClassTable.row();
-        
-        Table selectRaceClassButtonTable = new Table();
-        selectRaceClassButtonTable.add(this.raceClassNextButton).space(20).right().expandX();
-        selectRaceClassButtonTable.add(this.raceClassBackButton).space(20).right();
-
-        this.selectRaceClassDialog.getContentTable().add(this.selectRaceClassTable).minWidth(450);
-        this.selectRaceClassDialog.getButtonTable().add(selectRaceClassButtonTable).minWidth(450);
 
         // Load Game Table
         this.loadGameTable = new Table();
@@ -801,7 +721,9 @@ public class MainMenuScreen implements Screen, InputProcessor {
     }
 
     private void onNewGameClick() {
-        this.selectRaceClassDialog.show(this.stage);
+        this.createCharacterDialog = new CreateCharacterDialog(mainMenuSkin);
+        this.createCharacterDialog.addDialogListener(this::characterCreationCompleted);
+        this.createCharacterDialog.show(this.stage);
     }
 
     private void onLoadGameClick() {
@@ -826,18 +748,25 @@ public class MainMenuScreen implements Screen, InputProcessor {
     private void onQuitClick() {
         Gdx.app.exit();
     }
+    
+    private void characterCreationCompleted() {
+        this.newGameDialog.show(this.stage);
+    }
 
     private void startNewGame() {
         String gameName = this.newGameNameField.getText();
-        if (gameName == null || gameName.equals("")) {
+        if (gameName == null || gameName.isEmpty()) {
             gameName = "default";
         }
 
         World world = EuropaGame.game.getWorld(this.newGameWorldList.getSelected().toString());
 
         Party party = new Party();
-        EuropaEntity entity = party.createPlayer("Tharivol", CharacterClass.CLASS_LOOKUP.get(this.classSelectBox.getSelected()),
-                this.raceSelectBox.getSelected(), new AttributeSet());
+        
+        // Get Entities here
+        // Something isn't being updated properly
+        EuropaEntity entity = this.createCharacterDialog.getCreatedEntity();
+        party.addPlayer(entity);
         party.selectPlayer(entity);
         
         EuropaGame.game.startGame(gameName, world, party);
@@ -890,32 +819,6 @@ public class MainMenuScreen implements Screen, InputProcessor {
     private void applySettings() {
         EuropaGame.game.getSettings().musicVolume.set(this.musicSlider.getValue());
         EuropaGame.game.saveSettings();
-    }
-    
-    private void updateNewCharacterPreview() {
-        Race race = this.raceSelectBox.getSelected();
-        Class<? extends CharacterClass> charClass = CharacterClass.CLASS_LOOKUP.get(this.classSelectBox.getSelected());
-        try {
-            CharacterClass classInstance = charClass.newInstance();
-            String textureClassString = classInstance.getTextureSetName();
-            String texture = race.getTextureString() + "-" + textureClassString + "-" + MovementResourceComponent.FRONT_STAND_TEXTURE_NAME;
-            TextureRegionDrawable drawable = new TextureRegionDrawable(EuropaGame.game.getAssetManager().get(FileLocations.SPRITES_DIRECTORY.resolve("CharacterSprites.atlas").toString(),
-                    TextureAtlas.class).findRegion(texture));
-            this.raceClassPreview.setDrawable(drawable);
-        }
-        catch (IllegalAccessException | InstantiationException ex) {
-            
-        }
-    }
-
-    private void onRaceClassBackButton() {
-        this.selectRaceClassDialog.hide();
-    }
-
-    private void onRaceClassNextButton() {
-        this.newGameDialog.show(this.stage);
-        this.newGameNameField.setText("default");
-        this.newGameDialog.setSize(this.stage.getWidth(), this.stage.getHeight());
     }
 
 }

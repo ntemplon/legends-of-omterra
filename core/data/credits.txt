@@ -32,3 +32,10 @@ The platino sprite is not yet hidden in the game, but it will be before 1.0 :).
 
 All graphical assets in the game are DawnLike, except:
  * The character sprites.
+
+-----------------------------------------------------------------------------------------------------
+----     Fonts
+-----------------------------------------------------------------------------------------------------
+The majority of the text in game uses the MagicMedieval font by Dave Howell, obtained from fontspace.com.
+
+Titles are in the Diploma font, obtained from coolfonts.info.

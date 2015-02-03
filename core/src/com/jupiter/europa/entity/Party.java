@@ -63,47 +63,10 @@ public class Party implements Serializable {
     // Constants
     public static final String PARTY_MEMBERS_KEY = "party-members";
     public static final String ACTIVE_PARTY_MEMBERS_KEY = "active-party-members";
-
-
-    // Fields
-    private EuropaEntity player1;
-
-    private final List<EuropaEntity> activePartyMembers = new ArrayList<>();
-    private Map<String, EuropaEntity> partyMembers = new HashMap<>();
-
-
-    // Properties
-    public final EuropaEntity[] getActivePartyMembers() {
-        return this.activePartyMembers.toArray(new EuropaEntity[this.activePartyMembers.size()]);
-    }
-
-
-    // Initialization
-    public Party() {
-        this(false);
-    }
-
-    public Party(boolean createNew) {
-        if (createNew) {
-            this.player1 = this.createPlayer("Tharivol", Champion.class, PlayerRaces.Human, new AttributeSet());
-            this.activePartyMembers.add(this.player1);
-
-            // DEBUG - Assign Default Feats
-            CharacterClass charClass = Mappers.characterClass.get(this.player1).getCharacterClass();
-            FeatPool feats = charClass.getFeatPool();
-
-            feats.setAutoQualify(true);
-            feats.getSources().stream().forEach((Feat source) -> {
-                if (feats.getNumberOfSelections() < feats.getCapacity()) {
-                    feats.select(source);
-                }
-            });
-        }
-    }
     
     
-    // Public Methods
-    public final EuropaEntity createPlayer(String name, Class<? extends CharacterClass> charClass, Race race, AttributeSet attributes) {
+    // Static Methods
+    public static EuropaEntity createPlayer(String name, Class<? extends CharacterClass> charClass, Race race, AttributeSet attributes) {
         // NOTE: Order of component creation is important!
         EuropaEntity entity = new EuropaEntity();
 
@@ -126,9 +89,51 @@ public class Party implements Serializable {
 
         entity.initializeComponents();
 
-        this.partyMembers.put(name, entity);
-
         return entity;
+    }
+
+
+    // Fields
+    private EuropaEntity player1;
+
+    private final List<EuropaEntity> activePartyMembers = new ArrayList<>();
+    private Map<String, EuropaEntity> partyMembers = new HashMap<>();
+
+
+    // Properties
+    public final EuropaEntity[] getActivePartyMembers() {
+        return this.activePartyMembers.toArray(new EuropaEntity[this.activePartyMembers.size()]);
+    }
+
+
+    // Initialization
+    public Party() {
+        this(false);
+    }
+
+    public Party(boolean createNew) {
+        if (createNew) {
+            this.player1 = createPlayer("Tharivol", Champion.class, PlayerRaces.Human, new AttributeSet());
+            this.addPlayer(this.player1);
+            this.activePartyMembers.add(this.player1);
+
+            // DEBUG - Assign Default Feats
+            CharacterClass charClass = Mappers.characterClass.get(this.player1).getCharacterClass();
+            FeatPool feats = charClass.getFeatPool();
+
+            feats.setAutoQualify(true);
+            feats.getSources().stream().forEach((Feat source) -> {
+                if (feats.getNumberOfSelections() < feats.getCapacity()) {
+                    feats.select(source);
+                }
+            });
+        }
+    }
+    
+    
+    // Public Methods
+    public final void addPlayer(EuropaEntity entity) {
+        this.partyMembers.put(Mappers.name.get(entity).getName(), entity);
     }
 
     public final void selectPlayer(EuropaEntity entity) {

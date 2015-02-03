@@ -43,6 +43,7 @@ public final class FileLocations {
     public static final Path UI_DIRECTORY = ASSET_DIRECTORY.resolve("ui");
     public static final Path FONTS_DIRECTORY = UI_DIRECTORY.resolve("fonts");
     public static final Path SKINS_DIRECTORY = UI_DIRECTORY.resolve("skins");
+    public static final Path UI_IMAGES_DIRECTORY = UI_DIRECTORY.resolve("img");
 
     public static final Path GRAPHICS_DIRECTORY = ASSET_DIRECTORY.resolve("graphics");
     public static final Path SPRITES_DIRECTORY = GRAPHICS_DIRECTORY.resolve("sprites");
