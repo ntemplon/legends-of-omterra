@@ -5,6 +5,8 @@
  */
 package com.jupiter.europa.entity.messaging;
 
+import com.jupiter.ganymede.event.Listener;
+
 /**
  *
  * @author Hortator
@@ -17,22 +19,22 @@ public class FauxMessageSystem implements MessageSystem {
     }
 
     @Override
-    public void subscribe(MessageListener listener, Class<? extends Message>... messageTypes) {
+    public void subscribe(Listener<Message> listener, Class<? extends Message>... messageTypes) {
         
     }
 
     @Override
-    public void subscribe(MessageListener listener) {
+    public void subscribe(Listener<Message> listener) {
         
     }
 
     @Override
-    public void unsubscribe(MessageListener listener, Class<? extends Message>... messageTypes) {
+    public void unsubscribe(Listener<Message> listener, Class<? extends Message>... messageTypes) {
         
     }
 
     @Override
-    public void unsubscribe(MessageListener listener) {
+    public void unsubscribe(Listener<Message> listener) {
         
     }
 

@@ -27,16 +27,16 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.jupiter.europa.entity.messaging.Message;
-import com.jupiter.europa.entity.messaging.MessageListener;
 import com.jupiter.europa.entity.messaging.MessageSystem;
 import com.jupiter.europa.entity.messaging.PositionChangedMessage;
 import com.jupiter.europa.entity.messaging.SelfSubscribingListener;
+import com.jupiter.ganymede.event.Listener;
 
 /**
  *
  * @author Nathan Templon
  */
-public class CollisionSystem extends IteratingSystem implements MessageListener, SelfSubscribingListener {
+public class CollisionSystem extends IteratingSystem implements Listener<Message>, SelfSubscribingListener {
 
     // Initialization
     public CollisionSystem() {
@@ -56,7 +56,7 @@ public class CollisionSystem extends IteratingSystem implements MessageListener,
     }
 
     @Override
-    public void handleMessage(Message message) {
+    public void handle(Message message) {
         if (message instanceof PositionChangedMessage) {
             Entity entity = ((PositionChangedMessage) message).entity;
 

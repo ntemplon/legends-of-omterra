@@ -34,7 +34,6 @@ import com.jupiter.europa.entity.component.MovementResourceComponent;
 import com.jupiter.europa.entity.component.WalkComponent;
 import com.jupiter.europa.entity.component.WalkComponent.WalkStates;
 import com.jupiter.europa.entity.messaging.Message;
-import com.jupiter.europa.entity.messaging.MessageListener;
 import com.jupiter.europa.entity.messaging.MessageSystem;
 import com.jupiter.europa.entity.messaging.WalkRequestMessage;
 import com.jupiter.europa.entity.messaging.OffsetUpdatedMessage;
@@ -42,6 +41,7 @@ import com.jupiter.europa.entity.messaging.PositionChangedMessage;
 import com.jupiter.europa.entity.messaging.SelfSubscribingListener;
 import com.jupiter.europa.geometry.Size;
 import com.jupiter.europa.world.Level;
+import com.jupiter.ganymede.event.Listener;
 import java.awt.Point;
 import java.awt.Rectangle;
 
@@ -49,7 +49,7 @@ import java.awt.Rectangle;
  *
  * @author Nathan Templon
  */
-public class MovementSystem extends IteratingSystem implements MessageListener, SelfSubscribingListener {
+public class MovementSystem extends IteratingSystem implements Listener<Message>, SelfSubscribingListener {
 
     // Constants
     private static final float FIRST_WALK_SPRITE_BREAKPOINT = 0.3f;
@@ -116,7 +116,7 @@ public class MovementSystem extends IteratingSystem implements MessageListener, 
 
     // Public Methods
     @Override
-    public void handleMessage(Message message) {
+    public void handle(Message message) {
         if (message instanceof WalkRequestMessage) {
             this.handleWalkRequest((WalkRequestMessage) message);
         }

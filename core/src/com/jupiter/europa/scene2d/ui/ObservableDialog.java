@@ -24,10 +24,12 @@
 package com.jupiter.europa.scene2d.ui;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import com.jupiter.europa.util.ArrayUtils;
+import com.jupiter.ganymede.event.Event;
+import com.jupiter.ganymede.event.Listener;
 
 /**
  *
@@ -35,8 +37,16 @@ import java.util.Set;
  */
 public class ObservableDialog extends Dialog {
     
+    // Enumerations
+    public enum DialogEvents {
+        SHOWN,
+        HIDDEN
+    }
+    
+    
     // Fields
-    private final Set<DialogListener> listeners = new LinkedHashSet<>();
+    private final Event<DialogEventArgs> shown = new Event<>();
+    private final Event<DialogEventArgs> hidden = new Event<>();
     
     
     // Initialization
@@ -54,24 +64,77 @@ public class ObservableDialog extends Dialog {
     
     
     // Public Methods
-    public boolean addDialogListener(DialogListener listener) {
-        return this.listeners.add(listener);
+    @Override
+    public Dialog show(Stage stage) {
+        Dialog result = super.show(stage);
+        this.shown.dispatch(new DialogEventArgs(this, DialogEvents.SHOWN));
+        return result;
     }
     
-    public boolean removeDialogListener(DialogListener listener) {
-        return this.listeners.remove(listener);
+    @Override
+    public Dialog show(Stage stage, Action action) {
+        Dialog result = super.show(stage, action);
+        this.shown.dispatch(new DialogEventArgs(this, DialogEvents.SHOWN));
+        return result;
     }
     
     @Override
     public void hide() {
         super.hide();
-        this.listeners.stream().forEach((DialogListener listener) -> listener.dialogHidden());
+        this.hidden.dispatch(new DialogEventArgs(this, DialogEvents.HIDDEN));
     }
     
     @Override
     public void hide(Action action) {
         super.hide(action);
-        this.listeners.stream().forEach((DialogListener listener) -> listener.dialogHidden());
+        this.hidden.dispatch(new DialogEventArgs(this, DialogEvents.HIDDEN));
+    }
+    
+    public boolean addDialogListener(Listener<DialogEventArgs> listener, DialogEvents... events) {
+        boolean added = false;
+        if (ArrayUtils.contains(events, DialogEvents.SHOWN)) {
+            added = added && this.shown.addListener(listener);
+        }
+        if (ArrayUtils.contains(events, DialogEvents.HIDDEN)) {
+            added = added && this.hidden.addListener(listener);
+        }
+        return added;
+    }
+    
+    public boolean addDialogListener(Listener<DialogEventArgs> listener) {
+        return this.addDialogListener(listener, DialogEvents.values());
+    }
+    
+    public boolean removeDialogListener(Listener<DialogEventArgs> listener, DialogEvents... events) {
+        boolean removed = false;
+        if (ArrayUtils.contains(events, DialogEvents.SHOWN)) {
+            removed = removed && this.shown.removeListener(listener);
+        }
+        if (ArrayUtils.contains(events, DialogEvents.HIDDEN)) {
+            removed = removed && this.hidden.removeListener(listener);
+        }
+        return removed;
+    }
+    
+    public boolean removeDialogListener(Listener<DialogEventArgs> listener) {
+        return this.removeDialogListener(listener, DialogEvents.values());
+    }
+    
+    
+    // Nested Classes
+    public static class DialogEventArgs {
+        
+        // Fields
+        public final ObservableDialog sender;
+        public final DialogEvents event;
+        
+        
+        // Initialization
+        public DialogEventArgs(ObservableDialog sender, DialogEvents event) {
+            this.sender = sender;
+            this.event = event;
+        }
+        
     }
     
 }

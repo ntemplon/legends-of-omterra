@@ -61,6 +61,7 @@ import com.jupiter.europa.util.GameTimer;
 import com.jupiter.europa.util.Initializable;
 import com.jupiter.europa.world.Level;
 import com.jupiter.europa.world.World;
+import com.jupiter.ganymede.property.Property.PropertyChangedArgs;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -503,8 +504,8 @@ public class EuropaGame extends Game implements InputProcessor {
         this.loadSettings();
 
         // Configure Property Change listeners
-        this.settings.musicVolume.addPropertyChangeListener((property, oldValue, newValue) -> {
-            this.audio.setMusicVolume(newValue);
+        this.settings.musicVolume.addPropertyChangedListener((PropertyChangedArgs<Float> args) -> {
+            this.audio.setMusicVolume(args.newValue);
         });
 
         // Create our various screens

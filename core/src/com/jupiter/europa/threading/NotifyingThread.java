@@ -23,8 +23,8 @@
  */
 package com.jupiter.europa.threading;
 
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
+import com.jupiter.ganymede.event.Event;
+import com.jupiter.ganymede.event.Listener;
 
 /**
  * A thread which runs, then notifies any number of listeners of completion
@@ -33,7 +33,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class NotifyingThread extends Thread {
     
     // Fields
-    private final Set<ThreadCompleteListener> listeners = new CopyOnWriteArraySet<>();
+    private final Event<ThreadCompleteArgs> completed = new Event<>();
     
     
     // Initialization
@@ -42,30 +42,37 @@ public class NotifyingThread extends Thread {
     }
     
     
-    // Public Methods
-    public final void addListener(ThreadCompleteListener listener) {
-        this.listeners.add(listener);
-    }
-    
-    public final void removeListener(ThreadCompleteListener listener) {
-        this.listeners.remove(listener);
-    }
-    
+    // Public Methods   
     @Override
     public final void run() {
         try {
             super.run();
         }
         finally {
-            this.notifyListeners();
+            this.completed.dispatch(new ThreadCompleteArgs(this));
         }
     }
     
+    public boolean addThreadCompleteListener(Listener<ThreadCompleteArgs> listener) {
+        return this.completed.addListener(listener);
+    }
     
-    // Private Methods
-    private void notifyListeners() {
-        for (ThreadCompleteListener listener : listeners) {
-            listener.notifyOfThreadComplete(this);
+    public boolean removeThreadCompleteListener(Listener<ThreadCompleteArgs> listener) {
+        return this.completed.removeListener(listener);
+    }
+    
+    
+    // Neseted Classes
+    public static class ThreadCompleteArgs {
+        
+        // Fields
+        public final NotifyingThread thread;
+        
+        
+        // Initialization
+        public ThreadCompleteArgs(NotifyingThread thread) {
+            this.thread = thread;
         }
+        
     }
 }

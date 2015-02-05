@@ -31,19 +31,19 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.entity.component.RenderComponent;
 import com.jupiter.europa.entity.messaging.Message;
-import com.jupiter.europa.entity.messaging.MessageListener;
 import com.jupiter.europa.entity.messaging.MessageSystem;
 import com.jupiter.europa.entity.messaging.OffsetUpdatedMessage;
 import com.jupiter.europa.entity.messaging.PositionChangedMessage;
 import com.jupiter.europa.entity.messaging.SelfSubscribingListener;
 import com.jupiter.europa.util.Initializable;
+import com.jupiter.ganymede.event.Listener;
 import java.awt.Point;
 
 /**
  *
  * @author Nathan Templon
  */
-public class RenderingMaintenenceSystem extends IteratingSystem implements MessageListener, EntityListener, SelfSubscribingListener, Initializable {
+public class RenderingMaintenenceSystem extends IteratingSystem implements Listener<Message>, EntityListener, SelfSubscribingListener, Initializable {
 
     // Initialization
     public RenderingMaintenenceSystem() {
@@ -53,7 +53,7 @@ public class RenderingMaintenenceSystem extends IteratingSystem implements Messa
 
     // Public Methods
     @Override
-    public void handleMessage(Message message) {
+    public void handle(Message message) {
         if (message instanceof PositionChangedMessage) {
             this.updateSpriteData(((PositionChangedMessage) message).entity);
         }

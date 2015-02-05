@@ -69,6 +69,8 @@ import com.jupiter.europa.entity.Party;
 import com.jupiter.europa.io.FileLocations;
 import static com.jupiter.europa.io.FileLocations.SKINS_DIRECTORY;
 import com.jupiter.europa.save.SaveGame;
+import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEventArgs;
+import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEvents;
 import com.jupiter.europa.scene2d.ui.TabbedPane;
 import com.jupiter.europa.screen.dialog.CreateCharacterDialog;
 import com.jupiter.europa.world.World;
@@ -99,6 +101,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
     private static final String BACKGROUND_FILE_NAME = FileLocations.UI_IMAGES_DIRECTORY.resolve("main_menu_background.png").toString();
     private static final String ATLAS_KEY = "main_menu.atlas";
     private static final String SOLID_TEXTURE_KEY = "solid-texture";
+    private static final String BUTTON_TABLE_BACKGROUND_KEY = "button-table-background";
     private static final String SLIDER_BACKGROUND_KEY = "slider-background-main_menu";
     private static final String SLIDER_KNOB_KEY = "slider-knob-main_menu";
     private static final String TITLE_FONT_KEY = "title-font";
@@ -141,6 +144,9 @@ public class MainMenuScreen implements Screen, InputProcessor {
         pixmap.fill();
         skin.add(SOLID_TEXTURE_KEY, new Texture(pixmap));
         Drawable transparentDrawable = skin.newDrawable(SOLID_TEXTURE_KEY, TRANSPARENT);
+        
+        // Add textures to skin
+        skin.add(BUTTON_TABLE_BACKGROUND_KEY, skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0.5f, 0.5f, 0.5f, 0.5f)));
 
         // Get values from the atlas
         skin.addRegions(EuropaGame.game.getAssetManager().get(MAIN_MENU_SKIN_DIRECTORY.resolve(ATLAS_KEY).toString()));
@@ -501,6 +507,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
         this.buttonTable.row();
         this.buttonTable.add(this.quitButton).width(BUTTON_WIDTH).space(BUTTON_SPACING);
         this.buttonTable.row();
+        this.buttonTable.background(skin.get(BUTTON_TABLE_BACKGROUND_KEY, SpriteDrawable.class));
 
         // Title
         this.titleTable = new Table();
@@ -721,8 +728,8 @@ public class MainMenuScreen implements Screen, InputProcessor {
     }
 
     private void onNewGameClick() {
-        this.createCharacterDialog = new CreateCharacterDialog(mainMenuSkin);
-        this.createCharacterDialog.addDialogListener(this::characterCreationCompleted);
+        this.createCharacterDialog = new CreateCharacterDialog();
+        this.createCharacterDialog.addDialogListener(this::characterCreationCompleted, DialogEvents.HIDDEN);
         this.createCharacterDialog.show(this.stage);
     }
 
@@ -749,7 +756,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
         Gdx.app.exit();
     }
     
-    private void characterCreationCompleted() {
+    private void characterCreationCompleted(DialogEventArgs args) {
         this.newGameDialog.show(this.stage);
     }
 

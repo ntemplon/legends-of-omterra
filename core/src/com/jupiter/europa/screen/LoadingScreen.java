@@ -34,6 +34,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.io.EmergenceAssetManager;
 import com.jupiter.europa.threading.NotifyingThread;
+import com.jupiter.europa.threading.NotifyingThread.ThreadCompleteArgs;
 import java.text.DecimalFormat;
 
 /**
@@ -80,7 +81,9 @@ public class LoadingScreen implements Screen {
         
         if (!this.startedDataLoadingThread && this.assetManager.update()) {
             this.dataLoadingThread = new NotifyingThread(() -> this.game.loadWorldData());
-            this.dataLoadingThread.addListener((Thread thread) -> this.loadingComplete = true);
+            this.dataLoadingThread.addThreadCompleteListener((ThreadCompleteArgs args) -> {
+                this.loadingComplete = true;
+            });
             this.dataLoadingThread.start();
             this.startedDataLoadingThread = true;
         }

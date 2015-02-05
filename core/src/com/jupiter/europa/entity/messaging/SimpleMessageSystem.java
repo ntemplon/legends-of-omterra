@@ -23,12 +23,12 @@
  */
 package com.jupiter.europa.entity.messaging;
 
+import com.jupiter.ganymede.event.Event;
+import com.jupiter.ganymede.event.Listener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -42,8 +42,8 @@ public class SimpleMessageSystem implements MessageSystem {
     // Fields
     private final List<Message> queue;
     private final List<Message> publishedWhileUpdating;
-    private final Map<Class<? extends Message>, Set<MessageListener>> listeners;
-    private final Set<MessageListener> globalListeners;
+    private final Map<Class<? extends Message>, Event<Message>> messageEvents = new HashMap<>();
+    private final Event<Message> globalMessageEvent = new Event<>();
 
     private final Lock queueLock;
     private final Lock publishedWhileUpdatingLock;
@@ -60,8 +60,6 @@ public class SimpleMessageSystem implements MessageSystem {
         super();
         this.queue = new ArrayList<>();
         this.publishedWhileUpdating = new ArrayList<>();
-        this.listeners = new HashMap<>();
-        this.globalListeners = new HashSet<>();
 
         this.queueLock = new ReentrantLock();
         this.publishedWhileUpdatingLock = new ReentrantLock();
@@ -74,6 +72,7 @@ public class SimpleMessageSystem implements MessageSystem {
     /**
      * Sends all queued messages to all subscribed entities. If the previous call to update() has not yet completed,
      * this method will block until it has
+     * @param blocking
      */
     @Override
     public void update(boolean blocking) {
@@ -102,18 +101,18 @@ public class SimpleMessageSystem implements MessageSystem {
      * @param messageTypes
      */
     @Override
-    public void subscribe(MessageListener listener, Class<? extends Message>... messageTypes) {
+    public void subscribe(Listener<Message> listener, Class<? extends Message>... messageTypes) {
         this.listenersLock.lock();
 
         try {
             for (Class<? extends Message> type : messageTypes) {
-                if (this.listeners.containsKey(type)) {
-                    this.listeners.get(type).add(listener);
+                if (this.messageEvents.containsKey(type)) {
+                    this.messageEvents.get(type).addListener(listener);
                 }
                 else {
-                    Set<MessageListener> newListeners = new HashSet<>();
-                    newListeners.add(listener);
-                    this.listeners.put(type, newListeners);
+                    Event<Message> newEvent = new Event<>();
+                    newEvent.addListener(listener);
+                    this.messageEvents.put(type, newEvent);
                 }
             }
         }
@@ -128,11 +127,11 @@ public class SimpleMessageSystem implements MessageSystem {
      * @param listener
      */
     @Override
-    public void subscribe(MessageListener listener) {
+    public void subscribe(Listener<Message> listener) {
         this.globalListenersLock.lock();
 
         try {
-            this.globalListeners.add(listener);
+            this.globalMessageEvent.addListener(listener);
         }
         finally {
             this.globalListenersLock.unlock();
@@ -147,13 +146,13 @@ public class SimpleMessageSystem implements MessageSystem {
      * @param messageTypes
      */
     @Override
-    public void unsubscribe(MessageListener listener, Class<? extends Message>... messageTypes) {
+    public void unsubscribe(Listener<Message> listener, Class<? extends Message>... messageTypes) {
         this.listenersLock.lock();
 
         try {
             for (Class<? extends Message> type : messageTypes) {
-                if (this.listeners.containsKey(type)) {
-                    this.listeners.get(type).remove(listener);
+                if (this.messageEvents.containsKey(type)) {
+                    this.messageEvents.get(type).removeListener(listener);
                 }
             }
         }
@@ -168,15 +167,15 @@ public class SimpleMessageSystem implements MessageSystem {
      * @param listener
      */
     @Override
-    public void unsubscribe(MessageListener listener) {
+    public void unsubscribe(Listener<Message> listener) {
         this.globalListenersLock.lock();
         this.listenersLock.lock();
 
         try {
-            this.globalListeners.remove(listener);
+            this.globalMessageEvent.removeListener(listener);
 
-            this.listeners.keySet().stream().forEach((Class<? extends Message> type) -> {
-                this.listeners.get(type).remove(listener);
+            this.messageEvents.keySet().stream().forEach((Class<? extends Message> type) -> {
+                this.messageEvents.get(type).removeListener(listener);
             });
         }
         finally {
@@ -227,16 +226,12 @@ public class SimpleMessageSystem implements MessageSystem {
                 this.isUpdating = true;
                 this.queue.stream().forEach((Message message) -> {
                     // Send the message to global listeners
-                    this.globalListeners.stream().forEach((MessageListener listener) -> {
-                        listener.handleMessage(message);
-                    });
+                    this.globalMessageEvent.dispatch(message);
 
                     // Send the message to specifically subscribed listeners
                     Class<? extends Message> type = message.getClass();
-                    if (this.listeners.containsKey(type)) {
-                        this.listeners.get(type).stream().forEach((MessageListener listener) -> {
-                            listener.handleMessage(message);
-                        });
+                    if (this.messageEvents.containsKey(type)) {
+                        this.messageEvents.get(type).dispatch(message);
                     }
                 });
 

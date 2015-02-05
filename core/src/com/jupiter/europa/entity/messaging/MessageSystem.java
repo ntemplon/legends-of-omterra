@@ -5,6 +5,8 @@
  */
 package com.jupiter.europa.entity.messaging;
 
+import com.jupiter.ganymede.event.Listener;
+
 /**
  *
  * @author Hortator
@@ -12,10 +14,10 @@ package com.jupiter.europa.entity.messaging;
 public interface MessageSystem {
     
     void update(boolean blocking);
-    void subscribe(MessageListener listener, Class<? extends Message>... messageTypes);
-    void subscribe(MessageListener listener);
-    void unsubscribe(MessageListener listener, Class<? extends Message>... messageTypes);
-    void unsubscribe(MessageListener listener);
+    void subscribe(Listener<Message> listener, Class<? extends Message>... messageTypes);
+    void subscribe(Listener<Message> listener);
+    void unsubscribe(Listener<Message> listener, Class<? extends Message>... messageTypes);
+    void unsubscribe(Listener<Message> listener);
     void publish(Message message);
     
 }

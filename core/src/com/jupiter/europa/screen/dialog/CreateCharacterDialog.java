@@ -48,6 +48,7 @@ import com.jupiter.europa.entity.stats.characterclass.CharacterClass;
 import com.jupiter.europa.entity.stats.race.Race;
 import com.jupiter.europa.io.FileLocations;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
+import com.jupiter.europa.screen.MainMenuScreen;
 
 /**
  *
@@ -65,10 +66,17 @@ public class CreateCharacterDialog extends ObservableDialog {
 
     // Constants
     public static final String DIALOG_NAME = "Create a Character";
+    
+    
+    // Static Methods
+    private static Skin getSkin() {
+        return MainMenuScreen.getMainMenuSkin();
+    }
 
 
     // Fields
-    private SelectRaceClassDialog selectRaceClass;
+    private final SelectRaceClassDialog selectRaceClass;
+    private final Skin skin = getSkin();
 
     private CreateCharacterExitStates exitState = CreateCharacterExitStates.CANCELED;
     private EuropaEntity createdEntity;
@@ -85,11 +93,11 @@ public class CreateCharacterDialog extends ObservableDialog {
 
 
     // Initialization
-    public CreateCharacterDialog(Skin skin) {
-        super(DIALOG_NAME, skin.get(WindowStyle.class));
+    public CreateCharacterDialog() {
+        super(DIALOG_NAME, getSkin().get(WindowStyle.class));
 
         this.selectRaceClass = new SelectRaceClassDialog(skin);
-        this.selectRaceClass.addDialogListener(this::onSelectRaceClassHide);
+        this.selectRaceClass.addDialogListener(this::onSelectRaceClassHide, DialogEvents.HIDDEN);
     }
 
 
@@ -105,7 +113,7 @@ public class CreateCharacterDialog extends ObservableDialog {
 
 
     // Private Methods
-    private void onSelectRaceClassHide() {
+    private void onSelectRaceClassHide(DialogEventArgs args) {
         if (this.selectRaceClass.getExitState() == SelectRaceClassDialog.SelectRaceClassExitStates.OK) {
             this.exitState = CreateCharacterExitStates.OK;
         }

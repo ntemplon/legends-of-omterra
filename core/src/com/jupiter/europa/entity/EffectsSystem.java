@@ -28,16 +28,16 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.entity.messaging.EffectAddedMessage;
 import com.jupiter.europa.entity.messaging.Message;
-import com.jupiter.europa.entity.messaging.MessageListener;
 import com.jupiter.europa.entity.messaging.MessageSystem;
 import com.jupiter.europa.entity.messaging.RequestEffectAddMessage;
 import com.jupiter.europa.entity.messaging.SelfSubscribingListener;
+import com.jupiter.ganymede.event.Listener;
 
 /**
  *
  * @author Nathan Templon
  */
-public class EffectsSystem extends EntitySystem implements MessageListener, SelfSubscribingListener {
+public class EffectsSystem extends EntitySystem implements Listener<Message>, SelfSubscribingListener {
 
     // Initialization
     public EffectsSystem() {
@@ -47,7 +47,7 @@ public class EffectsSystem extends EntitySystem implements MessageListener, Self
 
     // Public Methods
     @Override
-    public void handleMessage(Message message) {
+    public void handle(Message message) {
         if (message instanceof RequestEffectAddMessage) {
             this.onEffectAddedRequest((RequestEffectAddMessage)message);
         }
