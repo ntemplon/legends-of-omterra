@@ -27,8 +27,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -38,6 +36,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.entity.EuropaEntity;
@@ -98,21 +97,24 @@ public class CreateCharacterDialog extends ObservableDialog {
 
         this.selectRaceClass = new SelectRaceClassDialog(skin);
         this.selectRaceClass.addDialogListener(this::onSelectRaceClassHide, DialogEvents.HIDDEN);
+        
+        this.addDialogListener(this::onShown, DialogEvents.SHOWN);
     }
-
-
+    
+    
     // Public Methods
     @Override
-    public Dialog show(Stage stage) {
-        Dialog result = super.show(stage);
-
-        this.selectRaceClass.show(stage);
-
-        return result;
+    public void setSize(float width, float height) {
+        super.setSize(width, height);
+        this.selectRaceClass.setSize(width, height);
     }
 
 
     // Private Methods
+    private void onShown(DialogEventArgs args) {
+        this.selectRaceClass.show(this.getStage());
+    }
+    
     private void onSelectRaceClassHide(DialogEventArgs args) {
         if (this.selectRaceClass.getExitState() == SelectRaceClassDialog.SelectRaceClassExitStates.OK) {
             this.exitState = CreateCharacterExitStates.OK;
@@ -142,16 +144,21 @@ public class CreateCharacterDialog extends ObservableDialog {
 
 
         // Constants
-        private static final String DIALOG_NAME = "Select a Race and Class";
+        private static final String DIALOG_NAME = "";
+        private static final String TITLE = "Select a Race and Class";
+        
+        private static final int IMAGE_SCALE = 4;
+        
 
 
         // Fields
         private final Skin skin;
 
-        private Table selectRaceClassTable;
-        private Table selectRaceClassBoxTable;
+        private Table mainTable;
+        private Table selectBoxTable;
         private SelectBox<Race> raceSelectBox;
         private SelectBox<String> classSelectBox;
+        private Label titleLabel;
         private Label raceLabel;
         private Label classLabel;
         private Image raceClassPreview;
@@ -186,12 +193,13 @@ public class CreateCharacterDialog extends ObservableDialog {
 
         // Private Methods
         private void initComponents() {
+            this.titleLabel = new Label(TITLE, skin.get(LabelStyle.class));
             this.raceLabel = new Label("Race: ", skin.get(LabelStyle.class));
             this.classLabel = new Label("Class: ", skin.get(LabelStyle.class));
             this.raceClassPreview = new Image(EuropaGame.game.getAssetManager()
                     .get(FileLocations.SPRITES_DIRECTORY.resolve("CharacterSprites.atlas").toString(),
-                            TextureAtlas.class).findRegion("human-champion-" + MovementResourceComponent.FRONT_STAND_TEXTURE_NAME));
-            this.raceClassPreview.setScale(3);
+                            TextureAtlas.class).findRegion(Race.PlayerRaces.Human.getTextureString() + "-champion-" + MovementResourceComponent.FRONT_STAND_TEXTURE_NAME));
+            this.raceClassPreview.setScale(IMAGE_SCALE);
 
             this.raceSelectBox = new SelectBox(skin.get(SelectBox.SelectBoxStyle.class));
             this.raceSelectBox.setItems(Race.PlayerRaces.values());
@@ -231,28 +239,35 @@ public class CreateCharacterDialog extends ObservableDialog {
                 }
             });
 
-            this.selectRaceClassTable = new Table();
+            this.mainTable = new Table();
 
-            this.selectRaceClassBoxTable = new Table();
-            this.selectRaceClassBoxTable.add(this.raceLabel).left();
-            this.selectRaceClassBoxTable.row();
-            this.selectRaceClassBoxTable.add(this.raceSelectBox).left();
-            this.selectRaceClassBoxTable.row();
-            this.selectRaceClassBoxTable.add(this.classLabel).left();
-            this.selectRaceClassBoxTable.row();
-            this.selectRaceClassBoxTable.add(this.classSelectBox).left();
-            this.selectRaceClassBoxTable.row();
+            this.selectBoxTable = new Table();
+            this.selectBoxTable.add(this.raceLabel).fillX();
+            this.selectBoxTable.row();
+            this.selectBoxTable.add(this.raceSelectBox).fillX();
+            this.selectBoxTable.row();
+            this.selectBoxTable.add(this.classLabel).fillX();
+            this.selectBoxTable.row();
+            this.selectBoxTable.add(this.classSelectBox).fillX();
+            this.selectBoxTable.row();
 
-            this.selectRaceClassTable.add(this.selectRaceClassBoxTable).left();
-            this.selectRaceClassTable.add(this.raceClassPreview).expandX().center();
-            this.selectRaceClassTable.row();
+            this.mainTable.add(this.titleLabel).center().colspan(2).minWidth(MainMenuScreen.DIALOG_MIN_WIDTH);
+            this.mainTable.row();
+            this.mainTable.add(this.selectBoxTable).left().expandY();
+            this.mainTable.add(this.raceClassPreview).center().expandY();
+            this.mainTable.row();
 
-            Table selectRaceClassButtonTable = new Table();
-            selectRaceClassButtonTable.add(this.raceClassNextButton).space(20).right().expandX();
-            selectRaceClassButtonTable.add(this.raceClassBackButton).space(20).right();
+            Table buttonTable = new Table();
+            buttonTable.add(this.raceClassNextButton).space(MainMenuScreen.BUTTON_SPACING).right().expandX();
+            buttonTable.add(this.raceClassBackButton).space(MainMenuScreen.BUTTON_SPACING).right();
+            
+            this.mainTable.add(buttonTable).right().colspan(2);
+            this.mainTable.row();
+            
+            this.mainTable.padLeft(MainMenuScreen.TABLE_HORIZONTAL_PADDING).padRight(MainMenuScreen.TABLE_HORIZONTAL_PADDING);
+            this.mainTable.background(skin.get(MainMenuScreen.BUTTON_TABLE_BACKGROUND_KEY, SpriteDrawable.class));
 
-            this.getContentTable().add(this.selectRaceClassTable).minWidth(450);
-            this.getButtonTable().add(selectRaceClassButtonTable).minWidth(450);
+            this.getContentTable().add(this.mainTable).expand().fillY();
         }
 
         private void updateNewCharacterPreview() {

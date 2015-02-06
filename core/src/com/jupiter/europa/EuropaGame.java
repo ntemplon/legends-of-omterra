@@ -62,6 +62,7 @@ import com.jupiter.europa.util.Initializable;
 import com.jupiter.europa.world.Level;
 import com.jupiter.europa.world.World;
 import com.jupiter.ganymede.property.Property.PropertyChangedArgs;
+import java.awt.Insets;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -231,6 +232,7 @@ public class EuropaGame extends Game implements InputProcessor {
     // Fields
     public final Engine entityEngine = new Engine(); // Ashley entity framework engine
     public final Map<Long, Entity> lastIdMapping = new HashMap<>();
+    
     private final GameTimer timer = new GameTimer();
 
     private LevelScreen levelScreen;

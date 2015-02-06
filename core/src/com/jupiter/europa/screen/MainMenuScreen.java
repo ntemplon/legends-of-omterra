@@ -51,7 +51,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -66,6 +65,7 @@ import com.jupiter.europa.EuropaGame;
 import static com.jupiter.europa.audio.AudioService.TITLE_MUSIC;
 import com.jupiter.europa.entity.EuropaEntity;
 import com.jupiter.europa.entity.Party;
+import com.jupiter.europa.geometry.Size;
 import com.jupiter.europa.io.FileLocations;
 import static com.jupiter.europa.io.FileLocations.SKINS_DIRECTORY;
 import com.jupiter.europa.save.SaveGame;
@@ -73,6 +73,9 @@ import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEventArgs;
 import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEvents;
 import com.jupiter.europa.scene2d.ui.TabbedPane;
 import com.jupiter.europa.screen.dialog.CreateCharacterDialog;
+import com.jupiter.europa.screen.dialog.CreateCharacterDialog.CreateCharacterExitStates;
+import com.jupiter.europa.screen.dialog.NewGameDialog;
+import com.jupiter.europa.screen.dialog.NewGameDialog.NewGameExitStates;
 import com.jupiter.europa.world.World;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -94,31 +97,34 @@ public class MainMenuScreen implements Screen, InputProcessor {
     public static final String TEXT_FIELD_FONT = "MagicMedieval32.fnt";
     public static final String INFO_LABEL_FONT = "MagicMedieval24.fnt";
 
-    private static final String DEFAULT_KEY = "default";
-    private static final String INFO_STYLE_KEY = "info";
-    private static final String TAB_STYLE_KEY = "tab-style";
+    public static final String DEFAULT_KEY = "default";
+    public static final String INFO_STYLE_KEY = "info";
+    public static final String TAB_STYLE_KEY = "tab-style";
 
-    private static final String BACKGROUND_FILE_NAME = FileLocations.UI_IMAGES_DIRECTORY.resolve("main_menu_background.png").toString();
-    private static final String ATLAS_KEY = "main_menu.atlas";
-    private static final String SOLID_TEXTURE_KEY = "solid-texture";
-    private static final String BUTTON_TABLE_BACKGROUND_KEY = "button-table-background";
-    private static final String SLIDER_BACKGROUND_KEY = "slider-background-main_menu";
-    private static final String SLIDER_KNOB_KEY = "slider-knob-main_menu";
-    private static final String TITLE_FONT_KEY = "title-font";
-    private static final String BUTTON_FONT_KEY = "button-font";
-    private static final String TEXT_FIELD_FONT_KEY = "text-field-font";
-    private static final String LIST_FONT_KEY = "list-font";
-    private static final String INFO_LABEL_FONT_KEY = "info-label-font";
+    public static final String BACKGROUND_FILE_NAME = FileLocations.UI_IMAGES_DIRECTORY.resolve("main_menu_background.png").toString();
+    public static final String ATLAS_KEY = "main_menu.atlas";
+    public static final String SOLID_TEXTURE_KEY = "solid-texture";
+    public static final String BUTTON_TABLE_BACKGROUND_KEY = "button-table-background";
+    public static final String SLIDER_BACKGROUND_KEY = "slider-background-main_menu";
+    public static final String SLIDER_KNOB_KEY = "slider-knob-main_menu";
+    public static final String TITLE_FONT_KEY = "title-font";
+    public static final String BUTTON_FONT_KEY = "button-font";
+    public static final String TEXT_FIELD_FONT_KEY = "text-field-font";
+    public static final String LIST_FONT_KEY = "list-font";
+    public static final String INFO_LABEL_FONT_KEY = "info-label-font";
 
-    private static Skin mainMenuSkin;
+    public static Skin mainMenuSkin;
 
-    private static final int TITLE_PADDING = 25;
-    private static final int BUTTON_WIDTH = 225;
-    private static final int BUTTON_SPACING = 0;
+    public static final int TITLE_PADDING = 25;
+    public static final int BUTTON_WIDTH = 225;
+    public static final int BUTTON_SPACING = 20;
+    public static final int TABLE_HORIZONTAL_PADDING = 20;
+    
+    public static final int DIALOG_MIN_WIDTH = 580;
 
-    private static final Color BACKGROUND_COLOR = new Color(Color.WHITE);
-    private static final Color SELECTION_COLOR = new Color(0.0f, 0.0f, 0.0f, 0.2f);
-    private static final Color TRANSPARENT = new Color(1, 1, 1, 0);
+    public static final Color BACKGROUND_COLOR = new Color(Color.WHITE);
+    public static final Color SELECTION_COLOR = new Color(0.0f, 0.0f, 0.0f, 0.2f);
+    public static final Color TRANSPARENT = new Color(1, 1, 1, 0);
 
 
     // Static Methods
@@ -144,9 +150,9 @@ public class MainMenuScreen implements Screen, InputProcessor {
         pixmap.fill();
         skin.add(SOLID_TEXTURE_KEY, new Texture(pixmap));
         Drawable transparentDrawable = skin.newDrawable(SOLID_TEXTURE_KEY, TRANSPARENT);
-        
+
         // Add textures to skin
-        skin.add(BUTTON_TABLE_BACKGROUND_KEY, skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0.5f, 0.5f, 0.5f, 0.5f)));
+        skin.add(BUTTON_TABLE_BACKGROUND_KEY, skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0.6f, 0.6f, 0.6f, 0.75f)));
 
         // Get values from the atlas
         skin.addRegions(EuropaGame.game.getAssetManager().get(MAIN_MENU_SKIN_DIRECTORY.resolve(ATLAS_KEY).toString()));
@@ -175,7 +181,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
         textButtonStyle.font = skin.getFont(BUTTON_FONT_KEY);
         textButtonStyle.fontColor = new Color(Color.BLACK);
         textButtonStyle.overFontColor = new Color(Color.BLUE);
-        textButtonStyle.disabledFontColor = new Color(Color.GRAY);
+        textButtonStyle.disabledFontColor = new Color(0.3f, 0.3f, 0.3f, 1.0f);
         textButtonStyle.pressedOffsetX = 2f;
         textButtonStyle.pressedOffsetY = -3f;
         skin.add(DEFAULT_KEY, textButtonStyle);
@@ -261,17 +267,6 @@ public class MainMenuScreen implements Screen, InputProcessor {
     private TextButton creditsButton;
     private TextButton quitButton;
 
-    private Dialog newGameDialog;
-    private Table newGameTable;
-    private Label newGameNameLabel;
-    private TextField newGameNameField;
-    private Label newGameWorldLabel;
-    private List newGameWorldList;
-    private ScrollPane newGameWorldPane;
-    private Table newGameButtonTable;
-    private TextButton newGameOkButton;
-    private TextButton newGameCancelButton;
-
     private Dialog loadGameDialog;
     private Table loadGameTable;
     private Label loadGameLabel;
@@ -303,8 +298,11 @@ public class MainMenuScreen implements Screen, InputProcessor {
     private ScrollPane creditsScrollPane;
     private Label creditsLabel;
     private TextButton creditsOkButton;
-    
+
     private CreateCharacterDialog createCharacterDialog;
+    private NewGameDialog newGameDialog;
+    
+    private Size size = new Size(0, 0);
 
 
     // Initialization
@@ -325,20 +323,23 @@ public class MainMenuScreen implements Screen, InputProcessor {
 
     @Override
     public void resize(int width, int height) {
-        // True buts 0, 0 at the bottom left corner, false or omission puts 0, 0 at the center
+        this.size = new Size(width, height);
+        
+        // True puts 0, 0 at the bottom left corner, false or omission puts 0, 0 at the center
         this.stage.getViewport().update(width, height, true);
 
         // Resize dialogs
-        this.newGameDialog.setSize(width, height);
         this.loadGameDialog.setSize(width, height);
         this.confirmDeleteDialog.setSize(width, height);
         this.optionsDialog.setSize(width, height);
         this.creditsDialog.setSize(width, height);
-        this.newGameDialog.invalidate();
-        this.loadGameDialog.invalidate();
-        this.confirmDeleteDialog.invalidate();
-        this.creditsDialog.invalidate();
-        this.optionsDialog.invalidate();
+        
+        if (this.createCharacterDialog != null) {
+            this.createCharacterDialog.setSize(width, height);
+        }
+        if (this.newGameDialog != null) {
+            this.newGameDialog.setSize(width, height);
+        }
     }
 
     @Override
@@ -421,7 +422,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
     private void init() {
         this.stage = new Stage(new ScreenViewport());
         Skin skin = getMainMenuSkin();
-        
+
         // Background
         this.background = new Image(EuropaGame.game.getAssetManager().get(BACKGROUND_FILE_NAME, Texture.class));
         this.background.setFillParent(true);
@@ -495,17 +496,17 @@ public class MainMenuScreen implements Screen, InputProcessor {
         });
 
         // Configure Button Table
-        this.buttonTable.add(this.newGameButton).width(BUTTON_WIDTH).space(BUTTON_SPACING);
+        this.buttonTable.add(this.newGameButton).width(BUTTON_WIDTH);
         this.buttonTable.row();
-        this.buttonTable.add(this.loadGameButton).width(BUTTON_WIDTH).space(BUTTON_SPACING);
+        this.buttonTable.add(this.loadGameButton).width(BUTTON_WIDTH);
         this.buttonTable.row();
-        this.buttonTable.add(this.multiplayerButton).width(BUTTON_WIDTH).space(BUTTON_SPACING);
+        this.buttonTable.add(this.multiplayerButton).width(BUTTON_WIDTH);
         this.buttonTable.row();
-        this.buttonTable.add(this.optionsButton).width(BUTTON_WIDTH).space(BUTTON_SPACING);
+        this.buttonTable.add(this.optionsButton).width(BUTTON_WIDTH);
         this.buttonTable.row();
-        this.buttonTable.add(this.creditsButton).width(BUTTON_WIDTH).space(BUTTON_SPACING);
+        this.buttonTable.add(this.creditsButton).width(BUTTON_WIDTH);
         this.buttonTable.row();
-        this.buttonTable.add(this.quitButton).width(BUTTON_WIDTH).space(BUTTON_SPACING);
+        this.buttonTable.add(this.quitButton).width(BUTTON_WIDTH);
         this.buttonTable.row();
         this.buttonTable.background(skin.get(BUTTON_TABLE_BACKGROUND_KEY, SpriteDrawable.class));
 
@@ -522,56 +523,6 @@ public class MainMenuScreen implements Screen, InputProcessor {
         this.titleTable.row();
 
         this.stage.addActor(this.titleTable);
-
-        // New Game Table
-        this.newGameTable = new Table();
-        this.newGameTable.setFillParent(true);
-        this.newGameTable.center();
-
-        this.newGameNameLabel = new Label("Save Name: ", skin.get(DEFAULT_KEY, LabelStyle.class));
-        this.newGameNameField = new TextField("default", skin.get(DEFAULT_KEY, TextFieldStyle.class));
-        this.newGameNameField.setMaxLength(16);
-        this.newGameWorldLabel = new Label("World:", skin.get(DEFAULT_KEY, LabelStyle.class));
-        this.newGameWorldList = new List(skin.get(DEFAULT_KEY, ListStyle.class));
-        this.newGameWorldList.setItems((Object[]) EuropaGame.game.getWorldNames());
-        this.newGameWorldPane = new ScrollPane(this.newGameWorldList, skin.get(DEFAULT_KEY, ScrollPaneStyle.class));
-
-        this.newGameOkButton = new TextButton("Accept", skin.get(DEFAULT_KEY, TextButtonStyle.class));
-        this.newGameOkButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Buttons.LEFT && !MainMenuScreen.this.newGameOkButton.isDisabled()) {
-                    MainMenuScreen.this.startNewGame();
-                }
-            }
-        });
-
-        this.newGameCancelButton = new TextButton("Back", skin.get(DEFAULT_KEY, TextButtonStyle.class));
-        this.newGameCancelButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Buttons.LEFT && !MainMenuScreen.this.newGameCancelButton.isDisabled()) {
-                    MainMenuScreen.this.cancelNewGame();
-                }
-            }
-        });
-
-        this.newGameButtonTable = new Table();
-        this.newGameButtonTable.add(this.newGameOkButton).right();
-        this.newGameButtonTable.add(this.newGameCancelButton).space(20).right();
-
-        this.newGameTable.add(this.newGameNameLabel).top().height(50).padTop(25).left();
-        this.newGameTable.add(this.newGameNameField).top().padTop(30).width(350).left();
-        this.newGameTable.row();
-        this.newGameTable.add(this.newGameWorldLabel).colspan(2).left();
-        this.newGameTable.row();
-        this.newGameTable.add(this.newGameWorldPane).colspan(2).expandY().minWidth(620).fill();
-        this.newGameTable.row();
-        this.newGameTable.add(this.newGameButtonTable).colspan(2).right().padBottom(25);
-        this.newGameTable.row();
-
-        this.newGameDialog = new Dialog("", skin.get(DEFAULT_KEY, WindowStyle.class));
-        this.newGameDialog.getContentTable().add(this.newGameTable).expand().fill();
 
         // Load Game Table
         this.loadGameTable = new Table();
@@ -729,8 +680,8 @@ public class MainMenuScreen implements Screen, InputProcessor {
 
     private void onNewGameClick() {
         this.createCharacterDialog = new CreateCharacterDialog();
-        this.createCharacterDialog.addDialogListener(this::characterCreationCompleted, DialogEvents.HIDDEN);
-        this.createCharacterDialog.show(this.stage);
+        this.createCharacterDialog.addDialogListener(this::onCharacterCreationCompleted, DialogEvents.HIDDEN);
+        this.showDialog(this.createCharacterDialog);
     }
 
     private void onLoadGameClick() {
@@ -755,32 +706,40 @@ public class MainMenuScreen implements Screen, InputProcessor {
     private void onQuitClick() {
         Gdx.app.exit();
     }
+
+    private void onCharacterCreationCompleted(DialogEventArgs args) {
+        if (this.createCharacterDialog.getExitState().equals(CreateCharacterExitStates.OK)) {
+            this.newGameDialog = new NewGameDialog();
+            this.newGameDialog.addDialogListener(this::onNewGameDialogHidden, DialogEvents.HIDDEN);
+            this.showDialog(this.newGameDialog);
+        }
+    }
     
-    private void characterCreationCompleted(DialogEventArgs args) {
-        this.newGameDialog.show(this.stage);
+    private void onNewGameDialogHidden(DialogEventArgs args) {
+        if (this.newGameDialog.getExitState().equals(NewGameExitStates.START_GAME)) {
+            this.startNewGame();
+        }
+        else {
+            this.showDialog(this.createCharacterDialog);
+        }
     }
 
     private void startNewGame() {
-        String gameName = this.newGameNameField.getText();
+        String gameName = this.newGameDialog.getNewGameName();
         if (gameName == null || gameName.isEmpty()) {
             gameName = "default";
         }
 
-        World world = EuropaGame.game.getWorld(this.newGameWorldList.getSelected().toString());
+        World world = EuropaGame.game.getWorld(this.newGameDialog.getNewGameWorldName());
 
         Party party = new Party();
-        
+
         // Get Entities here
-        // Something isn't being updated properly
         EuropaEntity entity = this.createCharacterDialog.getCreatedEntity();
         party.addPlayer(entity);
         party.selectPlayer(entity);
-        
-        EuropaGame.game.startGame(gameName, world, party);
-    }
 
-    private void cancelNewGame() {
-        this.newGameDialog.hide();
+        EuropaGame.game.startGame(gameName, world, party);
     }
 
     private void loadGame() {
@@ -826,6 +785,10 @@ public class MainMenuScreen implements Screen, InputProcessor {
     private void applySettings() {
         EuropaGame.game.getSettings().musicVolume.set(this.musicSlider.getValue());
         EuropaGame.game.saveSettings();
+    }
+    
+    private void showDialog(Dialog dialog) {
+        dialog.show(this.stage).setSize(this.size.width, this.size.height);
     }
 
 }

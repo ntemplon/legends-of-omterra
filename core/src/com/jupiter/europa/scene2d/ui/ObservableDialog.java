@@ -36,105 +36,107 @@ import com.jupiter.ganymede.event.Listener;
  * @author Nathan Templon
  */
 public class ObservableDialog extends Dialog {
-    
+
     // Enumerations
     public enum DialogEvents {
+
         SHOWN,
         HIDDEN
     }
-    
-    
+
+
     // Fields
     private final Event<DialogEventArgs> shown = new Event<>();
     private final Event<DialogEventArgs> hidden = new Event<>();
-    
-    
+
+
     // Initialization
     public ObservableDialog(String title, Skin skin) {
         super(title, skin);
     }
-    
+
     public ObservableDialog(String title, Skin skin, String windowStyleName) {
         super(title, skin, windowStyleName);
     }
-    
+
     public ObservableDialog(String title, WindowStyle style) {
         super(title, style);
     }
-    
-    
+
+
     // Public Methods
     @Override
-    public Dialog show(Stage stage) {
-        Dialog result = super.show(stage);
-        this.shown.dispatch(new DialogEventArgs(this, DialogEvents.SHOWN));
-        return result;
+    public final Dialog show(Stage stage) {
+        return super.show(stage); // the super implementation calls show(Stage, Action)
     }
-    
+
     @Override
-    public Dialog show(Stage stage, Action action) {
+    public final Dialog show(Stage stage, Action action) {
         Dialog result = super.show(stage, action);
         this.shown.dispatch(new DialogEventArgs(this, DialogEvents.SHOWN));
         return result;
     }
-    
+
     @Override
-    public void hide() {
-        super.hide();
-        this.hidden.dispatch(new DialogEventArgs(this, DialogEvents.HIDDEN));
+    public final void hide() {
+        super.hide(); // the super implementation calls hide(Action)
     }
-    
+
     @Override
-    public void hide(Action action) {
+    public final void hide(Action action) {
         super.hide(action);
         this.hidden.dispatch(new DialogEventArgs(this, DialogEvents.HIDDEN));
     }
-    
-    public boolean addDialogListener(Listener<DialogEventArgs> listener, DialogEvents... events) {
+
+    public final boolean addDialogListener(Listener<DialogEventArgs> listener, DialogEvents... events) {
         boolean added = false;
         if (ArrayUtils.contains(events, DialogEvents.SHOWN)) {
-            added = added && this.shown.addListener(listener);
+            boolean addedThisTime = this.shown.addListener(listener);
+            added &= addedThisTime;
         }
         if (ArrayUtils.contains(events, DialogEvents.HIDDEN)) {
-            added = added && this.hidden.addListener(listener);
+            boolean addedThisTime = this.hidden.addListener(listener);
+            added &= addedThisTime;
         }
         return added;
     }
-    
-    public boolean addDialogListener(Listener<DialogEventArgs> listener) {
+
+    public final boolean addDialogListener(Listener<DialogEventArgs> listener) {
         return this.addDialogListener(listener, DialogEvents.values());
     }
-    
-    public boolean removeDialogListener(Listener<DialogEventArgs> listener, DialogEvents... events) {
+
+    public final boolean removeDialogListener(Listener<DialogEventArgs> listener, DialogEvents... events) {
         boolean removed = false;
         if (ArrayUtils.contains(events, DialogEvents.SHOWN)) {
-            removed = removed && this.shown.removeListener(listener);
+            boolean removedThisTime = this.shown.removeListener(listener);
+            removed &= removedThisTime;
         }
         if (ArrayUtils.contains(events, DialogEvents.HIDDEN)) {
-            removed = removed && this.hidden.removeListener(listener);
+            boolean removedThisTime = this.hidden.removeListener(listener);
+            removed &= removedThisTime;
         }
         return removed;
     }
-    
-    public boolean removeDialogListener(Listener<DialogEventArgs> listener) {
+
+    public final boolean removeDialogListener(Listener<DialogEventArgs> listener) {
         return this.removeDialogListener(listener, DialogEvents.values());
     }
-    
-    
+
+
     // Nested Classes
     public static class DialogEventArgs {
-        
+
         // Fields
         public final ObservableDialog sender;
         public final DialogEvents event;
-        
-        
+
+
         // Initialization
         public DialogEventArgs(ObservableDialog sender, DialogEvents event) {
             this.sender = sender;
             this.event = event;
         }
-        
+
     }
-    
+
 }
