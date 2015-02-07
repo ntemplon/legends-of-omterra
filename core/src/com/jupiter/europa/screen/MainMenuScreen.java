@@ -74,6 +74,7 @@ import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEvents;
 import com.jupiter.europa.scene2d.ui.TabbedPane;
 import com.jupiter.europa.screen.dialog.CreateCharacterDialog;
 import com.jupiter.europa.screen.dialog.CreateCharacterDialog.CreateCharacterExitStates;
+import com.jupiter.europa.screen.dialog.LoadGameDialog;
 import com.jupiter.europa.screen.dialog.NewGameDialog;
 import com.jupiter.europa.screen.dialog.NewGameDialog.NewGameExitStates;
 import com.jupiter.europa.world.World;
@@ -267,16 +268,6 @@ public class MainMenuScreen implements Screen, InputProcessor {
     private TextButton creditsButton;
     private TextButton quitButton;
 
-    private Dialog loadGameDialog;
-    private Table loadGameTable;
-    private Label loadGameLabel;
-    private List loadGameList;
-    private ScrollPane loadGameListPane;
-    private Table loadGameButtonTable;
-    private TextButton loadGameOkButton;
-    private TextButton loadGameCancelButton;
-    private TextButton loadGameDeleteButton;
-
     private Dialog confirmDeleteDialog;
     private Label confirmDeleteLabel;
     private Table confirmDeleteButtonTable;
@@ -301,6 +292,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
 
     private CreateCharacterDialog createCharacterDialog;
     private NewGameDialog newGameDialog;
+    private LoadGameDialog loadGameDialog;
     
     private Size size = new Size(0, 0);
 
@@ -329,7 +321,6 @@ public class MainMenuScreen implements Screen, InputProcessor {
         this.stage.getViewport().update(width, height, true);
 
         // Resize dialogs
-        this.loadGameDialog.setSize(width, height);
         this.confirmDeleteDialog.setSize(width, height);
         this.optionsDialog.setSize(width, height);
         this.creditsDialog.setSize(width, height);
@@ -339,6 +330,9 @@ public class MainMenuScreen implements Screen, InputProcessor {
         }
         if (this.newGameDialog != null) {
             this.newGameDialog.setSize(width, height);
+        }
+        if (this.loadGameDialog != null) {
+            this.loadGameDialog.setSize(width, height);
         }
     }
 
@@ -524,61 +518,6 @@ public class MainMenuScreen implements Screen, InputProcessor {
 
         this.stage.addActor(this.titleTable);
 
-        // Load Game Table
-        this.loadGameTable = new Table();
-        this.loadGameTable.setFillParent(true);
-        this.loadGameTable.center();
-
-        this.loadGameLabel = new Label("Save Games", skin.get(DEFAULT_KEY, LabelStyle.class));
-        this.loadGameList = new List(skin.get(DEFAULT_KEY, ListStyle.class));
-        this.loadGameList.setItems((Object[]) EuropaGame.game.getSaveNames());
-        this.loadGameListPane = new ScrollPane(this.loadGameList, skin.get(DEFAULT_KEY, ScrollPaneStyle.class));
-
-        this.loadGameOkButton = new TextButton("Accept", skin.get(DEFAULT_KEY, TextButtonStyle.class));
-        this.loadGameOkButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Buttons.LEFT && !MainMenuScreen.this.loadGameOkButton.isDisabled()) {
-                    MainMenuScreen.this.loadGame();
-                }
-            }
-        });
-
-        this.loadGameCancelButton = new TextButton("Cancel", skin.get(DEFAULT_KEY, TextButtonStyle.class));
-        this.loadGameCancelButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Buttons.LEFT && !MainMenuScreen.this.loadGameCancelButton.isDisabled()) {
-                    MainMenuScreen.this.cancelLoadGame();
-                }
-            }
-        });
-
-        this.loadGameDeleteButton = new TextButton("Delete", skin.get(DEFAULT_KEY, TextButtonStyle.class));
-        this.loadGameDeleteButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Buttons.LEFT && !MainMenuScreen.this.loadGameDeleteButton.isDisabled()) {
-                    MainMenuScreen.this.onDeleteSaveGameClick();
-                }
-            }
-        });
-
-        this.loadGameButtonTable = new Table();
-        this.loadGameButtonTable.add(this.loadGameOkButton).right();
-        this.loadGameButtonTable.add(this.loadGameCancelButton).space(20).right();
-        this.loadGameButtonTable.add(this.loadGameDeleteButton).space(20).right();
-
-        this.loadGameTable.add(this.loadGameLabel).top().left().height(50).width(600).padTop(25);
-        this.loadGameTable.row();
-        this.loadGameTable.add(this.loadGameListPane).expandY().minWidth(600).fill();
-        this.loadGameTable.row();
-        this.loadGameTable.add(this.loadGameButtonTable).right().padBottom(25);
-        this.loadGameTable.row();
-
-        this.loadGameDialog = new Dialog("", skin.get(DEFAULT_KEY, WindowStyle.class));
-        this.loadGameDialog.getContentTable().add(this.loadGameTable).expand().fill();
-
         // Confirm Delete Dialog
         this.confirmDeleteDialog = new Dialog("", skin.get(DEFAULT_KEY, WindowStyle.class));
         this.confirmDeleteLabel = new Label("Are you sure you want to delete this save game?", skin.get(INFO_STYLE_KEY,
@@ -685,6 +624,8 @@ public class MainMenuScreen implements Screen, InputProcessor {
     }
 
     private void onLoadGameClick() {
+        this.loadGameDialog = new LoadGameDialog();
+        this.loadGameDialog.addDialogListener(this::onLoadGameDialogHidden, DialogEvents.HIDDEN);
         this.loadGameDialog.show(this.stage);
         this.loadGameDialog.setSize(this.stage.getWidth(), this.stage.getHeight());
     }
@@ -723,6 +664,12 @@ public class MainMenuScreen implements Screen, InputProcessor {
             this.showDialog(this.createCharacterDialog);
         }
     }
+    
+    private void onLoadGameDialogHidden(DialogEventArgs args) {
+        if (this.loadGameDialog.getExitState() == LoadGameDialog.LoadGameExitStates.LOAD) {
+            this.loadGame();
+        }
+    }
 
     private void startNewGame() {
         String gameName = this.newGameDialog.getNewGameName();
@@ -743,9 +690,8 @@ public class MainMenuScreen implements Screen, InputProcessor {
     }
 
     private void loadGame() {
-        Path saveFile = FileLocations.SAVE_DIRECTORY.resolve(this.loadGameList.getSelected().toString() + "." + SaveGame.SAVE_EXTENSION);
+        Path saveFile = FileLocations.SAVE_DIRECTORY.resolve(this.loadGameDialog.getGameToLoad() + "." + SaveGame.SAVE_EXTENSION);
         if (!Files.exists(saveFile)) {
-            this.cancelLoadGame();
             return;
         }
 
@@ -756,26 +702,22 @@ public class MainMenuScreen implements Screen, InputProcessor {
             EuropaGame.game.startGame(save);
         }
         catch (IOException ex) {
-            this.cancelLoadGame();
+            
         }
     }
 
-    private void cancelLoadGame() {
-        this.loadGameDialog.hide();
-    }
-
     private void onDeleteSaveGameClick() {
-        String selection = this.loadGameList.getSelected().toString();
-        this.confirmDeleteLabel.setText("Are you sure you want to delete the save game \"" + selection + "\"?");
-        this.confirmDeleteDialog.show(this.stage);
-        this.confirmDeleteDialog.setSize(this.stage.getWidth(), this.stage.getHeight());
+//        String selection = this.loadGameList.getSelected().toString();
+//        this.confirmDeleteLabel.setText("Are you sure you want to delete the save game \"" + selection + "\"?");
+//        this.confirmDeleteDialog.show(this.stage);
+//        this.confirmDeleteDialog.setSize(this.stage.getWidth(), this.stage.getHeight());
     }
 
     private void deleteSaveGame() {
-        EuropaGame.game.deleteSave(this.loadGameList.getSelected().toString());
-        this.loadGameList.setItems((Object[]) EuropaGame.game.getSaveNames());
-        this.loadGameButton.setDisabled(EuropaGame.game.getSaveNames().length == 0);
-        this.confirmDeleteDialog.hide();
+//        EuropaGame.game.deleteSave(this.loadGameList.getSelected().toString());
+//        this.loadGameList.setItems((Object[]) EuropaGame.game.getSaveNames());
+//        this.loadGameButton.setDisabled(EuropaGame.game.getSaveNames().length == 0);
+//        this.confirmDeleteDialog.hide();
     }
 
     private void loadSettings() {
