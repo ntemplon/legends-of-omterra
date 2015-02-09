@@ -66,9 +66,9 @@ public class NewGameDialog extends ObservableDialog {
     private final Skin skin = getSkin();
     
     private Table mainTable;
-    private Label newGameNameLabel;
-    private TextField newGameNameField;
-    private Label newGameWorldLabel;
+    private Label titleLabel;
+    private TextField gameNameField;
+    private Label woldLabel;
     private List newGameWorldList;
     private ScrollPane worldPane;
     private Table buttonTable;
@@ -84,7 +84,7 @@ public class NewGameDialog extends ObservableDialog {
     }
     
     public String getNewGameName() {
-        return this.newGameNameField.getText();
+        return this.gameNameField.getText();
     }
     
     public String getNewGameWorldName() {
@@ -104,10 +104,10 @@ public class NewGameDialog extends ObservableDialog {
     private void initComponents() {
         this.mainTable = new Table();
 
-        this.newGameNameLabel = new Label("Save Name: ", skin.get(DEFAULT_KEY, Label.LabelStyle.class));
-        this.newGameNameField = new TextField("default", skin.get(DEFAULT_KEY, TextField.TextFieldStyle.class));
-        this.newGameNameField.setMaxLength(16);
-        this.newGameWorldLabel = new Label("World:", skin.get(DEFAULT_KEY, Label.LabelStyle.class));
+        this.titleLabel = new Label("Save Name: ", skin.get(DEFAULT_KEY, Label.LabelStyle.class));
+        this.gameNameField = new TextField("default", skin.get(DEFAULT_KEY, TextField.TextFieldStyle.class));
+        this.gameNameField.setMaxLength(16);
+        this.woldLabel = new Label("World:", skin.get(DEFAULT_KEY, Label.LabelStyle.class));
         this.newGameWorldList = new List(skin.get(DEFAULT_KEY, List.ListStyle.class));
         this.newGameWorldList.setItems((Object[]) EuropaGame.game.getWorldNames());
         this.worldPane = new ScrollPane(this.newGameWorldList, skin.get(DEFAULT_KEY, ScrollPane.ScrollPaneStyle.class));
@@ -139,10 +139,10 @@ public class NewGameDialog extends ObservableDialog {
         this.mainTable.padLeft(MainMenuScreen.TABLE_HORIZONTAL_PADDING);
         this.mainTable.padRight(MainMenuScreen.TABLE_HORIZONTAL_PADDING);
 
-        this.mainTable.add(this.newGameNameLabel).center().left();
-        this.mainTable.add(this.newGameNameField).center().left().padTop(15).expandX().fillX();
+        this.mainTable.add(this.titleLabel).center().left();
+        this.mainTable.add(this.gameNameField).center().left().padTop(15).expandX().fillX();
         this.mainTable.row();
-        this.mainTable.add(this.newGameWorldLabel).colspan(2).left();
+        this.mainTable.add(this.woldLabel).colspan(2).left();
         this.mainTable.row();
         this.mainTable.add(this.worldPane).colspan(2).expandY().fill();
         this.mainTable.row();

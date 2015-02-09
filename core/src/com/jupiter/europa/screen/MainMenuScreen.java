@@ -268,12 +268,6 @@ public class MainMenuScreen implements Screen, InputProcessor {
     private TextButton creditsButton;
     private TextButton quitButton;
 
-    private Dialog confirmDeleteDialog;
-    private Label confirmDeleteLabel;
-    private Table confirmDeleteButtonTable;
-    private TextButton confirmDeleteYesButton;
-    private TextButton confirmDeleteNoButton;
-
     private Dialog optionsDialog;
     private Table optionsTable;
     private Label optionsLabel;
@@ -321,7 +315,6 @@ public class MainMenuScreen implements Screen, InputProcessor {
         this.stage.getViewport().update(width, height, true);
 
         // Resize dialogs
-        this.confirmDeleteDialog.setSize(width, height);
         this.optionsDialog.setSize(width, height);
         this.creditsDialog.setSize(width, height);
         
@@ -518,36 +511,6 @@ public class MainMenuScreen implements Screen, InputProcessor {
 
         this.stage.addActor(this.titleTable);
 
-        // Confirm Delete Dialog
-        this.confirmDeleteDialog = new Dialog("", skin.get(DEFAULT_KEY, WindowStyle.class));
-        this.confirmDeleteLabel = new Label("Are you sure you want to delete this save game?", skin.get(INFO_STYLE_KEY,
-                LabelStyle.class));
-        this.confirmDeleteYesButton = new TextButton("Yes", skin.get(DEFAULT_KEY, TextButtonStyle.class));
-        this.confirmDeleteYesButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Buttons.LEFT && !MainMenuScreen.this.confirmDeleteYesButton.isDisabled()) {
-                    MainMenuScreen.this.deleteSaveGame();
-                }
-            }
-        });
-        this.confirmDeleteNoButton = new TextButton("No", skin.get(DEFAULT_KEY, TextButtonStyle.class));
-        this.confirmDeleteNoButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Buttons.LEFT && !MainMenuScreen.this.confirmDeleteNoButton.isDisabled()) {
-                    MainMenuScreen.this.confirmDeleteDialog.hide();
-                }
-            }
-        });
-        this.confirmDeleteButtonTable = new Table();
-        this.confirmDeleteButtonTable.center();
-        this.confirmDeleteButtonTable.add(this.confirmDeleteYesButton).center();
-        this.confirmDeleteButtonTable.add(this.confirmDeleteNoButton).space(20).center();
-
-        this.confirmDeleteDialog.getContentTable().add(this.confirmDeleteLabel).row();
-        this.confirmDeleteDialog.getContentTable().add(this.confirmDeleteButtonTable);
-
         // Options Dialog
         this.optionsDialog = new Dialog("", skin.get(DEFAULT_KEY, WindowStyle.class));
         this.optionsTable = new Table();
@@ -704,20 +667,6 @@ public class MainMenuScreen implements Screen, InputProcessor {
         catch (IOException ex) {
             
         }
-    }
-
-    private void onDeleteSaveGameClick() {
-//        String selection = this.loadGameList.getSelected().toString();
-//        this.confirmDeleteLabel.setText("Are you sure you want to delete the save game \"" + selection + "\"?");
-//        this.confirmDeleteDialog.show(this.stage);
-//        this.confirmDeleteDialog.setSize(this.stage.getWidth(), this.stage.getHeight());
-    }
-
-    private void deleteSaveGame() {
-//        EuropaGame.game.deleteSave(this.loadGameList.getSelected().toString());
-//        this.loadGameList.setItems((Object[]) EuropaGame.game.getSaveNames());
-//        this.loadGameButton.setDisabled(EuropaGame.game.getSaveNames().length == 0);
-//        this.confirmDeleteDialog.hide();
     }
 
     private void loadSettings() {
