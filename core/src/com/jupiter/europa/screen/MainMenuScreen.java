@@ -117,6 +117,8 @@ public class MainMenuScreen implements Screen, InputProcessor {
     public static final String TEXT_FIELD_FONT_KEY = "text-field-font";
     public static final String LIST_FONT_KEY = "list-font";
     public static final String INFO_LABEL_FONT_KEY = "info-label-font";
+    public static final String SCROLL_BAR_VERTICAL_KEY = "scroll-bar-vertical";
+    public static final String SCROLL_BAR_VERTICAL_KNOB_KEY = "scroll-bar-vertical-knob";
 
     public static Skin mainMenuSkin;
 
@@ -238,6 +240,8 @@ public class MainMenuScreen implements Screen, InputProcessor {
         // Create a Scroll Pane Style
         ScrollPaneStyle scrollPaneStyle = new ScrollPaneStyle();
         scrollPaneStyle.background = transparentDrawable;
+//        scrollPaneStyle.vScroll = skin.newDrawable(MainMenuScreen.SCROLL_BAR_VERTICAL_KEY);
+//        scrollPaneStyle.vScrollKnob = skin.newDrawable(MainMenuScreen.SCROLL_BAR_VERTICAL_KNOB_KEY);
         skin.add(DEFAULT_KEY, scrollPaneStyle);
 
         // Create a Dialog Style

@@ -18,16 +18,44 @@ dialog-border
   orig: 640, 1010
   offset: 0, 0
   index: -1
+scroll-bar-vertical
+  rotate: false
+  xy: 644, 757
+  size: 10, 200
+  orig: 10, 200
+  offset: 0, 0
+  index: -1
+scroll-bar-vertical-end-bottom
+  rotate: false
+  xy: 929, 981
+  size: 32, 31
+  orig: 32, 31
+  offset: 0, 0
+  index: -1
+scroll-bar-vertical-end-top
+  rotate: false
+  xy: 656, 914
+  size: 32, 31
+  orig: 32, 31
+  offset: 0, 0
+  index: -1
+scroll-bar-vertical-knob
+  rotate: false
+  xy: 963, 995
+  size: 35, 17
+  orig: 35, 17
+  offset: 0, 0
+  index: -1
 slider-background-main_menu
   rotate: false
-  xy: 644, 947
+  xy: 656, 947
   size: 199, 10
   orig: 199, 10
   offset: 0, 0
   index: -1
 slider-knob-main_menu
   rotate: false
-  xy: 929, 988
+  xy: 656, 888
   size: 12, 24
   orig: 12, 24
   offset: 0, 0
