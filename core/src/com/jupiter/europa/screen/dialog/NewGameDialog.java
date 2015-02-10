@@ -38,6 +38,8 @@ import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.screen.MainMenuScreen;
 import static com.jupiter.europa.screen.MainMenuScreen.DEFAULT_KEY;
+import static com.jupiter.europa.screen.MainMenuScreen.DIALOG_BACKGROUND_KEY;
+import static com.jupiter.europa.screen.MainMenuScreen.LIST_BACKGROUND_KEY;
 
 /**
  *
@@ -69,6 +71,7 @@ public class NewGameDialog extends ObservableDialog {
     private Label titleLabel;
     private TextField gameNameField;
     private Label woldLabel;
+    private Table listWrapper;
     private List newGameWorldList;
     private ScrollPane worldPane;
     private Table buttonTable;
@@ -111,6 +114,10 @@ public class NewGameDialog extends ObservableDialog {
         this.newGameWorldList = new List(skin.get(DEFAULT_KEY, List.ListStyle.class));
         this.newGameWorldList.setItems((Object[]) EuropaGame.game.getWorldNames());
         this.worldPane = new ScrollPane(this.newGameWorldList, skin.get(DEFAULT_KEY, ScrollPane.ScrollPaneStyle.class));
+        
+        this.listWrapper = new Table();
+        this.listWrapper.add(this.worldPane).pad(MainMenuScreen.LIST_WRAPPER_PADDING).expand().fill();
+        this.listWrapper.background(skin.get(LIST_BACKGROUND_KEY, SpriteDrawable.class));
 
         this.nextButton = new TextButton("Accept", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
         this.nextButton.addListener(new ClickListener() {
@@ -133,25 +140,24 @@ public class NewGameDialog extends ObservableDialog {
         });
 
         this.buttonTable = new Table();
-        this.buttonTable.add(this.nextButton).space(MainMenuScreen.BUTTON_SPACING).right().expandX();
-        this.buttonTable.add(this.backButton).space(MainMenuScreen.BUTTON_SPACING).right();
+        this.buttonTable.add(this.nextButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right().expandX();
+        this.buttonTable.add(this.backButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right();
         
-        this.mainTable.padLeft(MainMenuScreen.TABLE_HORIZONTAL_PADDING);
-        this.mainTable.padRight(MainMenuScreen.TABLE_HORIZONTAL_PADDING);
+        this.mainTable.pad(MainMenuScreen.TABLE_PADDING);
 
         this.mainTable.add(this.titleLabel).center().left();
         this.mainTable.add(this.gameNameField).center().left().padTop(15).expandX().fillX();
         this.mainTable.row();
         this.mainTable.add(this.woldLabel).colspan(2).left();
         this.mainTable.row();
-        this.mainTable.add(this.worldPane).colspan(2).expandY().fill();
+        this.mainTable.add(this.listWrapper).colspan(2).expandY().fill();
         this.mainTable.row();
-        this.mainTable.add(this.buttonTable).colspan(2).right().minWidth(MainMenuScreen.DIALOG_MIN_WIDTH);
+        this.mainTable.add(this.buttonTable).space(MainMenuScreen.COMPONENT_SPACING).colspan(2).right().expandX().fillX();
         this.mainTable.row();
 
-        this.mainTable.background(this.skin.get(MainMenuScreen.BUTTON_TABLE_BACKGROUND_KEY, SpriteDrawable.class));
+        this.mainTable.background(this.skin.get(MainMenuScreen.DIALOG_BACKGROUND_KEY, SpriteDrawable.class));
 
-        this.getContentTable().add(this.mainTable).center().expandY().fillY();
+        this.getContentTable().add(this.mainTable).center().expandY().fillY().width(MainMenuScreen.DIALOG_WIDTH);
     }
     
     private void startNewGame() {

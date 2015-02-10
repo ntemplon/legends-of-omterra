@@ -20,6 +20,7 @@ import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.screen.MainMenuScreen;
 import static com.jupiter.europa.screen.MainMenuScreen.DEFAULT_KEY;
 import static com.jupiter.europa.screen.MainMenuScreen.INFO_STYLE_KEY;
+import static com.jupiter.europa.screen.MainMenuScreen.LIST_BACKGROUND_KEY;
 
 /**
  *
@@ -50,6 +51,7 @@ public class LoadGameDialog extends ObservableDialog {
 
     private Table mainTable;
     private Label loadGameLabel;
+    private Table listTable;
     private List gameList;
     private ScrollPane gameListPane;
     private Table buttonTable;
@@ -99,11 +101,15 @@ public class LoadGameDialog extends ObservableDialog {
     // Private Methods
     private void initComponents() {
         this.mainTable = new Table();
-
+        
+        this.listTable = new Table();
         this.loadGameLabel = new Label("Save Games", skin.get(DEFAULT_KEY, Label.LabelStyle.class));
         this.gameList = new List(skin.get(DEFAULT_KEY, List.ListStyle.class));
         this.gameList.setItems((Object[]) EuropaGame.game.getSaveNames());
         this.gameListPane = new ScrollPane(this.gameList, skin.get(DEFAULT_KEY, ScrollPane.ScrollPaneStyle.class));
+        
+        this.listTable.add(this.gameListPane).pad(MainMenuScreen.LIST_WRAPPER_PADDING).expand().fill();
+        this.listTable.background(skin.get(LIST_BACKGROUND_KEY, SpriteDrawable.class));
 
         this.okButton = new TextButton("Accept", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
         this.okButton.addListener(new ClickListener() {
@@ -136,23 +142,22 @@ public class LoadGameDialog extends ObservableDialog {
         });
 
         this.buttonTable = new Table();
-        this.buttonTable.add(this.okButton).space(MainMenuScreen.BUTTON_SPACING).right().expandX();
-        this.buttonTable.add(this.cancelButton).space(MainMenuScreen.BUTTON_SPACING).right();
-        this.buttonTable.add(this.deleteButton).space(MainMenuScreen.BUTTON_SPACING).right();
+        this.buttonTable.add(this.okButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right().expandX();
+        this.buttonTable.add(this.deleteButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right();
+        this.buttonTable.add(this.cancelButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right();
         
-        this.mainTable.padLeft(MainMenuScreen.TABLE_HORIZONTAL_PADDING);
-        this.mainTable.padRight(MainMenuScreen.TABLE_HORIZONTAL_PADDING);
+        this.mainTable.pad(MainMenuScreen.TABLE_PADDING);
 
         this.mainTable.add(this.loadGameLabel).center().left();
         this.mainTable.row();
-        this.mainTable.add(this.gameListPane).expandY().fill();
+        this.mainTable.add(this.listTable).expandY().fill();
         this.mainTable.row();
-        this.mainTable.add(this.buttonTable).right().minWidth(MainMenuScreen.DIALOG_MIN_WIDTH);
+        this.mainTable.add(this.buttonTable).space(MainMenuScreen.COMPONENT_SPACING).right().expandX().fillX();
         this.mainTable.row();
         
-        this.mainTable.background(this.skin.get(MainMenuScreen.BUTTON_TABLE_BACKGROUND_KEY, SpriteDrawable.class));
+        this.mainTable.background(this.skin.get(MainMenuScreen.DIALOG_BACKGROUND_KEY, SpriteDrawable.class));
 
-        this.getContentTable().add(this.mainTable).center().expandY().fillY();
+        this.getContentTable().add(this.mainTable).center().expandY().fillY().width(MainMenuScreen.DIALOG_WIDTH);
     }
 
     private void onLoadClick() {
@@ -258,13 +263,13 @@ public class LoadGameDialog extends ObservableDialog {
             });
             
             this.mainTable = new Table();
-            this.mainTable.add(this.titleLabel).width(MainMenuScreen.DIALOG_MIN_WIDTH).center().expandY();
+            this.mainTable.add(this.titleLabel).width(MainMenuScreen.DIALOG_WIDTH).center().expandY();
             this.mainTable.row();
             this.mainTable.add(this.yesButton).right().expandX();
-            this.mainTable.add(this.noButton).space(MainMenuScreen.BUTTON_SPACING).right();
+            this.mainTable.add(this.noButton).space(MainMenuScreen.COMPONENT_SPACING).right();
             
-            this.mainTable.padLeft(MainMenuScreen.TABLE_HORIZONTAL_PADDING);
-            this.mainTable.padRight(MainMenuScreen.TABLE_HORIZONTAL_PADDING);
+            this.mainTable.padLeft(MainMenuScreen.TABLE_PADDING);
+            this.mainTable.padRight(MainMenuScreen.TABLE_PADDING);
             
             this.mainTable.background(this.skin.get(MainMenuScreen.BUTTON_TABLE_BACKGROUND_KEY, SpriteDrawable.class));
 

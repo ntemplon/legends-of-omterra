@@ -25,17 +25,26 @@ Sound effects are provided from the following websites:
 
 The game features the work of DragonDePlatino and his DawnLike tileset, available at:
 	http://opengameart.org/content/dawnlike-16x16-universal-rogue-like-tileset-v18
+This work is modified, but mostly through some minor color changes.  The work is nearly all still
+	DragonDePlatino's
+	
 Credit goes to DawnBringer, whose DB 16 pallete served as the original palette for DawnLike, and whose
 DB 32 palette is the basis for the current game.  The DB 32 palette is available at:
 	http://www.pixeljoint.com/forum/forum_posts.asp?TID=16247
 The platino sprite is not yet hidden in the game, but it will be before 1.0 :).
 
 All graphical assets in the game are DawnLike, except:
- * The character sprites.
+ * Title title window border (by JAP at opengameart.org/content/borderdecoration, licensed under
+	CC-BY-SA 3.0) (modified by me)
+ * Main Menu GUI elemtns (by Lamoot at opengameart.org/content/rpg-gui-construction-kit-v10, licensed
+	under CC-BY 3.0) (modified by me)
+ * The character sprites (done by me).
+ * Other assets from the public domain.
 
 -----------------------------------------------------------------------------------------------------
 ----     Fonts
 -----------------------------------------------------------------------------------------------------
-The majority of the text in game uses the MagicMedieval font by Dave Howell, obtained from fontspace.com.
+The majority of the text in game uses the MagicMedieval font by Dave Howell, obtained from
+	fontspace.com.
 
 Titles are in the Diploma font, obtained from coolfonts.info.

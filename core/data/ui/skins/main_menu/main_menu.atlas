@@ -1,20 +1,54 @@
 
 main_menu.png
-size: 1024,128
+size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+button-background
+  rotate: false
+  xy: 644, 959
+  size: 283, 53
+  orig: 283, 53
+  offset: 0, 0
+  index: -1
+dialog-border
+  rotate: false
+  xy: 2, 2
+  size: 640, 1010
+  orig: 640, 1010
+  offset: 0, 0
+  index: -1
 slider-background-main_menu
   rotate: false
-  xy: 2, 84
-  size: 602, 30
-  orig: 602, 30
+  xy: 644, 947
+  size: 199, 10
+  orig: 199, 10
   offset: 0, 0
   index: -1
 slider-knob-main_menu
   rotate: false
+  xy: 929, 988
+  size: 12, 24
+  orig: 12, 24
+  offset: 0, 0
+  index: -1
+
+main_menu2.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+list-background
+  rotate: false
+  xy: 2, 54
+  size: 459, 621
+  orig: 459, 621
+  offset: 0, 0
+  index: -1
+list-selection
+  rotate: false
   xy: 2, 2
-  size: 20, 80
-  orig: 20, 80
+  size: 600, 50
+  orig: 600, 50
   offset: 0, 0
   index: -1

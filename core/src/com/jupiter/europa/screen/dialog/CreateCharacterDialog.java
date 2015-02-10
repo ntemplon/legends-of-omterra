@@ -48,6 +48,7 @@ import com.jupiter.europa.entity.stats.race.Race;
 import com.jupiter.europa.io.FileLocations;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.screen.MainMenuScreen;
+import static com.jupiter.europa.screen.MainMenuScreen.DIALOG_BACKGROUND_KEY;
 
 /**
  *
@@ -251,23 +252,23 @@ public class CreateCharacterDialog extends ObservableDialog {
             this.selectBoxTable.add(this.classSelectBox).fillX();
             this.selectBoxTable.row();
 
-            this.mainTable.add(this.titleLabel).center().colspan(2).minWidth(MainMenuScreen.DIALOG_MIN_WIDTH);
+            this.mainTable.add(this.titleLabel).center().colspan(2);
             this.mainTable.row();
             this.mainTable.add(this.selectBoxTable).left().expandY();
             this.mainTable.add(this.raceClassPreview).center().expandY();
             this.mainTable.row();
 
             Table buttonTable = new Table();
-            buttonTable.add(this.raceClassNextButton).space(MainMenuScreen.BUTTON_SPACING).right().expandX();
-            buttonTable.add(this.raceClassBackButton).space(MainMenuScreen.BUTTON_SPACING).right();
+            buttonTable.add(this.raceClassNextButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right().expandX();
+            buttonTable.add(this.raceClassBackButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right();
             
-            this.mainTable.add(buttonTable).right().colspan(2);
+            this.mainTable.add(buttonTable).space(MainMenuScreen.COMPONENT_SPACING).right().colspan(2).expandX().fillX();
             this.mainTable.row();
             
-            this.mainTable.padLeft(MainMenuScreen.TABLE_HORIZONTAL_PADDING).padRight(MainMenuScreen.TABLE_HORIZONTAL_PADDING);
-            this.mainTable.background(skin.get(MainMenuScreen.BUTTON_TABLE_BACKGROUND_KEY, SpriteDrawable.class));
+            this.mainTable.pad(MainMenuScreen.TABLE_PADDING);
+            this.mainTable.background(skin.get(MainMenuScreen.DIALOG_BACKGROUND_KEY, SpriteDrawable.class));
 
-            this.getContentTable().add(this.mainTable).expand().fillY();
+            this.getContentTable().add(this.mainTable).expand().fillY().width(MainMenuScreen.DIALOG_WIDTH);
         }
 
         private void updateNewCharacterPreview() {

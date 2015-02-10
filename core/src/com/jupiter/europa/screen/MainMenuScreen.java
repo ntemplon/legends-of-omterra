@@ -40,9 +40,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox.SelectBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -74,9 +72,11 @@ import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEvents;
 import com.jupiter.europa.scene2d.ui.TabbedPane;
 import com.jupiter.europa.screen.dialog.CreateCharacterDialog;
 import com.jupiter.europa.screen.dialog.CreateCharacterDialog.CreateCharacterExitStates;
+import com.jupiter.europa.screen.dialog.CreditsDialog;
 import com.jupiter.europa.screen.dialog.LoadGameDialog;
 import com.jupiter.europa.screen.dialog.NewGameDialog;
 import com.jupiter.europa.screen.dialog.NewGameDialog.NewGameExitStates;
+import com.jupiter.europa.screen.dialog.OptionsDialog;
 import com.jupiter.europa.world.World;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -106,7 +106,11 @@ public class MainMenuScreen implements Screen, InputProcessor {
     public static final String ATLAS_KEY = "main_menu.atlas";
     public static final String SOLID_TEXTURE_KEY = "solid-texture";
     public static final String BUTTON_TABLE_BACKGROUND_KEY = "button-table-background";
+    public static final String DIALOG_BACKGROUND_KEY = "dialog-border";
+    public static final String BUTTON_BACKGROUND_KEY = "button-background";
     public static final String SLIDER_BACKGROUND_KEY = "slider-background-main_menu";
+    public static final String LIST_BACKGROUND_KEY = "list-background";
+    public static final String LIST_SELECTION_KEY = "list-selection";
     public static final String SLIDER_KNOB_KEY = "slider-knob-main_menu";
     public static final String TITLE_FONT_KEY = "title-font";
     public static final String BUTTON_FONT_KEY = "button-font";
@@ -116,12 +120,13 @@ public class MainMenuScreen implements Screen, InputProcessor {
 
     public static Skin mainMenuSkin;
 
-    public static final int TITLE_PADDING = 25;
-    public static final int BUTTON_WIDTH = 225;
-    public static final int BUTTON_SPACING = 20;
-    public static final int TABLE_HORIZONTAL_PADDING = 20;
-    
-    public static final int DIALOG_MIN_WIDTH = 580;
+    public static final int COMPONENT_SPACING = 4;
+    public static final int TITLE_BUTTON_WIDTH = 250;
+    public static final int DIALOG_BUTTON_WIDTH = 190;
+    public static final int TABLE_PADDING = 14;
+    public static final int LIST_WRAPPER_PADDING = 20;
+
+    public static final int DIALOG_WIDTH = 640;
 
     public static final Color BACKGROUND_COLOR = new Color(Color.WHITE);
     public static final Color SELECTION_COLOR = new Color(0.0f, 0.0f, 0.0f, 0.2f);
@@ -158,6 +163,14 @@ public class MainMenuScreen implements Screen, InputProcessor {
         // Get values from the atlas
         skin.addRegions(EuropaGame.game.getAssetManager().get(MAIN_MENU_SKIN_DIRECTORY.resolve(ATLAS_KEY).toString()));
 
+        // Set images
+        skin.add(DIALOG_BACKGROUND_KEY, skin.newDrawable(new TextureRegionDrawable(skin.get(DIALOG_BACKGROUND_KEY, TextureRegion.class)), new Color(1.0f, 1.0f,
+                1.0f, 0.9f)));
+        skin.add(LIST_BACKGROUND_KEY, skin.newDrawable(new TextureRegionDrawable(skin.get(LIST_BACKGROUND_KEY, TextureRegion.class)),
+                new Color(1.0f, 1.0f, 1.0f, 1.0f)));
+        skin.add(LIST_SELECTION_KEY, skin.newDrawable(new TextureRegionDrawable(skin.get(LIST_SELECTION_KEY, TextureRegion.class)), new Color(1.0f, 1.0f, 1.0f,
+                1.0f)));
+
         // Create a Label style for the title
         Label.LabelStyle titleStyle = new Label.LabelStyle();
         titleStyle.background = transparentDrawable;
@@ -174,14 +187,15 @@ public class MainMenuScreen implements Screen, InputProcessor {
 
         // Default Button Style
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.up = transparentDrawable;
-        textButtonStyle.down = transparentDrawable;
-        textButtonStyle.checked = transparentDrawable;
-        textButtonStyle.over = transparentDrawable;
-        textButtonStyle.disabled = transparentDrawable;
+        Drawable textButtonBackground = new TextureRegionDrawable(skin.get(BUTTON_BACKGROUND_KEY, TextureRegion.class));
+        textButtonStyle.up = textButtonBackground;
+        textButtonStyle.down = textButtonBackground;
+        textButtonStyle.checked = textButtonBackground;
+        textButtonStyle.over = textButtonBackground;
+        textButtonStyle.disabled = textButtonBackground;
         textButtonStyle.font = skin.getFont(BUTTON_FONT_KEY);
         textButtonStyle.fontColor = new Color(Color.BLACK);
-        textButtonStyle.overFontColor = new Color(Color.BLUE);
+        textButtonStyle.overFontColor = new Color(0.65f, 0.15f, 0.30f, 1.0f);
         textButtonStyle.disabledFontColor = new Color(0.3f, 0.3f, 0.3f, 1.0f);
         textButtonStyle.pressedOffsetX = 2f;
         textButtonStyle.pressedOffsetY = -3f;
@@ -217,7 +231,8 @@ public class MainMenuScreen implements Screen, InputProcessor {
         listStyle.fontColorSelected = Color.BLACK;
         listStyle.fontColorUnselected = Color.BLACK;
         listStyle.selection = skin.newDrawable(SOLID_TEXTURE_KEY, SELECTION_COLOR);
-        listStyle.background = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(Color.WHITE));
+//        listStyle.selection = skin.get(LIST_SELECTION_KEY, SpriteDrawable.class);
+        listStyle.background = transparentDrawable;
         skin.add(DEFAULT_KEY, listStyle);
 
         // Create a Scroll Pane Style
@@ -268,26 +283,12 @@ public class MainMenuScreen implements Screen, InputProcessor {
     private TextButton creditsButton;
     private TextButton quitButton;
 
-    private Dialog optionsDialog;
-    private Table optionsTable;
-    private Label optionsLabel;
-    private TabbedPane optionsPane;
-    private Table audioTable;
-    private Slider musicSlider;
-    private Table graphicsTable;
-    private TextButton optionsAcceptButton;
-    private TextButton optionsCancelButton;
-    private Table optionsButtonTable;
-
-    private Dialog creditsDialog;
-    private ScrollPane creditsScrollPane;
-    private Label creditsLabel;
-    private TextButton creditsOkButton;
-
     private CreateCharacterDialog createCharacterDialog;
     private NewGameDialog newGameDialog;
     private LoadGameDialog loadGameDialog;
-    
+    private CreditsDialog creditsDialog;
+    private OptionsDialog optionsDialog;
+
     private Size size = new Size(0, 0);
 
 
@@ -310,14 +311,11 @@ public class MainMenuScreen implements Screen, InputProcessor {
     @Override
     public void resize(int width, int height) {
         this.size = new Size(width, height);
-        
+
         // True puts 0, 0 at the bottom left corner, false or omission puts 0, 0 at the center
         this.stage.getViewport().update(width, height, true);
 
         // Resize dialogs
-        this.optionsDialog.setSize(width, height);
-        this.creditsDialog.setSize(width, height);
-        
         if (this.createCharacterDialog != null) {
             this.createCharacterDialog.setSize(width, height);
         }
@@ -327,6 +325,12 @@ public class MainMenuScreen implements Screen, InputProcessor {
         if (this.loadGameDialog != null) {
             this.loadGameDialog.setSize(width, height);
         }
+        if (this.creditsDialog != null) {
+            this.creditsDialog.setSize(width, height);
+        }
+        if (this.optionsDialog != null) {
+            this.optionsDialog.setSize(width, height);
+        }
     }
 
     @Override
@@ -334,10 +338,12 @@ public class MainMenuScreen implements Screen, InputProcessor {
         EuropaGame.game.inspectSaves();
         this.init();
 
-        this.loadSettings();
-
         // Play Music
         EuropaGame.game.getAudioService().playMusic(TITLE_MUSIC);
+
+        // Create Screens
+        this.optionsDialog = new OptionsDialog();
+        this.creditsDialog = new CreditsDialog();
     }
 
     @Override
@@ -483,19 +489,18 @@ public class MainMenuScreen implements Screen, InputProcessor {
         });
 
         // Configure Button Table
-        this.buttonTable.add(this.newGameButton).width(BUTTON_WIDTH);
+        this.buttonTable.add(this.newGameButton).width(TITLE_BUTTON_WIDTH).space(MainMenuScreen.COMPONENT_SPACING);
         this.buttonTable.row();
-        this.buttonTable.add(this.loadGameButton).width(BUTTON_WIDTH);
+        this.buttonTable.add(this.loadGameButton).width(TITLE_BUTTON_WIDTH).space(MainMenuScreen.COMPONENT_SPACING);
         this.buttonTable.row();
-        this.buttonTable.add(this.multiplayerButton).width(BUTTON_WIDTH);
+        this.buttonTable.add(this.multiplayerButton).width(TITLE_BUTTON_WIDTH).space(MainMenuScreen.COMPONENT_SPACING);
         this.buttonTable.row();
-        this.buttonTable.add(this.optionsButton).width(BUTTON_WIDTH);
+        this.buttonTable.add(this.optionsButton).width(TITLE_BUTTON_WIDTH).space(MainMenuScreen.COMPONENT_SPACING);
         this.buttonTable.row();
-        this.buttonTable.add(this.creditsButton).width(BUTTON_WIDTH);
+        this.buttonTable.add(this.creditsButton).width(TITLE_BUTTON_WIDTH).space(MainMenuScreen.COMPONENT_SPACING);
         this.buttonTable.row();
-        this.buttonTable.add(this.quitButton).width(BUTTON_WIDTH);
+        this.buttonTable.add(this.quitButton).width(TITLE_BUTTON_WIDTH).space(MainMenuScreen.COMPONENT_SPACING);
         this.buttonTable.row();
-        this.buttonTable.background(skin.get(BUTTON_TABLE_BACKGROUND_KEY, SpriteDrawable.class));
 
         // Title
         this.titleTable = new Table();
@@ -504,80 +509,12 @@ public class MainMenuScreen implements Screen, InputProcessor {
 
         this.titleLabel = new Label(EuropaGame.TITLE, skin.get(DEFAULT_KEY, LabelStyle.class));
 
-        this.titleTable.add(this.titleLabel).top().pad(TITLE_PADDING);
+        this.titleTable.add(this.titleLabel).top();
         this.titleTable.row();
         this.titleTable.add(this.buttonTable).center().expandY();
         this.titleTable.row();
 
         this.stage.addActor(this.titleTable);
-
-        // Options Dialog
-        this.optionsDialog = new Dialog("", skin.get(DEFAULT_KEY, WindowStyle.class));
-        this.optionsTable = new Table();
-        this.optionsTable.center();
-        this.optionsLabel = new Label("Options", skin.get(DEFAULT_KEY, LabelStyle.class));
-        this.optionsPane = new TabbedPane(skin.get(TAB_STYLE_KEY, TextButtonStyle.class));
-        this.optionsAcceptButton = new TextButton("Accept", skin.get(DEFAULT_KEY, TextButtonStyle.class));
-        this.optionsAcceptButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Buttons.LEFT && !MainMenuScreen.this.optionsAcceptButton.isDisabled()) {
-                    MainMenuScreen.this.applySettings();
-                    MainMenuScreen.this.optionsDialog.hide();
-                }
-            }
-        });
-        this.optionsCancelButton = new TextButton("Cancel", skin.get(DEFAULT_KEY, TextButtonStyle.class));
-        this.optionsCancelButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Buttons.LEFT && !MainMenuScreen.this.optionsCancelButton.isDisabled()) {
-                    MainMenuScreen.this.optionsDialog.hide();
-                }
-            }
-        });
-
-        this.optionsButtonTable = new Table();
-        this.optionsButtonTable.add(this.optionsAcceptButton).right();
-        this.optionsButtonTable.add(this.optionsCancelButton).right().space(20);
-
-        //    Audio
-        this.musicSlider = new Slider(0f, 1f, 0.05f, false, skin.get(DEFAULT_KEY, SliderStyle.class));
-        this.audioTable = new Table();
-        this.audioTable.add(this.musicSlider).minHeight(20).minWidth(600).maxWidth(1000).expandX();
-        this.audioTable.row();
-
-        this.optionsPane.addTab("Audio", this.audioTable);
-
-        //   Graphics
-        this.graphicsTable = new Table();
-
-        this.optionsPane.addTab("Graphics", this.graphicsTable);
-
-        this.optionsTable.add(this.optionsLabel).left().padTop(25).minWidth(600);
-        this.optionsTable.row();
-        this.optionsTable.add(this.optionsPane).expandY().fill().top();
-        this.optionsTable.row();
-        this.optionsTable.add(this.optionsButtonTable).padBottom(25);
-
-        this.optionsDialog.getContentTable().add(this.optionsTable).expand().fill();
-
-        // Credits Dialog
-        this.creditsDialog = new Dialog("", skin.get(DEFAULT_KEY, WindowStyle.class));
-        this.creditsLabel = new Label(EuropaGame.game.getCredits(), skin.get(INFO_STYLE_KEY, LabelStyle.class));
-        this.creditsScrollPane = new ScrollPane(this.creditsLabel, skin.get(DEFAULT_KEY, ScrollPaneStyle.class));
-        this.creditsOkButton = new TextButton("Return to Menu", skin.get(DEFAULT_KEY, TextButtonStyle.class));
-        this.creditsOkButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Buttons.LEFT && !MainMenuScreen.this.creditsOkButton.isDisabled()) {
-                    MainMenuScreen.this.creditsDialog.hide();
-                }
-            }
-        });
-
-        this.creditsDialog.getContentTable().add(this.creditsScrollPane).row();
-        this.creditsDialog.getContentTable().add(this.creditsOkButton).center();
     }
 
     private void onNewGameClick() {
@@ -618,7 +555,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
             this.showDialog(this.newGameDialog);
         }
     }
-    
+
     private void onNewGameDialogHidden(DialogEventArgs args) {
         if (this.newGameDialog.getExitState().equals(NewGameExitStates.START_GAME)) {
             this.startNewGame();
@@ -627,7 +564,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
             this.showDialog(this.createCharacterDialog);
         }
     }
-    
+
     private void onLoadGameDialogHidden(DialogEventArgs args) {
         if (this.loadGameDialog.getExitState() == LoadGameDialog.LoadGameExitStates.LOAD) {
             this.loadGame();
@@ -665,19 +602,10 @@ public class MainMenuScreen implements Screen, InputProcessor {
             EuropaGame.game.startGame(save);
         }
         catch (IOException ex) {
-            
+
         }
     }
 
-    private void loadSettings() {
-        this.musicSlider.setValue(EuropaGame.game.getSettings().musicVolume.get());
-    }
-
-    private void applySettings() {
-        EuropaGame.game.getSettings().musicVolume.set(this.musicSlider.getValue());
-        EuropaGame.game.saveSettings();
-    }
-    
     private void showDialog(Dialog dialog) {
         dialog.show(this.stage).setSize(this.size.width, this.size.height);
     }
