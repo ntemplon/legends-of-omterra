@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.screen.MainMenuScreen;
+import static com.jupiter.europa.screen.MainMenuScreen.CREDITS_BACKGROUND_KEY;
 import static com.jupiter.europa.screen.MainMenuScreen.DEFAULT_KEY;
 import static com.jupiter.europa.screen.MainMenuScreen.INFO_STYLE_KEY;
 
@@ -40,6 +41,7 @@ public class CreditsDialog extends ObservableDialog {
     private final Skin skin = getSkin();
     
     private Table mainTable;
+    private Table wrapperTable;
     private ScrollPane scrollPane;
     private Label label;
     private TextButton returnButton;
@@ -68,17 +70,18 @@ public class CreditsDialog extends ObservableDialog {
             }
         });
         
+        this.wrapperTable = new Table();
+        this.wrapperTable.add(this.scrollPane).pad(MainMenuScreen.LIST_WRAPPER_PADDING).expand().fill();
+        this.wrapperTable.background(this.skin.get(MainMenuScreen.CREDITS_BACKGROUND_KEY, SpriteDrawable.class));
+        
         this.mainTable = new Table();
 
-        this.mainTable.add(this.scrollPane).row();
-        this.mainTable.add(this.returnButton).center();
+        this.mainTable.add(this.wrapperTable).row();
+        this.mainTable.add(this.returnButton).center().space(MainMenuScreen.COMPONENT_SPACING);
         
         this.mainTable.pad(MainMenuScreen.TABLE_PADDING);
-//        this.mainTable.padRight(MainMenuScreen.TABLE_HORIZONTAL_PADDING);
         
-        this.mainTable.background(this.skin.get(MainMenuScreen.BUTTON_TABLE_BACKGROUND_KEY, SpriteDrawable.class));
-        
-        this.getContentTable().add(this.mainTable).expandY().fillY().minWidth(MainMenuScreen.DIALOG_WIDTH);
+        this.getContentTable().add(this.mainTable).expandY().fillY().minWidth(MainMenuScreen.DIALOG_WIDTH).center();
     }
     
 }

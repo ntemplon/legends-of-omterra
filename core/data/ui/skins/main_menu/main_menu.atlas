@@ -1,61 +1,89 @@
 
 main_menu.png
-size: 1024,1024
+size: 2048,2048
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 button-background
   rotate: false
-  xy: 644, 959
+  xy: 2, 14
   size: 283, 53
   orig: 283, 53
   offset: 0, 0
   index: -1
-dialog-border
+button-background-down
   rotate: false
-  xy: 2, 2
-  size: 640, 1010
-  orig: 640, 1010
+  xy: 463, 588
+  size: 280, 50
+  orig: 280, 50
+  offset: 0, 0
+  index: -1
+drop-down-opened
+  rotate: false
+  xy: 463, 588
+  size: 280, 50
+  orig: 280, 50
+  offset: 0, 0
+  index: -1
+credits-background
+  rotate: false
+  xy: 2, 692
+  size: 1920, 1080
+  orig: 1920, 1080
+  offset: 0, 0
+  index: -1
+drop-down-closed
+  rotate: false
+  xy: 1065, 640
+  size: 280, 50
+  orig: 280, 50
+  offset: 0, 0
+  index: -1
+drop-down-list-background
+  rotate: false
+  xy: 463, 512
+  size: 74, 74
+  orig: 74, 74
+  offset: 0, 0
+  index: -1
+list-background
+  rotate: false
+  xy: 2, 69
+  size: 459, 621
+  orig: 459, 621
+  offset: 0, 0
+  index: -1
+list-selection
+  rotate: false
+  xy: 463, 640
+  size: 600, 50
+  orig: 600, 50
   offset: 0, 0
   index: -1
 scroll-bar-vertical
   rotate: false
-  xy: 644, 757
+  xy: 1924, 1572
   size: 10, 200
   orig: 10, 200
   offset: 0, 0
   index: -1
-scroll-bar-vertical-end-bottom
-  rotate: false
-  xy: 929, 981
-  size: 32, 31
-  orig: 32, 31
-  offset: 0, 0
-  index: -1
-scroll-bar-vertical-end-top
-  rotate: false
-  xy: 656, 914
-  size: 32, 31
-  orig: 32, 31
-  offset: 0, 0
-  index: -1
 scroll-bar-vertical-knob
   rotate: false
-  xy: 963, 995
+  xy: 287, 50
   size: 35, 17
   orig: 35, 17
   offset: 0, 0
   index: -1
 slider-background-main_menu
   rotate: false
-  xy: 656, 947
+  xy: 2, 2
   size: 199, 10
   orig: 199, 10
   offset: 0, 0
   index: -1
 slider-knob-main_menu
   rotate: false
-  xy: 656, 888
+  xy: 745, 614
   size: 12, 24
   orig: 12, 24
   offset: 0, 0
@@ -66,17 +94,10 @@ size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-list-background
-  rotate: false
-  xy: 2, 54
-  size: 459, 621
-  orig: 459, 621
-  offset: 0, 0
-  index: -1
-list-selection
+dialog-border
   rotate: false
   xy: 2, 2
-  size: 600, 50
-  orig: 600, 50
+  size: 640, 1010
+  orig: 640, 1010
   offset: 0, 0
   index: -1

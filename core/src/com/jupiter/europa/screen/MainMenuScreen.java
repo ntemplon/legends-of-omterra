@@ -25,7 +25,6 @@ package com.jupiter.europa.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -44,7 +43,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox.SelectBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -67,9 +65,9 @@ import com.jupiter.europa.geometry.Size;
 import com.jupiter.europa.io.FileLocations;
 import static com.jupiter.europa.io.FileLocations.SKINS_DIRECTORY;
 import com.jupiter.europa.save.SaveGame;
+import com.jupiter.europa.scene2d.ui.EuropaSelectBox.EuropaSelectBoxStyle;
 import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEventArgs;
 import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEvents;
-import com.jupiter.europa.scene2d.ui.TabbedPane;
 import com.jupiter.europa.screen.dialog.CreateCharacterDialog;
 import com.jupiter.europa.screen.dialog.CreateCharacterDialog.CreateCharacterExitStates;
 import com.jupiter.europa.screen.dialog.CreditsDialog;
@@ -108,6 +106,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
     public static final String BUTTON_TABLE_BACKGROUND_KEY = "button-table-background";
     public static final String DIALOG_BACKGROUND_KEY = "dialog-border";
     public static final String BUTTON_BACKGROUND_KEY = "button-background";
+    public static final String BUTTON_DOWN_KEY = "button-background-down";
     public static final String SLIDER_BACKGROUND_KEY = "slider-background-main_menu";
     public static final String LIST_BACKGROUND_KEY = "list-background";
     public static final String LIST_SELECTION_KEY = "list-selection";
@@ -119,6 +118,10 @@ public class MainMenuScreen implements Screen, InputProcessor {
     public static final String INFO_LABEL_FONT_KEY = "info-label-font";
     public static final String SCROLL_BAR_VERTICAL_KEY = "scroll-bar-vertical";
     public static final String SCROLL_BAR_VERTICAL_KNOB_KEY = "scroll-bar-vertical-knob";
+    public static final String DROP_DOWN_CLOSED_BACKGROUND = "drop-down-closed";
+    public static final String DROP_DOWN_OPENED_BACKGROUND = "drop-down-opened";
+    public static final String DROP_DOWN_LIST_BACKGROUND = "drop-down-list-background";
+    public static final String CREDITS_BACKGROUND_KEY = "credits-background";
 
     public static Skin mainMenuSkin;
 
@@ -172,6 +175,15 @@ public class MainMenuScreen implements Screen, InputProcessor {
                 new Color(1.0f, 1.0f, 1.0f, 1.0f)));
         skin.add(LIST_SELECTION_KEY, skin.newDrawable(new TextureRegionDrawable(skin.get(LIST_SELECTION_KEY, TextureRegion.class)), new Color(1.0f, 1.0f, 1.0f,
                 1.0f)));
+        skin.add(CREDITS_BACKGROUND_KEY, skin.newDrawable(new TextureRegionDrawable(skin.get(CREDITS_BACKGROUND_KEY, TextureRegion.class)),
+                new Color(1.0f, 1.0f, 1.0f, 1.0f)));
+        skin.add(DROP_DOWN_OPENED_BACKGROUND, skin.newDrawable(new TextureRegionDrawable(skin.get(DROP_DOWN_OPENED_BACKGROUND, TextureRegion.class)), new Color(
+                1, 1, 1, 1)));
+        skin.add(DROP_DOWN_CLOSED_BACKGROUND, skin.newDrawable(new TextureRegionDrawable(skin.get(DROP_DOWN_CLOSED_BACKGROUND, TextureRegion.class)), new Color(
+                1, 1, 1, 1)));
+        skin.add(DROP_DOWN_LIST_BACKGROUND, skin.newDrawable(new TextureRegionDrawable(skin.get(DROP_DOWN_LIST_BACKGROUND, TextureRegion.class)), new Color(
+                1, 1, 1, 1)));
+        skin.add(BUTTON_DOWN_KEY, skin.newDrawable(new TextureRegionDrawable(skin.get(BUTTON_DOWN_KEY, TextureRegion.class)), new Color(1, 1, 1, 1)));
 
         // Create a Label style for the title
         Label.LabelStyle titleStyle = new Label.LabelStyle();
@@ -190,17 +202,18 @@ public class MainMenuScreen implements Screen, InputProcessor {
         // Default Button Style
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         Drawable textButtonBackground = new TextureRegionDrawable(skin.get(BUTTON_BACKGROUND_KEY, TextureRegion.class));
+        Drawable textButtonBackgroundDown = skin.get(BUTTON_DOWN_KEY, SpriteDrawable.class);
         textButtonStyle.up = textButtonBackground;
-        textButtonStyle.down = textButtonBackground;
+        textButtonStyle.down = textButtonBackgroundDown;
         textButtonStyle.checked = textButtonBackground;
-        textButtonStyle.over = textButtonBackground;
+        textButtonStyle.over = textButtonBackgroundDown;
         textButtonStyle.disabled = textButtonBackground;
         textButtonStyle.font = skin.getFont(BUTTON_FONT_KEY);
         textButtonStyle.fontColor = new Color(Color.BLACK);
-        textButtonStyle.overFontColor = new Color(0.65f, 0.15f, 0.30f, 1.0f);
+//        textButtonStyle.overFontColor = new Color(0.65f, 0.15f, 0.30f, 1.0f);
         textButtonStyle.disabledFontColor = new Color(0.3f, 0.3f, 0.3f, 1.0f);
-        textButtonStyle.pressedOffsetX = 2f;
-        textButtonStyle.pressedOffsetY = -3f;
+//        textButtonStyle.pressedOffsetX = 2f;
+//        textButtonStyle.pressedOffsetY = -3f;
         skin.add(DEFAULT_KEY, textButtonStyle);
 //        listStyle.background = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0f, 0f, 0f, 0.1f));
         // Tab Button Style
@@ -259,14 +272,20 @@ public class MainMenuScreen implements Screen, InputProcessor {
         skin.add(DEFAULT_KEY, sliderStyle);
 
         // Create a Drop Down Menu Skin
-        SelectBoxStyle selectBoxStyle = new SelectBoxStyle();
-        selectBoxStyle.background = transparentDrawable;
-        selectBoxStyle.backgroundOpen = transparentDrawable;
-        selectBoxStyle.backgroundOver = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0, 0, 0, 0.1f));
-        selectBoxStyle.listStyle = listStyle;
+        EuropaSelectBoxStyle selectBoxStyle = new EuropaSelectBoxStyle();
+        selectBoxStyle.background = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0.3f, 0.3f, 0.3f, 0.5f));
+        selectBoxStyle.backgroundOpen = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0, 0, 0, 0.5f));
+        selectBoxStyle.backgroundOver = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0, 0, 0, 0.5f));
         selectBoxStyle.scrollStyle = scrollPaneStyle;
         selectBoxStyle.font = skin.getFont(TEXT_FIELD_FONT_KEY);
         selectBoxStyle.fontColor = new Color(Color.BLACK);
+        ListStyle selectBoxListStyle = new ListStyle();
+        selectBoxListStyle.font = skin.getFont(LIST_FONT_KEY);
+        selectBoxListStyle.fontColorSelected = Color.BLACK;
+        selectBoxListStyle.fontColorUnselected = Color.BLACK;
+        selectBoxListStyle.selection = skin.newDrawable(SOLID_TEXTURE_KEY, SELECTION_COLOR);
+        selectBoxListStyle.background = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0.3f, 0.3f, 0.3f, 1.0f));
+        selectBoxStyle.listStyle = selectBoxListStyle;
         skin.add(DEFAULT_KEY, selectBoxStyle);
 
         mainMenuSkin = skin;
@@ -530,8 +549,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
     private void onLoadGameClick() {
         this.loadGameDialog = new LoadGameDialog();
         this.loadGameDialog.addDialogListener(this::onLoadGameDialogHidden, DialogEvents.HIDDEN);
-        this.loadGameDialog.show(this.stage);
-        this.loadGameDialog.setSize(this.stage.getWidth(), this.stage.getHeight());
+        this.showDialog(this.loadGameDialog);
     }
 
     private void onMultiplayerClick() {
@@ -539,13 +557,11 @@ public class MainMenuScreen implements Screen, InputProcessor {
     }
 
     private void onOptionsClick() {
-        this.optionsDialog.show(this.stage);
-        this.optionsDialog.setSize(this.stage.getWidth(), this.stage.getHeight());
+        this.showDialog(this.optionsDialog);
     }
 
     private void onCreditsClick() {
-        this.creditsDialog.show(this.stage);
-        this.creditsDialog.setSize(this.stage.getWidth(), this.stage.getHeight());
+        this.showDialog(this.creditsDialog);
     }
 
     private void onQuitClick() {
