@@ -19,6 +19,7 @@ import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.screen.MainMenuScreen;
 import static com.jupiter.europa.screen.MainMenuScreen.DEFAULT_KEY;
+import static com.jupiter.europa.screen.MainMenuScreen.DIALOG_BACKGROUND_KEY;
 import static com.jupiter.europa.screen.MainMenuScreen.INFO_STYLE_KEY;
 import static com.jupiter.europa.screen.MainMenuScreen.LIST_BACKGROUND_KEY;
 
@@ -271,7 +272,7 @@ public class LoadGameDialog extends ObservableDialog {
             this.mainTable.padLeft(MainMenuScreen.TABLE_PADDING);
             this.mainTable.padRight(MainMenuScreen.TABLE_PADDING);
             
-            this.mainTable.background(this.skin.get(MainMenuScreen.BUTTON_TABLE_BACKGROUND_KEY, SpriteDrawable.class));
+            this.mainTable.background(this.skin.get(MainMenuScreen.DIALOG_BACKGROUND_KEY, SpriteDrawable.class));
 
             this.getContentTable().add(this.mainTable).expandY().fillY();
         }

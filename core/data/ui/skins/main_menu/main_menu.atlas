@@ -6,70 +6,56 @@ filter: Nearest,Nearest
 repeat: none
 button-background
   rotate: false
-  xy: 2, 14
-  size: 283, 53
-  orig: 283, 53
+  xy: 463, 835
+  size: 281, 50
+  orig: 281, 50
   offset: 0, 0
   index: -1
 button-background-down
   rotate: false
-  xy: 463, 588
-  size: 280, 50
-  orig: 280, 50
-  offset: 0, 0
-  index: -1
-drop-down-opened
-  rotate: false
-  xy: 463, 588
-  size: 280, 50
-  orig: 280, 50
+  xy: 1065, 887
+  size: 281, 50
+  orig: 281, 50
   offset: 0, 0
   index: -1
 credits-background
   rotate: false
-  xy: 2, 692
+  xy: 2, 939
   size: 1920, 1080
   orig: 1920, 1080
   offset: 0, 0
   index: -1
-drop-down-closed
-  rotate: false
-  xy: 1065, 640
-  size: 280, 50
-  orig: 280, 50
-  offset: 0, 0
-  index: -1
 drop-down-list-background
   rotate: false
-  xy: 463, 512
-  size: 74, 74
-  orig: 74, 74
+  xy: 2, 14
+  size: 281, 300
+  orig: 281, 300
   offset: 0, 0
   index: -1
 list-background
   rotate: false
-  xy: 2, 69
+  xy: 2, 316
   size: 459, 621
   orig: 459, 621
   offset: 0, 0
   index: -1
 list-selection
   rotate: false
-  xy: 463, 640
+  xy: 463, 887
   size: 600, 50
   orig: 600, 50
   offset: 0, 0
   index: -1
 scroll-bar-vertical
   rotate: false
-  xy: 1924, 1572
+  xy: 1924, 1819
   size: 10, 200
   orig: 10, 200
   offset: 0, 0
   index: -1
 scroll-bar-vertical-knob
   rotate: false
-  xy: 287, 50
+  xy: 285, 297
   size: 35, 17
   orig: 35, 17
   offset: 0, 0
@@ -83,7 +69,7 @@ slider-background-main_menu
   index: -1
 slider-knob-main_menu
   rotate: false
-  xy: 745, 614
+  xy: 463, 809
   size: 12, 24
   orig: 12, 24
   offset: 0, 0

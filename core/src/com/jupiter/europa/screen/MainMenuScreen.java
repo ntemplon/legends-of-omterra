@@ -65,7 +65,6 @@ import com.jupiter.europa.geometry.Size;
 import com.jupiter.europa.io.FileLocations;
 import static com.jupiter.europa.io.FileLocations.SKINS_DIRECTORY;
 import com.jupiter.europa.save.SaveGame;
-import com.jupiter.europa.scene2d.ui.EuropaSelectBox.EuropaSelectBoxStyle;
 import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEventArgs;
 import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEvents;
 import com.jupiter.europa.screen.dialog.CreateCharacterDialog;
@@ -103,7 +102,6 @@ public class MainMenuScreen implements Screen, InputProcessor {
     public static final String BACKGROUND_FILE_NAME = FileLocations.UI_IMAGES_DIRECTORY.resolve("main_menu_background.png").toString();
     public static final String ATLAS_KEY = "main_menu.atlas";
     public static final String SOLID_TEXTURE_KEY = "solid-texture";
-    public static final String BUTTON_TABLE_BACKGROUND_KEY = "button-table-background";
     public static final String DIALOG_BACKGROUND_KEY = "dialog-border";
     public static final String BUTTON_BACKGROUND_KEY = "button-background";
     public static final String BUTTON_DOWN_KEY = "button-background-down";
@@ -118,8 +116,6 @@ public class MainMenuScreen implements Screen, InputProcessor {
     public static final String INFO_LABEL_FONT_KEY = "info-label-font";
     public static final String SCROLL_BAR_VERTICAL_KEY = "scroll-bar-vertical";
     public static final String SCROLL_BAR_VERTICAL_KNOB_KEY = "scroll-bar-vertical-knob";
-    public static final String DROP_DOWN_CLOSED_BACKGROUND = "drop-down-closed";
-    public static final String DROP_DOWN_OPENED_BACKGROUND = "drop-down-opened";
     public static final String DROP_DOWN_LIST_BACKGROUND = "drop-down-list-background";
     public static final String CREDITS_BACKGROUND_KEY = "credits-background";
 
@@ -162,13 +158,34 @@ public class MainMenuScreen implements Screen, InputProcessor {
         skin.add(SOLID_TEXTURE_KEY, new Texture(pixmap));
         Drawable transparentDrawable = skin.newDrawable(SOLID_TEXTURE_KEY, TRANSPARENT);
 
-        // Add textures to skin
-        skin.add(BUTTON_TABLE_BACKGROUND_KEY, skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0.6f, 0.6f, 0.6f, 0.75f)));
-
         // Get values from the atlas
         skin.addRegions(EuropaGame.game.getAssetManager().get(MAIN_MENU_SKIN_DIRECTORY.resolve(ATLAS_KEY).toString()));
+        
+        // Colors
+        Color textButtonFontColor = new Color(0.85f, 0.85f, 0.85f, 1.0f);
 
         // Set images
+        Drawable textButtonBackground = new TextureRegionDrawable(skin.get(BUTTON_BACKGROUND_KEY, TextureRegion.class));
+        textButtonBackground.setLeftWidth(32);
+        textButtonBackground.setRightWidth(32);
+        textButtonBackground.setTopHeight(5);
+        textButtonBackground.setBottomHeight(5);
+        skin.add(BUTTON_BACKGROUND_KEY, textButtonBackground);
+        
+        Drawable textButtonBackgroundDown = new TextureRegionDrawable(skin.get(BUTTON_DOWN_KEY, TextureRegion.class));
+        textButtonBackgroundDown.setLeftWidth(32);
+        textButtonBackgroundDown.setRightWidth(32);
+        textButtonBackgroundDown.setTopHeight(5);
+        textButtonBackgroundDown.setBottomHeight(5);
+        skin.add(BUTTON_DOWN_KEY, textButtonBackgroundDown);
+        
+        Drawable listSelection = new TextureRegionDrawable(skin.get(LIST_SELECTION_KEY, TextureRegion.class));
+        listSelection.setLeftWidth(7);
+        listSelection.setRightWidth(7);
+        listSelection.setTopHeight(0);
+        listSelection.setBottomHeight(0);
+        skin.add(LIST_SELECTION_KEY, listSelection);
+        
         skin.add(DIALOG_BACKGROUND_KEY, skin.newDrawable(new TextureRegionDrawable(skin.get(DIALOG_BACKGROUND_KEY, TextureRegion.class)), new Color(1.0f, 1.0f,
                 1.0f, 0.9f)));
         skin.add(LIST_BACKGROUND_KEY, skin.newDrawable(new TextureRegionDrawable(skin.get(LIST_BACKGROUND_KEY, TextureRegion.class)),
@@ -177,13 +194,13 @@ public class MainMenuScreen implements Screen, InputProcessor {
                 1.0f)));
         skin.add(CREDITS_BACKGROUND_KEY, skin.newDrawable(new TextureRegionDrawable(skin.get(CREDITS_BACKGROUND_KEY, TextureRegion.class)),
                 new Color(1.0f, 1.0f, 1.0f, 1.0f)));
-        skin.add(DROP_DOWN_OPENED_BACKGROUND, skin.newDrawable(new TextureRegionDrawable(skin.get(DROP_DOWN_OPENED_BACKGROUND, TextureRegion.class)), new Color(
-                1, 1, 1, 1)));
-        skin.add(DROP_DOWN_CLOSED_BACKGROUND, skin.newDrawable(new TextureRegionDrawable(skin.get(DROP_DOWN_CLOSED_BACKGROUND, TextureRegion.class)), new Color(
-                1, 1, 1, 1)));
-        skin.add(DROP_DOWN_LIST_BACKGROUND, skin.newDrawable(new TextureRegionDrawable(skin.get(DROP_DOWN_LIST_BACKGROUND, TextureRegion.class)), new Color(
-                1, 1, 1, 1)));
-        skin.add(BUTTON_DOWN_KEY, skin.newDrawable(new TextureRegionDrawable(skin.get(BUTTON_DOWN_KEY, TextureRegion.class)), new Color(1, 1, 1, 1)));
+        
+        Drawable dropdownListBackground = skin.newDrawable(new TextureRegionDrawable(skin.get(DROP_DOWN_LIST_BACKGROUND, TextureRegion.class)), new Color(1, 1, 1, 1));
+        dropdownListBackground.setLeftWidth(28);
+        dropdownListBackground.setRightWidth(28);
+        dropdownListBackground.setTopHeight(0);
+        dropdownListBackground.setBottomHeight(0);
+        skin.add(DROP_DOWN_LIST_BACKGROUND, dropdownListBackground);
 
         // Create a Label style for the title
         Label.LabelStyle titleStyle = new Label.LabelStyle();
@@ -201,15 +218,13 @@ public class MainMenuScreen implements Screen, InputProcessor {
 
         // Default Button Style
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        Drawable textButtonBackground = new TextureRegionDrawable(skin.get(BUTTON_BACKGROUND_KEY, TextureRegion.class));
-        Drawable textButtonBackgroundDown = skin.get(BUTTON_DOWN_KEY, SpriteDrawable.class);
         textButtonStyle.up = textButtonBackground;
         textButtonStyle.down = textButtonBackgroundDown;
         textButtonStyle.checked = textButtonBackground;
         textButtonStyle.over = textButtonBackgroundDown;
         textButtonStyle.disabled = textButtonBackground;
         textButtonStyle.font = skin.getFont(BUTTON_FONT_KEY);
-        textButtonStyle.fontColor = new Color(Color.BLACK);
+        textButtonStyle.fontColor = textButtonFontColor;
 //        textButtonStyle.overFontColor = new Color(0.65f, 0.15f, 0.30f, 1.0f);
         textButtonStyle.disabledFontColor = new Color(0.3f, 0.3f, 0.3f, 1.0f);
 //        textButtonStyle.pressedOffsetX = 2f;
@@ -245,8 +260,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
         listStyle.font = skin.getFont(LIST_FONT_KEY);
         listStyle.fontColorSelected = Color.BLACK;
         listStyle.fontColorUnselected = Color.BLACK;
-        listStyle.selection = skin.newDrawable(SOLID_TEXTURE_KEY, SELECTION_COLOR);
-//        listStyle.selection = skin.get(LIST_SELECTION_KEY, SpriteDrawable.class);
+        listStyle.selection = listSelection;
         listStyle.background = transparentDrawable;
         skin.add(DEFAULT_KEY, listStyle);
 
@@ -272,19 +286,19 @@ public class MainMenuScreen implements Screen, InputProcessor {
         skin.add(DEFAULT_KEY, sliderStyle);
 
         // Create a Drop Down Menu Skin
-        EuropaSelectBoxStyle selectBoxStyle = new EuropaSelectBoxStyle();
-        selectBoxStyle.background = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0.3f, 0.3f, 0.3f, 0.5f));
-        selectBoxStyle.backgroundOpen = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0, 0, 0, 0.5f));
-        selectBoxStyle.backgroundOver = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0, 0, 0, 0.5f));
+        SelectBoxStyle selectBoxStyle = new SelectBoxStyle();
+        selectBoxStyle.background = textButtonBackground;
+        selectBoxStyle.backgroundOpen = textButtonBackgroundDown;
+        selectBoxStyle.backgroundOver = textButtonBackgroundDown;
         selectBoxStyle.scrollStyle = scrollPaneStyle;
         selectBoxStyle.font = skin.getFont(TEXT_FIELD_FONT_KEY);
-        selectBoxStyle.fontColor = new Color(Color.BLACK);
+        selectBoxStyle.fontColor = textButtonFontColor;
         ListStyle selectBoxListStyle = new ListStyle();
         selectBoxListStyle.font = skin.getFont(LIST_FONT_KEY);
-        selectBoxListStyle.fontColorSelected = Color.BLACK;
-        selectBoxListStyle.fontColorUnselected = Color.BLACK;
+        selectBoxListStyle.fontColorSelected = textButtonFontColor;
+        selectBoxListStyle.fontColorUnselected = textButtonFontColor;
         selectBoxListStyle.selection = skin.newDrawable(SOLID_TEXTURE_KEY, SELECTION_COLOR);
-        selectBoxListStyle.background = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0.3f, 0.3f, 0.3f, 1.0f));
+        selectBoxListStyle.background = dropdownListBackground;
         selectBoxStyle.listStyle = selectBoxListStyle;
         skin.add(DEFAULT_KEY, selectBoxStyle);
 

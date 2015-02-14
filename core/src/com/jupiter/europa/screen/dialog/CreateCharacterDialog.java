@@ -46,7 +46,6 @@ import com.jupiter.europa.entity.stats.AttributeSet;
 import com.jupiter.europa.entity.stats.characterclass.CharacterClass;
 import com.jupiter.europa.entity.stats.race.Race;
 import com.jupiter.europa.io.FileLocations;
-import com.jupiter.europa.scene2d.ui.EuropaSelectBox;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.screen.MainMenuScreen;
 
@@ -157,8 +156,8 @@ public class CreateCharacterDialog extends ObservableDialog {
 
         private Table mainTable;
         private Table selectBoxTable;
-        private EuropaSelectBox<Race> raceSelectBox;
-        private EuropaSelectBox<String> classSelectBox;
+        private SelectBox<Race> raceSelectBox;
+        private SelectBox<String> classSelectBox;
         private Label titleLabel;
         private Label raceLabel;
         private Label classLabel;
@@ -202,7 +201,7 @@ public class CreateCharacterDialog extends ObservableDialog {
                             TextureAtlas.class).findRegion(Race.PlayerRaces.Human.getTextureString() + "-champion-" + MovementResourceComponent.FRONT_STAND_TEXTURE_NAME));
             this.raceClassPreview.setScale(IMAGE_SCALE);
 
-            this.raceSelectBox = new EuropaSelectBox<>(skin.get(EuropaSelectBox.EuropaSelectBoxStyle.class));
+            this.raceSelectBox = new SelectBox<>(skin.get(SelectBox.SelectBoxStyle.class));
             this.raceSelectBox.setItems(Race.PlayerRaces.values());
             this.raceSelectBox.addListener(new ChangeListener() {
                 @Override
@@ -211,7 +210,7 @@ public class CreateCharacterDialog extends ObservableDialog {
                 }
             });
 
-            this.classSelectBox = new EuropaSelectBox<>(skin.get(EuropaSelectBox.EuropaSelectBoxStyle.class));
+            this.classSelectBox = new SelectBox<>(skin.get(SelectBox.SelectBoxStyle.class));
             this.classSelectBox.setItems(CharacterClass.AVAILABLE_CLASSES);
             this.classSelectBox.addListener(new ChangeListener() {
                 @Override
@@ -245,11 +244,11 @@ public class CreateCharacterDialog extends ObservableDialog {
             this.selectBoxTable = new Table();
             this.selectBoxTable.add(this.raceLabel).fillX();
             this.selectBoxTable.row();
-            this.selectBoxTable.add(this.raceSelectBox).fillX();
+            this.selectBoxTable.add(this.raceSelectBox).minWidth(MainMenuScreen.TITLE_BUTTON_WIDTH).fillX();
             this.selectBoxTable.row();
             this.selectBoxTable.add(this.classLabel).fillX();
             this.selectBoxTable.row();
-            this.selectBoxTable.add(this.classSelectBox).fillX();
+            this.selectBoxTable.add(this.classSelectBox).minWidth(MainMenuScreen.TITLE_BUTTON_WIDTH).fillX();
             this.selectBoxTable.row();
 
             this.mainTable.add(this.titleLabel).center().colspan(2);
