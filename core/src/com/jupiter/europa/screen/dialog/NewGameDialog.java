@@ -38,7 +38,6 @@ import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.screen.MainMenuScreen;
 import static com.jupiter.europa.screen.MainMenuScreen.DEFAULT_KEY;
-import static com.jupiter.europa.screen.MainMenuScreen.DIALOG_BACKGROUND_KEY;
 import static com.jupiter.europa.screen.MainMenuScreen.LIST_BACKGROUND_KEY;
 
 /**

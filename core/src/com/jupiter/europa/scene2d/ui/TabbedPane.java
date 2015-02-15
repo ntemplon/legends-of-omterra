@@ -61,7 +61,7 @@ public class TabbedPane extends Table {
             }
             else {
                 this.currentTab = this.tabs.get(tabName);
-                this.add(this.currentTab).expand().top();
+                this.add(this.currentTab).expand().fillX().top();
             }
             
             this.buttons.keySet().stream().forEach((String key) -> {
@@ -98,7 +98,7 @@ public class TabbedPane extends Table {
         this.tabs.put(header, actor);
         this.buttons.put(header, tabButton);
 
-        this.buttonTable.add(tabButton).space(20).left();
+        this.buttonTable.add(tabButton).left();
         this.buttonTable.invalidate();
         
         if (this.currentTab == null) {

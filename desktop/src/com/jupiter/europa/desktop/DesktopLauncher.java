@@ -6,6 +6,8 @@ import com.badlogic.gdx.backends.lwjgl.LwjglFrame;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.tools.AtlasPacker;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
@@ -46,5 +48,7 @@ public class DesktopLauncher {
                 Gdx.app.exit();
             }
         });
+        
+        game.setContainingFrame(frame);
     }
 }

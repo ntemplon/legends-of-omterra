@@ -65,6 +65,7 @@ import com.jupiter.europa.geometry.Size;
 import com.jupiter.europa.io.FileLocations;
 import static com.jupiter.europa.io.FileLocations.SKINS_DIRECTORY;
 import com.jupiter.europa.save.SaveGame;
+import com.jupiter.europa.scene2d.ui.NumberSelector.NumberSelectorStyle;
 import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEventArgs;
 import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEvents;
 import com.jupiter.europa.screen.dialog.CreateCharacterDialog;
@@ -89,6 +90,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
     // Constants
     public static final Path MAIN_MENU_SKIN_DIRECTORY = SKINS_DIRECTORY.resolve("main_menu");
 
+    public static final String TITLE_FANCY_FONT = "Diploma56-bold.fnt";
     public static final String TITLE_FONT = "MagicMedieval48-bold.fnt";
     public static final String BUTTON_FONT = "MagicMedieval40.fnt";
     public static final String LIST_FONT = "MagicMedieval32.fnt";
@@ -96,6 +98,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
     public static final String INFO_LABEL_FONT = "MagicMedieval24.fnt";
 
     public static final String DEFAULT_KEY = "default";
+    public static final String FANCY_KEY = "fancy";
     public static final String INFO_STYLE_KEY = "info";
     public static final String TAB_STYLE_KEY = "tab-style";
     public static final String POPUP_DIALOG_STYLE_KEY = "popup-dialog-style";
@@ -105,6 +108,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
     public static final String SOLID_TEXTURE_KEY = "solid-texture";
     public static final String DIALOG_BACKGROUND_KEY = "dialog-border";
     public static final String POPUP_BACKGROUND_KEY = "popup-border";
+    public static final String TITLE_BACKGROUND_KEY = "title-border";
     public static final String BUTTON_BACKGROUND_KEY = "button-background";
     public static final String BUTTON_DOWN_KEY = "button-background-down";
     public static final String SLIDER_BACKGROUND_KEY = "slider-background-main_menu";
@@ -112,6 +116,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
     public static final String LIST_SELECTION_KEY = "list-selection";
     public static final String SLIDER_KNOB_KEY = "slider-knob-main_menu";
     public static final String TITLE_FONT_KEY = "title-font";
+    public static final String TITLE_FANCY_FONT_KEY = "title-font-fancy";
     public static final String BUTTON_FONT_KEY = "button-font";
     public static final String TEXT_FIELD_FONT_KEY = "text-field-font";
     public static final String LIST_FONT_KEY = "list-font";
@@ -120,6 +125,10 @@ public class MainMenuScreen implements Screen, InputProcessor {
     public static final String SCROLL_BAR_VERTICAL_KNOB_KEY = "scroll-bar-vertical-knob";
     public static final String DROP_DOWN_LIST_BACKGROUND = "drop-down-list-background";
     public static final String CREDITS_BACKGROUND_KEY = "credits-background";
+    public static final String TAB_BUTTON_BACKGROUND_KEY = "tab-button-background";
+    public static final String TAB_BUTTON_SELECTED_KEY = "tab-button-background-selected";
+    public static final String NUMBER_SELECTOR_INCREASE_KEY = "number-increase";
+    public static final String NUMBER_SELECTOR_DECREASE_KEY = "number-decrease";
 
     public static Skin mainMenuSkin;
 
@@ -147,7 +156,9 @@ public class MainMenuScreen implements Screen, InputProcessor {
     private static void buildMainMenuSkin() {
         Skin skin = new Skin();
 
+        // Fonts
         skin.add(BUTTON_FONT_KEY, EuropaGame.game.getAssetManager().get(FileLocations.FONTS_DIRECTORY.resolve(BUTTON_FONT).toString()));
+        skin.add(TITLE_FANCY_FONT_KEY, EuropaGame.game.getAssetManager().get(FileLocations.FONTS_DIRECTORY.resolve(TITLE_FANCY_FONT).toString()));
         skin.add(TITLE_FONT_KEY, EuropaGame.game.getAssetManager().get(FileLocations.FONTS_DIRECTORY.resolve(TITLE_FONT).toString()));
         skin.add(LIST_FONT_KEY, EuropaGame.game.getAssetManager().get(FileLocations.FONTS_DIRECTORY.resolve(LIST_FONT).toString()));
         skin.add(TEXT_FIELD_FONT_KEY, EuropaGame.game.getAssetManager().get(FileLocations.FONTS_DIRECTORY.resolve(TEXT_FIELD_FONT).toString()));
@@ -188,6 +199,41 @@ public class MainMenuScreen implements Screen, InputProcessor {
         listSelection.setBottomHeight(0);
         skin.add(LIST_SELECTION_KEY, listSelection);
         
+        Drawable tabButtonBackground = new TextureRegionDrawable(skin.get(TAB_BUTTON_BACKGROUND_KEY, TextureRegion.class));
+        tabButtonBackground.setLeftWidth(5);
+        tabButtonBackground.setRightWidth(5);
+        tabButtonBackground.setTopHeight(0);
+        tabButtonBackground.setBottomHeight(0);
+        skin.add(TAB_BUTTON_BACKGROUND_KEY, tabButtonBackground);
+        
+        Drawable tabButtonBackgroundSelected = new TextureRegionDrawable(skin.get(TAB_BUTTON_SELECTED_KEY, TextureRegion.class));
+        tabButtonBackgroundSelected.setLeftWidth(5);
+        tabButtonBackgroundSelected.setRightWidth(5);
+        tabButtonBackgroundSelected.setTopHeight(0);
+        tabButtonBackgroundSelected.setBottomHeight(0);
+        skin.add(TAB_BUTTON_SELECTED_KEY, tabButtonBackgroundSelected);
+        
+        Drawable titleBackground = new TextureRegionDrawable(skin.get(TITLE_BACKGROUND_KEY, TextureRegion.class));
+        titleBackground.setLeftWidth(10);
+        titleBackground.setRightWidth(10);
+        titleBackground.setTopHeight(0);
+        titleBackground.setBottomHeight(0);
+        skin.add(TITLE_BACKGROUND_KEY, titleBackground);
+        
+        Drawable numberIncreaseDrawable = new TextureRegionDrawable(skin.get(NUMBER_SELECTOR_INCREASE_KEY, TextureRegion.class));
+        numberIncreaseDrawable.setLeftWidth(0);
+        numberIncreaseDrawable.setRightWidth(0);
+        numberIncreaseDrawable.setTopHeight(0);
+        numberIncreaseDrawable.setBottomHeight(0);
+        skin.add(NUMBER_SELECTOR_INCREASE_KEY, numberIncreaseDrawable);
+        
+        Drawable numberDecreaseDrawable = new TextureRegionDrawable(skin.get(NUMBER_SELECTOR_DECREASE_KEY, TextureRegion.class));
+        numberDecreaseDrawable.setLeftWidth(0);
+        numberDecreaseDrawable.setRightWidth(0);
+        numberDecreaseDrawable.setTopHeight(0);
+        numberDecreaseDrawable.setBottomHeight(0);
+        skin.add(NUMBER_SELECTOR_DECREASE_KEY, numberDecreaseDrawable);
+        
         skin.add(DIALOG_BACKGROUND_KEY, skin.newDrawable(new TextureRegionDrawable(skin.get(DIALOG_BACKGROUND_KEY, TextureRegion.class)), new Color(1.0f, 1.0f,
                 1.0f, 1.0f)));
         skin.add(POPUP_BACKGROUND_KEY, skin.newDrawable(new TextureRegionDrawable(skin.get(POPUP_BACKGROUND_KEY, TextureRegion.class)), new Color(1.0f, 1.0f,
@@ -212,6 +258,13 @@ public class MainMenuScreen implements Screen, InputProcessor {
         titleStyle.font = skin.getFont(TITLE_FONT_KEY);
         titleStyle.fontColor = new Color(Color.BLACK);
         skin.add(DEFAULT_KEY, titleStyle);
+        
+        // Fancy Character Label Style
+        Label.LabelStyle fancyTitleStyle = new Label.LabelStyle();
+        fancyTitleStyle.background = transparentDrawable;
+        fancyTitleStyle.font = skin.getFont(TITLE_FANCY_FONT_KEY);
+        fancyTitleStyle.fontColor = new Color(Color.BLACK);
+        skin.add(FANCY_KEY, fancyTitleStyle);
 
         // Create a Label style for dialogs
         LabelStyle infoStyle = new LabelStyle();
@@ -229,25 +282,22 @@ public class MainMenuScreen implements Screen, InputProcessor {
         textButtonStyle.disabled = textButtonBackground;
         textButtonStyle.font = skin.getFont(BUTTON_FONT_KEY);
         textButtonStyle.fontColor = textButtonFontColor;
-//        textButtonStyle.overFontColor = new Color(0.65f, 0.15f, 0.30f, 1.0f);
         textButtonStyle.disabledFontColor = new Color(0.3f, 0.3f, 0.3f, 1.0f);
 //        textButtonStyle.pressedOffsetX = 2f;
 //        textButtonStyle.pressedOffsetY = -3f;
         skin.add(DEFAULT_KEY, textButtonStyle);
-//        listStyle.background = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0f, 0f, 0f, 0.1f));
+        
         // Tab Button Style
         TextButtonStyle tabButtonStyle = new TextButtonStyle();
-        tabButtonStyle.up = transparentDrawable;
-        tabButtonStyle.down = transparentDrawable;
-        tabButtonStyle.checked = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0, 0, 0, 0.2f));
-        tabButtonStyle.over = transparentDrawable;
-        tabButtonStyle.disabled = transparentDrawable;
+        tabButtonStyle.up = tabButtonBackground;
+        tabButtonStyle.down = tabButtonBackground;
+        tabButtonStyle.checked = tabButtonBackgroundSelected;
+        tabButtonStyle.over = tabButtonBackground;
+        tabButtonStyle.disabled = tabButtonBackground;
         tabButtonStyle.font = skin.getFont(BUTTON_FONT_KEY);
-        tabButtonStyle.fontColor = new Color(Color.BLACK);
-        tabButtonStyle.overFontColor = new Color(Color.BLUE);
+        tabButtonStyle.fontColor = textButtonFontColor;
+        tabButtonStyle.overFontColor = textButtonFontColor;
         tabButtonStyle.disabledFontColor = new Color(Color.GRAY);
-        tabButtonStyle.pressedOffsetX = 2f;
-        tabButtonStyle.pressedOffsetY = -3f;
         skin.add(TAB_STYLE_KEY, tabButtonStyle);
 
         // Create a TextField style
@@ -310,6 +360,15 @@ public class MainMenuScreen implements Screen, InputProcessor {
         selectBoxListStyle.background = dropdownListBackground;
         selectBoxStyle.listStyle = selectBoxListStyle;
         skin.add(DEFAULT_KEY, selectBoxStyle);
+        
+        // NumberSelectorStyle
+        NumberSelectorStyle numberStyle = new NumberSelectorStyle();
+        numberStyle.decrease = numberDecreaseDrawable;
+        numberStyle.increase = numberIncreaseDrawable;
+        numberStyle.minimumNumberSize = 200;
+        numberStyle.numberLabelStyle = infoStyle;
+        numberStyle.spacing = COMPONENT_SPACING;
+        skin.add(DEFAULT_KEY, numberStyle);
 
         mainMenuSkin = skin;
     }
@@ -321,7 +380,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
 
     private Table titleTable;
     private Table buttonTable;
-    private Label titleLabel;
+    private Table titleWrapperTable;
     private TextButton newGameButton;
     private TextButton loadGameButton;
     private TextButton multiplayerButton;
@@ -559,9 +618,26 @@ public class MainMenuScreen implements Screen, InputProcessor {
         this.titleTable.setFillParent(true);
         this.titleTable.center();
 
-        this.titleLabel = new Label(EuropaGame.TITLE, skin.get(DEFAULT_KEY, LabelStyle.class));
+        this.titleWrapperTable = new Table();
+        String[] titleWords = EuropaGame.TITLE.split("\\s+");
+        this.titleWrapperTable.add(new Label(titleWords[0].substring(0, 1), skin.get(FANCY_KEY, LabelStyle.class))).right().expandX();
+        this.titleWrapperTable.add(new Label(titleWords[0].substring(1), skin.get(DEFAULT_KEY, LabelStyle.class)));
+        for (int i = 1; i < titleWords.length - 1; i++) {
+            String text = titleWords[i];
+            if (i == 1) {
+                text = " " + text;
+            }
+            if (i == titleWords.length - 1) {
+                text += " ";
+            }
+            this.titleWrapperTable.add(new Label(text, skin.get(DEFAULT_KEY, LabelStyle.class)));
+        }
+        this.titleWrapperTable.add(new Label(titleWords[titleWords.length - 1].substring(0, 1), skin.get(FANCY_KEY, LabelStyle.class)));
+        this.titleWrapperTable.add(new Label(titleWords[titleWords.length - 1].substring(1), skin.get(DEFAULT_KEY, LabelStyle.class))).left().expandX();
+        
+        this.titleWrapperTable.background(skin.get(TITLE_BACKGROUND_KEY, TextureRegionDrawable.class));
 
-        this.titleTable.add(this.titleLabel).top();
+        this.titleTable.add(this.titleWrapperTable).pad(COMPONENT_SPACING).top();
         this.titleTable.row();
         this.titleTable.add(this.buttonTable).center().expandY();
         this.titleTable.row();

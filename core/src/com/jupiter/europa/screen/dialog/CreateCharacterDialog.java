@@ -34,8 +34,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.jupiter.europa.EuropaGame;
@@ -156,6 +159,9 @@ public class CreateCharacterDialog extends ObservableDialog {
 
         private Table mainTable;
         private Table selectBoxTable;
+        private Table nameTable;
+        private Label nameLabel;
+        private TextField nameField;
         private SelectBox<Race> raceSelectBox;
         private SelectBox<String> classSelectBox;
         private Label titleLabel;
@@ -180,6 +186,10 @@ public class CreateCharacterDialog extends ObservableDialog {
         public final Race getSelectedRace() {
             return this.raceSelectBox.getSelected();
         }
+        
+        public final Drawable getCharacterPortrait() {
+            return this.raceClassPreview.getDrawable();
+        }
 
 
         // Initialization
@@ -196,6 +206,10 @@ public class CreateCharacterDialog extends ObservableDialog {
             this.titleLabel = new Label(TITLE, skin.get(LabelStyle.class));
             this.raceLabel = new Label("Race: ", skin.get(LabelStyle.class));
             this.classLabel = new Label("Class: ", skin.get(LabelStyle.class));
+            this.nameLabel = new Label("Name: ", skin.get(LabelStyle.class));
+            
+            this.nameField = new TextField("default", skin.get(TextFieldStyle.class));
+            
             this.raceClassPreview = new Image(EuropaGame.game.getAssetManager()
                     .get(FileLocations.SPRITES_DIRECTORY.resolve("CharacterSprites.atlas").toString(),
                             TextureAtlas.class).findRegion(Race.PlayerRaces.Human.getTextureString() + "-champion-" + MovementResourceComponent.FRONT_STAND_TEXTURE_NAME));
@@ -238,6 +252,10 @@ public class CreateCharacterDialog extends ObservableDialog {
                     }
                 }
             });
+            
+            this.nameTable = new Table();
+            this.nameTable.add(this.nameLabel).left().space(MainMenuScreen.COMPONENT_SPACING);
+            this.nameTable.add(this.nameField).space(MainMenuScreen.COMPONENT_SPACING).padTop(10).expandX().fillX();
 
             this.mainTable = new Table();
 
@@ -253,8 +271,14 @@ public class CreateCharacterDialog extends ObservableDialog {
 
             this.mainTable.add(this.titleLabel).center().colspan(2);
             this.mainTable.row();
-            this.mainTable.add(this.selectBoxTable).left().expandY();
-            this.mainTable.add(this.raceClassPreview).center().expandY();
+            this.mainTable.add(new Image()).expandY().fillY();
+            this.mainTable.row();
+            this.mainTable.add(this.nameTable).colspan(2).expandX().fillX().bottom();
+            this.mainTable.row();
+            this.mainTable.add(this.selectBoxTable).left();
+            this.mainTable.add(this.raceClassPreview).center();
+            this.mainTable.row();
+            this.mainTable.add(new Image()).expandY().fillY();
             this.mainTable.row();
 
             Table buttonTable = new Table();
@@ -297,6 +321,33 @@ public class CreateCharacterDialog extends ObservableDialog {
             this.hide();
         }
 
+    }
+    
+    private static class SelectAttributesDialog extends ObservableDialog {
+        
+        // Constants
+        private static final String DIALOG_NAME = "";
+        
+        
+        // Fields
+        private final Drawable characterPreview;
+        
+        
+        // Initialization
+        private SelectAttributesDialog(Skin skin, Drawable characterPreview) {
+            super(DIALOG_NAME, skin.get(WindowStyle.class));
+            
+            this.characterPreview = characterPreview;
+            
+            this.initComponents();
+        }
+        
+        
+        // Private Methods
+        private void initComponents() {
+            
+        }
+        
     }
 
 }

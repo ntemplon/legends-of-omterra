@@ -6,79 +6,114 @@ filter: Nearest,Nearest
 repeat: none
 button-background
   rotate: false
-  xy: 1105, 887
+  xy: 463, 551
   size: 281, 50
   orig: 281, 50
   offset: 0, 0
   index: -1
 button-background-down
   rotate: false
-  xy: 463, 524
+  xy: 1105, 823
   size: 281, 50
   orig: 281, 50
   offset: 0, 0
   index: -1
 credits-background
   rotate: false
-  xy: 2, 939
+  xy: 2, 966
   size: 1920, 1080
   orig: 1920, 1080
   offset: 0, 0
   index: -1
 drop-down-list-background
   rotate: false
-  xy: 2, 14
+  xy: 2, 41
   size: 281, 300
   orig: 281, 300
   offset: 0, 0
   index: -1
 list-background
   rotate: false
-  xy: 2, 316
+  xy: 2, 343
   size: 459, 621
   orig: 459, 621
   offset: 0, 0
   index: -1
 list-selection
   rotate: false
-  xy: 463, 576
+  xy: 463, 603
   size: 600, 50
   orig: 600, 50
   offset: 0, 0
   index: -1
+number-decrease
+  rotate: false
+  xy: 2, 2
+  size: 24, 25
+  orig: 24, 25
+  offset: 0, 0
+  index: -1
+number-increase
+  rotate: false
+  xy: 28, 2
+  size: 24, 25
+  orig: 24, 25
+  offset: 0, 0
+  index: -1
 popup-border
   rotate: false
-  xy: 463, 628
+  xy: 463, 655
   size: 640, 309
   orig: 640, 309
   offset: 0, 0
   index: -1
 scroll-bar-vertical
   rotate: false
-  xy: 1924, 1819
+  xy: 1924, 1846
   size: 10, 200
   orig: 10, 200
   offset: 0, 0
   index: -1
 scroll-bar-vertical-knob
   rotate: false
-  xy: 1065, 609
+  xy: 1065, 636
   size: 35, 17
   orig: 35, 17
   offset: 0, 0
   index: -1
 slider-background-main_menu
   rotate: false
-  xy: 2, 2
+  xy: 2, 29
   size: 199, 10
   orig: 199, 10
   offset: 0, 0
   index: -1
 slider-knob-main_menu
   rotate: false
-  xy: 285, 290
+  xy: 285, 317
   size: 12, 24
   orig: 12, 24
+  offset: 0, 0
+  index: -1
+tab-button-background
+  rotate: false
+  xy: 1616, 919
+  size: 224, 45
+  orig: 224, 45
+  offset: 0, 0
+  index: -1
+tab-button-background-selected
+  rotate: false
+  xy: 463, 504
+  size: 224, 45
+  orig: 224, 45
+  offset: 0, 0
+  index: -1
+title-border
+  rotate: false
+  xy: 1105, 875
+  size: 509, 89
+  orig: 509, 89
   offset: 0, 0
   index: -1
 

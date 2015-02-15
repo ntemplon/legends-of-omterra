@@ -37,6 +37,9 @@ import com.jupiter.europa.entity.messaging.WalkRequestMessage;
 import com.jupiter.europa.screen.overlay.Overlay;
 import com.jupiter.europa.screen.overlay.PauseMenu;
 import com.jupiter.europa.world.Level;
+import java.awt.Insets;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -87,14 +90,17 @@ public class LevelScreen extends OverlayableScreen {
     private PauseMenu pauseMenu;
 
     private final FPSLogger fpslog = new FPSLogger();
+    
+    private int width;
+    private int height;
 
 
     // Properties
     public void setLevel(Level level) {
         this.level = level;
 
-        // Debug code: set view to center of map
-        this.camera.position.set(this.level.getPixelWidth() / 2.0f, this.level.getPixelHeight() / 2.0f, 0.0f);
+        Sprite focusedSprite = Mappers.render.get(this.level.getControlledEntity()).getSprite();
+        this.camera.position.set(focusedSprite.getX() + focusedSprite.getWidth() / 2.0f, focusedSprite.getY() + focusedSprite.getHeight() / 2.0f, 0);
 
         this.mapRender = new LevelRenderer(this.level);
     }
@@ -105,6 +111,10 @@ public class LevelScreen extends OverlayableScreen {
 
     public void setPauseKey(int key) {
         this.pauseKey = key;
+    }
+    
+    public int getMouseLookSensitivity() {
+        return 5;
     }
 
 
@@ -126,10 +136,7 @@ public class LevelScreen extends OverlayableScreen {
         Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
         Gdx.gl.glClear(GL_COLOR_BUFFER_BIT);
 
-        Sprite focusedSprite = Mappers.render.get(this.level.getControlledEntity()).getSprite();
-        this.camera.position.set(focusedSprite.getX() + focusedSprite.getWidth() / 2.0f,
-                focusedSprite.getY() + focusedSprite.getHeight() / 2.0f, 0);
-        this.camera.update();
+        this.updateCamera();
 
         if (this.mapRender != null) {
             this.mapRender.setView(camera);
@@ -139,7 +146,7 @@ public class LevelScreen extends OverlayableScreen {
 
         this.renderOverlays();
         // Record metrics if in debug mode
-//        if (OmterraGame.DEBUG) {
+//        if (EuropaGame.DEBUG) {
 //            fpslog.log();
 //        }
     }
@@ -147,6 +154,9 @@ public class LevelScreen extends OverlayableScreen {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
+        
+        this.width = width;
+        this.height = height;
 
         this.camera.viewportWidth = width / EuropaGame.SCALE;
         this.camera.viewportHeight = height / EuropaGame.SCALE;
@@ -208,6 +218,41 @@ public class LevelScreen extends OverlayableScreen {
             EuropaGame.game.getMessageSystem().publish(new WalkRequestMessage(this.level.getControlledEntity(), totalDirection));
         }
     }
+    
+    private void updateCamera() {
+        if (EuropaGame.game.isSuspended()) {
+            return;
+        }
+        
+        Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
+        Point frameLoc = EuropaGame.game.getContainingFrame().getLocationOnScreen();
+        Insets insets = EuropaGame.game.getContainingFrame().getInsets();
+        
+        int mouseX = mouseLoc.x - frameLoc.x - insets.left;
+        int mouseY = mouseLoc.y - frameLoc.y - insets.top;
+
+        if (mouseX <= 0) {
+            // MouseX = 0 -> We should move left
+            int newX = Math.max(0, (int)this.camera.position.x - this.getMouseLookSensitivity());
+            this.camera.position.set(newX, this.camera.position.y, 0);
+        }
+        else if (mouseX >= this.width - 1) {
+            // MouseX = width -> We should move right
+            int newX = Math.min(this.level.getPixelWidth(), (int)this.camera.position.x + this.getMouseLookSensitivity());
+            this.camera.position.set(newX, this.camera.position.y, 0);
+        }
+        
+        if (mouseY >= this.height - 1) {
+            int newY = Math.max(0, (int)this.camera.position.y - this.getMouseLookSensitivity());
+            this.camera.position.set(this.camera.position.x, newY, 0);
+        }
+        else if (mouseY <= 0) {
+            int newY = Math.min(this.level.getPixelHeight(), (int)this.camera.position.y + this.getMouseLookSensitivity());
+            this.camera.position.set(this.camera.position.x, newY, 0);
+        }
+        
+        this.camera.update();
+    }
 
 
     // Inner Classes
@@ -253,7 +298,7 @@ public class LevelScreen extends OverlayableScreen {
         }
 
         @Override
-        public boolean mouseMoved(int i, int i1) {
+        public boolean mouseMoved(int x, int y) {
             return false;
         }
 

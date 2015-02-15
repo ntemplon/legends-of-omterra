@@ -7,13 +7,14 @@ package com.jupiter.europa.screen.dialog;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.scene2d.ui.TabbedPane;
@@ -48,7 +49,7 @@ public class OptionsDialog extends ObservableDialog {
     // Fields
     private final Skin skin;
 
-    private Table optionsTable;
+    private Table mainTable;
     private Label optionsLabel;
     private TabbedPane optionsPane;
     private TextButton optionsAcceptButton;
@@ -81,8 +82,7 @@ public class OptionsDialog extends ObservableDialog {
 
     // Private Methods
     private void initComponent() {
-        this.optionsTable = new Table();
-        this.optionsTable.center();
+        this.mainTable = new Table();
         this.optionsLabel = new Label("Options", skin.get(DEFAULT_KEY, Label.LabelStyle.class));
         this.optionsPane = new TabbedPane(skin.get(TAB_STYLE_KEY, TextButton.TextButtonStyle.class));
         
@@ -110,8 +110,8 @@ public class OptionsDialog extends ObservableDialog {
         });
 
         this.optionsButtonTable = new Table();
-        this.optionsButtonTable.add(this.optionsAcceptButton).right();
-        this.optionsButtonTable.add(this.optionsCancelButton).right().space(20);
+        this.optionsButtonTable.add(this.optionsAcceptButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right().expandX();
+        this.optionsButtonTable.add(this.optionsCancelButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right();
 
         // Create and Add Tabs
         this.audioTable = new AudioOptionsTable(this.skin);
@@ -119,13 +119,16 @@ public class OptionsDialog extends ObservableDialog {
         this.optionsPane.addTab("Audio", this.audioTable);
         this.optionsPane.addTab("Graphics", this.graphicsTable);
 
-        this.optionsTable.add(this.optionsLabel).left().padTop(25).minWidth(600);
-        this.optionsTable.row();
-        this.optionsTable.add(this.optionsPane).expandY().fill().top();
-        this.optionsTable.row();
-        this.optionsTable.add(this.optionsButtonTable).padBottom(25);
+        this.mainTable.add(this.optionsLabel).left();
+        this.mainTable.row();
+        this.mainTable.add(this.optionsPane).expand().fill().top();
+        this.mainTable.row();
+        this.mainTable.add(this.optionsButtonTable).expandX().fillX().right();
+        
+        this.mainTable.pad(MainMenuScreen.TABLE_PADDING);
+        this.mainTable.background(this.skin.get(MainMenuScreen.DIALOG_BACKGROUND_KEY, SpriteDrawable.class));
 
-        this.getContentTable().add(this.optionsTable).expand().fill();
+        this.getContentTable().add(this.mainTable).center().expandY().fillY().width(MainMenuScreen.DIALOG_WIDTH);
     }
     
     private void loadSettings() {
@@ -143,6 +146,7 @@ public class OptionsDialog extends ObservableDialog {
 
         // Fields
         private final Skin skin;
+        private final Label volumeLabel;
         private final Slider musicSlider;
         
         
@@ -159,10 +163,16 @@ public class OptionsDialog extends ObservableDialog {
         // Initialization
         private AudioOptionsTable(Skin skin) {
             this.skin = skin;
+            
+            this.volumeLabel = new Label("Volumne:", skin.get(MainMenuScreen.INFO_STYLE_KEY, LabelStyle.class));
 
             this.musicSlider = new Slider(0f, 1f, 0.05f, false, skin.get(DEFAULT_KEY, Slider.SliderStyle.class));
-            this.add(this.musicSlider).minHeight(20).minWidth(600).maxWidth(1000).expandX();
+            
+            this.add(this.volumeLabel).space(MainMenuScreen.COMPONENT_SPACING).center().left();
+            this.add(this.musicSlider).space(MainMenuScreen.COMPONENT_SPACING).center().minHeight(20).expandX().fillX();
             this.row();
+            
+            this.pad(MainMenuScreen.TABLE_PADDING);
         }
 
     }
@@ -178,6 +188,8 @@ public class OptionsDialog extends ObservableDialog {
         // Initialization
         private GraphicOptionsTable(Skin skin) {
             this.skin = skin;
+            
+            this.pad(MainMenuScreen.TABLE_PADDING);
         }
 
     }

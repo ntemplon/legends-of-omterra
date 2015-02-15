@@ -84,11 +84,6 @@ public class Champion extends CharacterClass {
         super.create();
         this.getFeatPool().increaseCapacity(1);
     }
-    
-    @Override
-    public void initialize() {
-        super.initialize();
-    }
 
 
     // Public Methods

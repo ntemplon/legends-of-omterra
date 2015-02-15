@@ -34,6 +34,7 @@ import com.jupiter.europa.entity.messaging.RequestEffectAddMessage;
 import com.jupiter.europa.entity.trait.TraitPool;
 import com.jupiter.europa.entity.trait.feat.FeatPool;
 import com.jupiter.europa.entity.stats.race.Race;
+import com.jupiter.europa.entity.trait.Trait;
 import com.jupiter.europa.entity.trait.feat.Feat;
 import com.jupiter.europa.util.Initializable;
 import java.util.HashMap;
@@ -125,7 +126,7 @@ public abstract class CharacterClass implements Serializable, Initializable {
     private int level;
     private long ownerId = -1;
     private Entity owner;
-    private final Set<TraitPool<?>> abilityPools = new LinkedHashSet<>();
+    private final Set<TraitPool<? extends Trait>> abilityPools = new LinkedHashSet<>();
     private FeatPool featPool;
 
 
@@ -148,7 +149,7 @@ public abstract class CharacterClass implements Serializable, Initializable {
 
     public abstract int getWill();
 
-    public Set<TraitPool<?>> getAbilityPools() {
+    public Set<TraitPool<? extends Trait>> getAbilityPools() {
         return this.abilityPools;
     }
 

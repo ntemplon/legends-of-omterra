@@ -62,7 +62,6 @@ import com.jupiter.europa.util.Initializable;
 import com.jupiter.europa.world.Level;
 import com.jupiter.europa.world.World;
 import com.jupiter.ganymede.property.Property.PropertyChangedArgs;
-import java.awt.Insets;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -74,6 +73,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import javax.swing.JFrame;
 
 public class EuropaGame extends Game implements InputProcessor {
 
@@ -234,6 +234,8 @@ public class EuropaGame extends Game implements InputProcessor {
     public final Map<Long, Entity> lastIdMapping = new HashMap<>();
     
     private final GameTimer timer = new GameTimer();
+    
+    private JFrame frame;
 
     private LevelScreen levelScreen;
     private Screen loadingScreen;
@@ -324,6 +326,14 @@ public class EuropaGame extends Game implements InputProcessor {
 
     public Settings getSettings() {
         return this.settings;
+    }
+    
+    public JFrame getContainingFrame() {
+        return this.frame;
+    }
+    
+    public void setContainingFrame(JFrame frame) {
+        this.frame = frame;
     }
 
 
