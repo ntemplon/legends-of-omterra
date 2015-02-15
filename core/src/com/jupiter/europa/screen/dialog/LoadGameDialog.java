@@ -7,21 +7,23 @@ package com.jupiter.europa.screen.dialog;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.screen.MainMenuScreen;
 import static com.jupiter.europa.screen.MainMenuScreen.DEFAULT_KEY;
-import static com.jupiter.europa.screen.MainMenuScreen.DIALOG_BACKGROUND_KEY;
 import static com.jupiter.europa.screen.MainMenuScreen.INFO_STYLE_KEY;
 import static com.jupiter.europa.screen.MainMenuScreen.LIST_BACKGROUND_KEY;
+import static com.jupiter.europa.screen.MainMenuScreen.POPUP_BACKGROUND_KEY;
 
 /**
  *
@@ -91,7 +93,7 @@ public class LoadGameDialog extends ObservableDialog {
     public void setSize(float width, float height) {
         super.setSize(width, height);
         if (this.confirmDeleteDialog != null) {
-            this.confirmDeleteDialog.setSize(width, height);
+            this.confirmDeleteDialog.setSize(width, this.height);
         }
         
         this.width = width;
@@ -228,12 +230,19 @@ public class LoadGameDialog extends ObservableDialog {
 
         // Initialization
         private ConfirmDeleteSaveDialog(String saveName, Skin skin) {
-            super(DIALOG_NAME, skin.get(WindowStyle.class));
+            super(DIALOG_NAME, skin.get(MainMenuScreen.POPUP_DIALOG_STYLE_KEY, WindowStyle.class));
 
             this.saveName = saveName;
             this.skin = skin;
 
             this.initComponents();
+        }
+        
+        
+        // Public Methods
+        @Override
+        public void setSize(float width, float height) {
+            super.setSize(width, height);
         }
 
 
@@ -242,6 +251,7 @@ public class LoadGameDialog extends ObservableDialog {
             this.titleLabel = new Label("Are you sure you want to delete the save game \"" + this.saveName + "\"?", skin.get(INFO_STYLE_KEY,
                     Label.LabelStyle.class));
             this.titleLabel.setWrap(true);
+            this.titleLabel.setAlignment(Align.center);
             
             this.yesButton = new TextButton("Yes", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
             this.yesButton.addListener(new ClickListener() {
@@ -264,17 +274,16 @@ public class LoadGameDialog extends ObservableDialog {
             });
             
             this.mainTable = new Table();
-            this.mainTable.add(this.titleLabel).width(MainMenuScreen.DIALOG_WIDTH).center().expandY();
+            this.mainTable.add(this.titleLabel).colspan(2).width(MainMenuScreen.DIALOG_WIDTH).expandX().fillX();
             this.mainTable.row();
-            this.mainTable.add(this.yesButton).right().expandX();
-            this.mainTable.add(this.noButton).space(MainMenuScreen.COMPONENT_SPACING).right();
+            this.mainTable.add(this.yesButton).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).space(MainMenuScreen.COMPONENT_SPACING).right();
+            this.mainTable.add(this.noButton).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).space(MainMenuScreen.COMPONENT_SPACING).left();
             
             this.mainTable.padLeft(MainMenuScreen.TABLE_PADDING);
             this.mainTable.padRight(MainMenuScreen.TABLE_PADDING);
             
-            this.mainTable.background(this.skin.get(MainMenuScreen.DIALOG_BACKGROUND_KEY, SpriteDrawable.class));
-
-            this.getContentTable().add(this.mainTable).expandY().fillY();
+            this.mainTable.background(this.skin.get(MainMenuScreen.POPUP_BACKGROUND_KEY, SpriteDrawable.class));
+            this.getContentTable().add(this.mainTable).row();
         }
 
         private void onYesButtonClick() {

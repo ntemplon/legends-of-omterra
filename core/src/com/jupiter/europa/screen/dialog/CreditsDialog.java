@@ -67,6 +67,7 @@ public class CreditsDialog extends ObservableDialog {
                 if (event.getButton() == Input.Buttons.LEFT && !CreditsDialog.this.returnButton.isDisabled()) {
                     CreditsDialog.this.hide();
                 }
+                CreditsDialog.this.returnButton.setChecked(false);
             }
         });
         

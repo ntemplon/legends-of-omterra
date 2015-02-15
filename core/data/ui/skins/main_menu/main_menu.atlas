@@ -6,14 +6,14 @@ filter: Nearest,Nearest
 repeat: none
 button-background
   rotate: false
-  xy: 463, 835
+  xy: 1105, 887
   size: 281, 50
   orig: 281, 50
   offset: 0, 0
   index: -1
 button-background-down
   rotate: false
-  xy: 1065, 887
+  xy: 463, 524
   size: 281, 50
   orig: 281, 50
   offset: 0, 0
@@ -41,9 +41,16 @@ list-background
   index: -1
 list-selection
   rotate: false
-  xy: 463, 887
+  xy: 463, 576
   size: 600, 50
   orig: 600, 50
+  offset: 0, 0
+  index: -1
+popup-border
+  rotate: false
+  xy: 463, 628
+  size: 640, 309
+  orig: 640, 309
   offset: 0, 0
   index: -1
 scroll-bar-vertical
@@ -55,7 +62,7 @@ scroll-bar-vertical
   index: -1
 scroll-bar-vertical-knob
   rotate: false
-  xy: 285, 297
+  xy: 1065, 609
   size: 35, 17
   orig: 35, 17
   offset: 0, 0
@@ -69,7 +76,7 @@ slider-background-main_menu
   index: -1
 slider-knob-main_menu
   rotate: false
-  xy: 463, 809
+  xy: 285, 290
   size: 12, 24
   orig: 12, 24
   offset: 0, 0

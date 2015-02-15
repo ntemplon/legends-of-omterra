@@ -75,7 +75,7 @@ public class OptionsDialog extends ObservableDialog {
 
         this.initComponent();
         
-        this.addDialogListener((args) -> this.loadSettings(), DialogEvents.SHOWN);
+        this.addDialogListener((DialogEventArgs args) -> this.loadSettings(), DialogEvents.SHOWN);
     }
 
 
@@ -85,6 +85,7 @@ public class OptionsDialog extends ObservableDialog {
         this.optionsTable.center();
         this.optionsLabel = new Label("Options", skin.get(DEFAULT_KEY, Label.LabelStyle.class));
         this.optionsPane = new TabbedPane(skin.get(TAB_STYLE_KEY, TextButton.TextButtonStyle.class));
+        
         this.optionsAcceptButton = new TextButton("Accept", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
         this.optionsAcceptButton.addListener(new ClickListener() {
             @Override
@@ -93,8 +94,10 @@ public class OptionsDialog extends ObservableDialog {
                     OptionsDialog.this.applySettings();
                     OptionsDialog.this.hide();
                 }
+                OptionsDialog.this.optionsAcceptButton.setChecked(false);
             }
         });
+        
         this.optionsCancelButton = new TextButton("Cancel", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
         this.optionsCancelButton.addListener(new ClickListener() {
             @Override
@@ -102,6 +105,7 @@ public class OptionsDialog extends ObservableDialog {
                 if (event.getButton() == Input.Buttons.LEFT && !OptionsDialog.this.optionsCancelButton.isDisabled()) {
                     OptionsDialog.this.hide();
                 }
+                OptionsDialog.this.optionsCancelButton.setChecked(false);
             }
         });
 

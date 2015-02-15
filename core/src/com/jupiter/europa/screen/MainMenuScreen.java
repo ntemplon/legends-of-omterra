@@ -98,11 +98,13 @@ public class MainMenuScreen implements Screen, InputProcessor {
     public static final String DEFAULT_KEY = "default";
     public static final String INFO_STYLE_KEY = "info";
     public static final String TAB_STYLE_KEY = "tab-style";
+    public static final String POPUP_DIALOG_STYLE_KEY = "popup-dialog-style";
 
     public static final String BACKGROUND_FILE_NAME = FileLocations.UI_IMAGES_DIRECTORY.resolve("main_menu_background.png").toString();
     public static final String ATLAS_KEY = "main_menu.atlas";
     public static final String SOLID_TEXTURE_KEY = "solid-texture";
     public static final String DIALOG_BACKGROUND_KEY = "dialog-border";
+    public static final String POPUP_BACKGROUND_KEY = "popup-border";
     public static final String BUTTON_BACKGROUND_KEY = "button-background";
     public static final String BUTTON_DOWN_KEY = "button-background-down";
     public static final String SLIDER_BACKGROUND_KEY = "slider-background-main_menu";
@@ -187,7 +189,9 @@ public class MainMenuScreen implements Screen, InputProcessor {
         skin.add(LIST_SELECTION_KEY, listSelection);
         
         skin.add(DIALOG_BACKGROUND_KEY, skin.newDrawable(new TextureRegionDrawable(skin.get(DIALOG_BACKGROUND_KEY, TextureRegion.class)), new Color(1.0f, 1.0f,
-                1.0f, 0.9f)));
+                1.0f, 1.0f)));
+        skin.add(POPUP_BACKGROUND_KEY, skin.newDrawable(new TextureRegionDrawable(skin.get(POPUP_BACKGROUND_KEY, TextureRegion.class)), new Color(1.0f, 1.0f,
+                1.0f, 1.0f)));
         skin.add(LIST_BACKGROUND_KEY, skin.newDrawable(new TextureRegionDrawable(skin.get(LIST_BACKGROUND_KEY, TextureRegion.class)),
                 new Color(1.0f, 1.0f, 1.0f, 1.0f)));
         skin.add(LIST_SELECTION_KEY, skin.newDrawable(new TextureRegionDrawable(skin.get(LIST_SELECTION_KEY, TextureRegion.class)), new Color(1.0f, 1.0f, 1.0f,
@@ -274,10 +278,15 @@ public class MainMenuScreen implements Screen, InputProcessor {
         // Create a Dialog Style
         WindowStyle dialogStyle = new WindowStyle();
         dialogStyle.background = new SpriteDrawable(new Sprite(EuropaGame.game.getAssetManager().get(BACKGROUND_FILE_NAME, Texture.class)));
-        dialogStyle.stageBackground = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(Color.WHITE));
         dialogStyle.titleFont = skin.getFont(TITLE_FONT_KEY);
         dialogStyle.titleFontColor = new Color(Color.BLACK);
         skin.add(DEFAULT_KEY, dialogStyle);
+        
+        // Popup Dialog Style
+        WindowStyle popupStyle = new WindowStyle();
+        popupStyle.titleFont = skin.getFont(TITLE_FONT_KEY);
+        popupStyle.titleFontColor = new Color(Color.BLACK);
+        skin.add(POPUP_DIALOG_STYLE_KEY, popupStyle);
 
         // Create a Slider Skin
         SliderStyle sliderStyle = new SliderStyle();
@@ -470,6 +479,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
                 if (event.getButton() == Input.Buttons.LEFT && !MainMenuScreen.this.newGameButton.isDisabled()) {
                     MainMenuScreen.this.onNewGameClick();
                 }
+                MainMenuScreen.this.newGameButton.setChecked(false);
             }
         });
 
@@ -480,6 +490,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
                 if (event.getButton() == Input.Buttons.LEFT && !MainMenuScreen.this.loadGameButton.isDisabled()) {
                     MainMenuScreen.this.onLoadGameClick();
                 }
+                MainMenuScreen.this.loadGameButton.setChecked(false);
             }
         });
         this.loadGameButton.setDisabled(EuropaGame.game.getSaveNames().length == 0);
@@ -491,6 +502,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
                 if (event.getButton() == Input.Buttons.LEFT && !MainMenuScreen.this.multiplayerButton.isDisabled()) {
                     MainMenuScreen.this.onMultiplayerClick();
                 }
+                MainMenuScreen.this.multiplayerButton.setChecked(false);
             }
         });
         this.multiplayerButton.setDisabled(true);
@@ -502,6 +514,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
                 if (event.getButton() == Input.Buttons.LEFT && !MainMenuScreen.this.optionsButton.isDisabled()) {
                     MainMenuScreen.this.onOptionsClick();
                 }
+                MainMenuScreen.this.optionsButton.setChecked(false);
             }
         });
 
@@ -512,6 +525,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
                 if (event.getButton() == Input.Buttons.LEFT && !MainMenuScreen.this.creditsButton.isDisabled()) {
                     MainMenuScreen.this.onCreditsClick();
                 }
+                MainMenuScreen.this.creditsButton.setChecked(false);
             }
         });
 
@@ -522,6 +536,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
                 if (event.getButton() == Input.Buttons.LEFT && !MainMenuScreen.this.quitButton.isDisabled()) {
                     MainMenuScreen.this.onQuitClick();
                 }
+                MainMenuScreen.this.quitButton.setChecked(false);
             }
         });
 
