@@ -25,12 +25,26 @@ package com.jupiter.europa.entity.stats.characterclass;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import com.jupiter.europa.entity.stats.SkillSet.Skills;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  *
  * @author Nathan Templon
  */
 public class Champion extends CharacterClass {
+    
+    // Fields
+    private final Set<Skills> classSkills = new TreeSet<>(Arrays.asList(new Skills[] {
+        Skills.INTIMIDATE,
+        Skills.PERCEPTION,
+        Skills.USE_MAGIC_DEVICE
+    }));
+    private final Set<Skills> classSkillsAccess = Collections.unmodifiableSet(this.classSkills);
+    
     
     // Properties
     @Override
@@ -71,6 +85,11 @@ public class Champion extends CharacterClass {
     @Override
     public int getWill() {
         return CharacterClass.goodSave(this.getLevel());
+    }
+    
+    @Override
+    public Set<Skills> getClassSkills() {
+        return this.classSkillsAccess;
     }
 
 

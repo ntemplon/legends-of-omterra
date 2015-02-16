@@ -26,7 +26,11 @@ package com.jupiter.europa.entity.stats;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -51,6 +55,68 @@ public class AttributeSet implements Serializable {
         INITIATIVE,
         SPELL_POWER,
         SPELL_RESISTANCE;
+        
+        // Static Fields
+        private static Map<String, Attributes> byDisplayName;
+        
+        
+        // Static Methods
+        public static Attributes getByDisplayName(String displayName) {
+            if (byDisplayName == null) {
+                byDisplayName = new HashMap<>();
+                for (Attributes attr : Attributes.values()) {
+                    byDisplayName.put(attr.getDisplayName(), attr);
+                }
+            }
+            
+            if (byDisplayName.containsKey(displayName)) {
+                return byDisplayName.get(displayName);
+            }
+            return null;
+        }
+        
+        
+        // Fields
+        private final String displayName;
+        
+        
+        // Initialization
+        Attributes() {
+            String[] words = this.toString().split("_");
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < words.length; i++) {
+                sb.append(words[i].substring(0, 1).toUpperCase()).append(words[i].substring(1).toLowerCase());
+                if (i < words.length - 1) {
+                    sb.append(" ");
+                }
+            }
+            this.displayName = sb.toString();
+        }
+        
+        
+        // Public Methods
+        public String getDisplayName() {
+            return this.displayName;
+        }
+    }
+    
+    
+    // Constants
+    public static final Set<Attributes> PRIMARY_ATTRIBUTES = getPrimaryAttributes();
+    
+    
+    // Static Methods
+    private static Set<Attributes> getPrimaryAttributes() {
+        Set<Attributes> attrs = new LinkedHashSet<>();
+        
+        attrs.add(Attributes.STRENGTH);
+        attrs.add(Attributes.CONSTITUTION);
+        attrs.add(Attributes.DEXTERITY);
+        attrs.add(Attributes.INTELLIGENCE);
+        attrs.add(Attributes.WISDOM);
+        attrs.add(Attributes.CHARISMA);
+        
+        return Collections.unmodifiableSet(attrs);
     }
     
     

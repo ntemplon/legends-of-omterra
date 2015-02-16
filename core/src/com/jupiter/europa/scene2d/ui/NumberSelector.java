@@ -25,104 +25,184 @@ package com.jupiter.europa.scene2d.ui;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.jupiter.ganymede.event.Event;
+import com.jupiter.ganymede.event.Listener;
 
 /**
  *
  * @author Nathan Templon
  */
 public class NumberSelector extends Table {
-    
+
     // Constants
-    private final Color enabledColor =  new Color(Color.WHITE);
-    private final Color disabledColor = new Color(0.6f, 0.6f, 0.6f, 1.0f);
-    
+    private final Color DISABLED_COLOR = new Color(0.6f, 0.6f, 0.6f, 1.0f);
+    private final int DEFAULT_CHANGE_AMOUNT = 5;
+
 
     // Fields
+    private final Event<ValueChangedEventArgs> valueChanged = new Event<>();
     private final Label numberLabel;
-    private final Drawable increase;
-    private final Drawable decrease;
+    private final ImageButton increase;
+    private final ImageButton decrease;
     private final int spacing;
     private final int minimumNumberSize;
-    
-    private Actor increaseActor;
-    private Actor decreaseActor;
+
+    private final Drawable increaseBackground;
+    private final Drawable decreaseBackground;
+    private final Drawable increaseBackgroundDisabled;
+    private final Drawable decreaseBackgroundDisabled;
 
     private int changeAmount;
     private int value;
+    private boolean decreaseEnabled;
+    private boolean increaseEnabled;
 
 
     // Properties
-    public int getChangeAmount() {
+    public final int getChangeAmount() {
         return this.changeAmount;
     }
 
-    public void setChangeAmount(int change) {
+    public final void setChangeAmount(int change) {
         this.changeAmount = change;
     }
-    
-    public int getValue() {
+
+    public final int getValue() {
         return this.value;
     }
-    
-    public void setValue(int value) {
-        this.value = value;
-        this.numberLabel.setText(value + "");
+
+    public final void setValue(int value) {
+        if (value != this.value) {
+            int oldValue = this.value;
+            this.value = value;
+            this.numberLabel.setText(this.value + "");
+            this.invalidate();
+            this.valueChanged.dispatch(new ValueChangedEventArgs(this, oldValue, this.value));
+        }
+    }
+
+    public final boolean getDecreaseEnabled() {
+        return this.decreaseEnabled;
+    }
+
+    public final void setDecreaseEnabled(boolean enabled) {
+        this.decreaseEnabled = enabled;
+        if (enabled) {
+            this.decrease.setBackground(this.decreaseBackgroundDisabled);
+        }
+        else {
+            this.decrease.setBackground(this.decreaseBackground);
+        }
+    }
+
+    public final boolean getIncreaseEnabled() {
+        return this.increaseEnabled;
+    }
+
+    public final void setIncreaseEnabled(boolean enabled) {
+        this.increaseEnabled = enabled;
+        if (enabled) {
+            this.increase.setBackground(this.increaseBackgroundDisabled);
+        }
+        else {
+            this.increase.setBackground(this.increaseBackground);
+        }
     }
 
 
     // Initialization
     public NumberSelector(NumberSelectorStyle style) {
         this.numberLabel = new Label("0", style.numberLabelStyle);
-        this.increase = style.increase;
-        this.decrease = style.decrease;
+        this.increase = new ImageButton(style.increase);
+        this.decrease = new ImageButton(style.decrease);
         this.spacing = style.spacing;
         this.minimumNumberSize = style.minimumNumberSize;
+
+        this.increaseBackground = style.increase;
+        this.decreaseBackground = style.decrease;
+        if (style.increase instanceof TextureRegionDrawable) {
+            this.increaseBackgroundDisabled = ((TextureRegionDrawable) style.increase).tint(DISABLED_COLOR);
+        }
+        else if (style.increase instanceof NinePatchDrawable) {
+            this.increaseBackgroundDisabled = ((NinePatchDrawable) style.increase).tint(DISABLED_COLOR);
+        }
+        else if (style.increase instanceof SpriteDrawable) {
+            this.increaseBackgroundDisabled = ((SpriteDrawable) style.increase).tint(DISABLED_COLOR);
+        }
+        else {
+            this.increaseBackgroundDisabled = this.increaseBackground;
+        }
+        if (style.decrease instanceof TextureRegionDrawable) {
+            this.decreaseBackgroundDisabled = ((TextureRegionDrawable) style.increase).tint(DISABLED_COLOR);
+        }
+        else if (style.decrease instanceof NinePatchDrawable) {
+            this.decreaseBackgroundDisabled = ((NinePatchDrawable) style.increase).tint(DISABLED_COLOR);
+        }
+        else if (style.decrease instanceof SpriteDrawable) {
+            this.decreaseBackgroundDisabled = ((SpriteDrawable) style.increase).tint(DISABLED_COLOR);
+        }
+        else {
+            this.decreaseBackgroundDisabled = this.decreaseBackground;
+        }
         
+        this.setIncreaseEnabled(true);
+        this.setDecreaseEnabled(true);
+        this.setChangeAmount(DEFAULT_CHANGE_AMOUNT);
+
         this.initComponent();
     }
     
     
+    // Public Methods
+    public boolean addValueChangedListener(Listener<ValueChangedEventArgs> listener) {
+        return this.valueChanged.addListener(listener);
+    }
+    
+    public boolean removeValueChangedListener(Listener<ValueChangedEventArgs> listener) {
+        return this.valueChanged.removeListener(listener);
+    }
+
+
     // Private Methods
     private void initComponent() {
-        this.increaseActor = new Image(this.increase);
-        this.increaseActor.addListener(new ClickListener() {
+        this.increase.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Input.Buttons.LEFT) {
+                if (event.getButton() == Input.Buttons.LEFT && NumberSelector.this.getIncreaseEnabled()) {
                     NumberSelector.this.onIncreaseClicked();
                 }
             }
         });
-        
-        this.decreaseActor = new Image(this.decrease);
-        this.decreaseActor.addListener(new ClickListener() {
+        this.decrease.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Input.Buttons.LEFT) {
+                if (event.getButton() == Input.Buttons.LEFT && NumberSelector.this.getDecreaseEnabled()) {
                     NumberSelector.this.onDecreaseClicked();
                 }
             }
         });
-        
-        this.add(this.numberLabel).minWidth(this.minimumNumberSize).expandX().space(this.spacing);
-        this.add(this.decreaseActor).space(this.spacing);
-        this.add(this.increaseActor).space(this.spacing);
+
+        this.add(this.numberLabel).minWidth(this.minimumNumberSize).expandX().space(this.spacing).padBottom(6);
+        this.add(this.decrease).space(this.spacing);
+        this.add(this.increase).space(this.spacing);
     }
-    
+
     private void onIncreaseClicked() {
-        
+        this.setValue(this.getValue() + this.getChangeAmount());
     }
-    
+
     private void onDecreaseClicked() {
-        
+        this.setValue(this.getValue() - this.getChangeAmount());
     }
 
 
@@ -142,6 +222,23 @@ public class NumberSelector extends Table {
 
         }
 
+    }
+    
+    public static class ValueChangedEventArgs {
+        
+        // Fields
+        public final NumberSelector sender;
+        public final int oldValue;
+        public final int newValue;
+        
+        
+        // Initialization
+        public ValueChangedEventArgs(NumberSelector sender, int oldValue, int newValue) {
+            this.sender = sender;
+            this.oldValue = oldValue;
+            this.newValue = newValue;
+        }
+        
     }
 
 }

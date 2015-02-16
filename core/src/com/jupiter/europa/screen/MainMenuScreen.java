@@ -65,6 +65,8 @@ import com.jupiter.europa.geometry.Size;
 import com.jupiter.europa.io.FileLocations;
 import static com.jupiter.europa.io.FileLocations.SKINS_DIRECTORY;
 import com.jupiter.europa.save.SaveGame;
+import com.jupiter.europa.scene2d.ui.MultipleNumberSelector;
+import com.jupiter.europa.scene2d.ui.MultipleNumberSelector.AttributeSelectorStyle;
 import com.jupiter.europa.scene2d.ui.NumberSelector.NumberSelectorStyle;
 import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEventArgs;
 import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEvents;
@@ -365,10 +367,17 @@ public class MainMenuScreen implements Screen, InputProcessor {
         NumberSelectorStyle numberStyle = new NumberSelectorStyle();
         numberStyle.decrease = numberDecreaseDrawable;
         numberStyle.increase = numberIncreaseDrawable;
-        numberStyle.minimumNumberSize = 200;
+        numberStyle.minimumNumberSize = 50;
         numberStyle.numberLabelStyle = infoStyle;
         numberStyle.spacing = COMPONENT_SPACING;
         skin.add(DEFAULT_KEY, numberStyle);
+        
+        // AttributeSelectorStyle
+        AttributeSelectorStyle attrStyle = new MultipleNumberSelector.AttributeSelectorStyle();
+        attrStyle.labelStyle = infoStyle;
+        attrStyle.numberSelectorStyle = numberStyle;
+        attrStyle.spacing = COMPONENT_SPACING;
+        skin.add(DEFAULT_KEY, attrStyle);
 
         mainMenuSkin = skin;
     }

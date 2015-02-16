@@ -25,12 +25,30 @@ package com.jupiter.europa.entity.stats.characterclass;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import com.jupiter.europa.entity.stats.SkillSet;
+import com.jupiter.europa.entity.stats.SkillSet.Skills;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  *
  * @author Nathan Templon
  */
 public class Magus extends CharacterClass {
+    
+    // Fields
+    private final Set<SkillSet.Skills> classSkills = new TreeSet<>(Arrays.asList(new SkillSet.Skills[] {
+        Skills.CRAFT,
+        Skills.DIPLOMACY,
+        Skills.PERCEPTION,
+        Skills.SENSE_MOTIVE,
+        Skills.SPELLCRAFT,
+        Skills.USE_MAGIC_DEVICE
+    }));
+    private final Set<SkillSet.Skills> classSkillsAccess = Collections.unmodifiableSet(this.classSkills);
+    
 
     // Properties
     @Override
@@ -71,6 +89,11 @@ public class Magus extends CharacterClass {
     @Override
     public String getTextureSetName() {
         return "magus";
+    }
+    
+    @Override
+    public Set<Skills> getClassSkills() {
+        return this.classSkillsAccess;
     }
     
     

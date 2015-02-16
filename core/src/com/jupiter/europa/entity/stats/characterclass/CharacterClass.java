@@ -31,12 +31,14 @@ import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.entity.Families;
 import com.jupiter.europa.entity.Mappers;
 import com.jupiter.europa.entity.messaging.RequestEffectAddMessage;
+import com.jupiter.europa.entity.stats.SkillSet.Skills;
 import com.jupiter.europa.entity.trait.TraitPool;
 import com.jupiter.europa.entity.trait.feat.FeatPool;
 import com.jupiter.europa.entity.stats.race.Race;
 import com.jupiter.europa.entity.trait.Trait;
 import com.jupiter.europa.entity.trait.feat.Feat;
 import com.jupiter.europa.util.Initializable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -118,6 +120,7 @@ public abstract class CharacterClass implements Serializable, Initializable {
             i++;
         }
         
+        Arrays.sort(classNames);
         return classNames;
     }
 
@@ -148,6 +151,8 @@ public abstract class CharacterClass implements Serializable, Initializable {
     public abstract int getReflexes();
 
     public abstract int getWill();
+    
+    public abstract Set<Skills> getClassSkills();
 
     public Set<TraitPool<? extends Trait>> getAbilityPools() {
         return this.abilityPools;
