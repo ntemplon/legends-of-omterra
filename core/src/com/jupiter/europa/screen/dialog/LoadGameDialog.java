@@ -121,6 +121,7 @@ public class LoadGameDialog extends ObservableDialog {
                 if (event.getButton() == Input.Buttons.LEFT && !LoadGameDialog.this.okButton.isDisabled()) {
                     LoadGameDialog.this.onLoadClick();
                 }
+                LoadGameDialog.this.okButton.setChecked(false);
             }
         });
 
@@ -131,6 +132,7 @@ public class LoadGameDialog extends ObservableDialog {
                 if (event.getButton() == Input.Buttons.LEFT && !LoadGameDialog.this.cancelButton.isDisabled()) {
                     LoadGameDialog.this.onCancelClick();
                 }
+                LoadGameDialog.this.cancelButton.setChecked(false);
             }
         });
 
@@ -141,6 +143,7 @@ public class LoadGameDialog extends ObservableDialog {
                 if (event.getButton() == Input.Buttons.LEFT && !LoadGameDialog.this.deleteButton.isDisabled()) {
                     LoadGameDialog.this.onDeleteClick();
                 }
+                LoadGameDialog.this.deleteButton.setChecked(false);
             }
         });
 
@@ -260,6 +263,7 @@ public class LoadGameDialog extends ObservableDialog {
                     if (event.getButton() == Input.Buttons.LEFT && !ConfirmDeleteSaveDialog.this.yesButton.isDisabled()) {
                         ConfirmDeleteSaveDialog.this.onYesButtonClick();
                     }
+                    ConfirmDeleteSaveDialog.this.yesButton.setChecked(false);
                 }
             });
             
@@ -270,6 +274,7 @@ public class LoadGameDialog extends ObservableDialog {
                     if (event.getButton() == Input.Buttons.LEFT && !ConfirmDeleteSaveDialog.this.noButton.isDisabled()) {
                         ConfirmDeleteSaveDialog.this.onNoButtonClick();
                     }
+                    ConfirmDeleteSaveDialog.this.noButton.setChecked(false);
                 }
             });
             
