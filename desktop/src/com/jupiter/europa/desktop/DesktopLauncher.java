@@ -33,6 +33,7 @@ public class DesktopLauncher {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = DesktopLauncher.getWindowTitle();
         config.resizable = RESIZEABLE;
+        config.vSyncEnabled = false;
 
         final EuropaGame game = EuropaGame.game;
         
