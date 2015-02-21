@@ -168,6 +168,7 @@ public class MultipleNumberSelector extends Table {
     private void onValueChanged(ValueChangedEventArgs args) {
         int total = this.getTotalSelected();
         if (total >= this.getMaxPoints()) {
+            args.sender.setDecreaseEnabled(!(this.isUseMinimumNumber() && args.sender.getValue() <= this.getMinimumNumber()));
             this.selectors.keySet().stream().forEach((String val) -> this.selectors.get(val).setIncreaseEnabled(false));
         }
         else {

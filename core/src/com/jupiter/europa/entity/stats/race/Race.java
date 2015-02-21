@@ -23,6 +23,11 @@
  */
 package com.jupiter.europa.entity.stats.race;
 
+import com.jupiter.europa.entity.stats.SkillSet.Skills;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  *
  * @author Nathan Templon
@@ -41,7 +46,9 @@ public interface Race {
             public int getBonusSkillPoints() { return 1; }
             
             @Override
-            public boolean allSkillsAsClass() { return true; }
+            public Set<Skills> getClassSkills() {
+                return new HashSet<>(Arrays.asList(Skills.values()));
+            }
         },
         Elf() {
             @Override
@@ -119,8 +126,8 @@ public interface Race {
         return 0;
     }
     
-    public default boolean allSkillsAsClass() {
-        return false;
+    public default Set<Skills> getClassSkills() {
+        return new HashSet<>();
     }
     
 }

@@ -48,6 +48,7 @@ import com.jupiter.europa.entity.Party;
 import com.jupiter.europa.entity.component.MovementResourceComponent;
 import com.jupiter.europa.entity.stats.AttributeSet;
 import com.jupiter.europa.entity.stats.AttributeSet.Attributes;
+import com.jupiter.europa.entity.stats.SkillSet;
 import com.jupiter.europa.entity.stats.characterclass.CharacterClass;
 import com.jupiter.europa.entity.stats.race.Race;
 import com.jupiter.europa.io.FileLocations;
@@ -167,7 +168,7 @@ public class CreateCharacterDialog extends ObservableDialog {
 
     private void concludeDialog() {
         this.createdEntity = Party.createPlayer(this.selectRaceClass.getCharacterName(), CharacterClass.CLASS_LOOKUP
-                .get(this.selectRaceClass.getSelectedClass()), this.selectRaceClass.getSelectedRace(), this.selectAttributes.getAttributes());
+                .get(this.selectRaceClass.getSelectedClass()), this.selectRaceClass.getSelectedRace(), this.selectAttributes.getAttributes(), new SkillSet());
         this.hide();
     }
 

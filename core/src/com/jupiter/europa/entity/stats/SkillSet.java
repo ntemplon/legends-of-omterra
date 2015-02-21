@@ -36,7 +36,7 @@ import java.util.TreeMap;
 public class SkillSet implements Serializable {
 
     // Enumerations
-    public enum Skills {
+    public enum Skills implements Comparable<Skills> {
 
         BLUFF,
         CRAFT,
@@ -73,6 +73,7 @@ public class SkillSet implements Serializable {
         public String getDisplayName() {
             return this.displayName;
         }
+        
     }
     
     

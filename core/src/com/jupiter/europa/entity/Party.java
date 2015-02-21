@@ -40,8 +40,11 @@ import com.jupiter.europa.entity.component.SizeComponent;
 import com.jupiter.europa.entity.component.MovementResourceComponent;
 import com.jupiter.europa.entity.component.NameComponent;
 import com.jupiter.europa.entity.component.RaceComponent;
+import com.jupiter.europa.entity.component.SkillsComponent;
 import com.jupiter.europa.entity.component.WalkComponent;
 import com.jupiter.europa.entity.stats.AttributeSet;
+import com.jupiter.europa.entity.stats.SkillSet;
+import com.jupiter.europa.entity.stats.SkillSet.Skills;
 import com.jupiter.europa.entity.stats.characterclass.Champion;
 import com.jupiter.europa.entity.stats.characterclass.CharacterClass;
 import com.jupiter.europa.entity.stats.race.Race;
@@ -50,9 +53,12 @@ import com.jupiter.europa.geometry.Size;
 import com.jupiter.europa.io.FileLocations;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -66,7 +72,7 @@ public class Party implements Serializable {
     
     
     // Static Methods
-    public static EuropaEntity createPlayer(String name, Class<? extends CharacterClass> charClass, Race race, AttributeSet attributes) {
+    public static EuropaEntity createPlayer(String name, Class<? extends CharacterClass> charClass, Race race, AttributeSet attributes, SkillSet skills) {
         // NOTE: Order of component creation is important!
         EuropaEntity entity = new EuropaEntity();
 
@@ -85,6 +91,14 @@ public class Party implements Serializable {
         entity.add(new WalkComponent());
         entity.add(new RenderComponent(new Sprite(Mappers.moveTexture.get(entity).getFrontStandTexture())));
         entity.add(new AttributesComponent(attributes));
+        
+        // Skills
+        Set<Skills> classSkills = classComponent.getCharacterClass().getClassSkills();
+        classSkills.addAll(race.getClassSkills());
+        List<Skills> sorted = new ArrayList<>(classSkills);
+        Collections.sort(sorted);
+        entity.add(new SkillsComponent(skills, sorted));
+        
         entity.add(classComponent);
 
         entity.initializeComponents();
@@ -113,7 +127,7 @@ public class Party implements Serializable {
 
     public Party(boolean createNew) {
         if (createNew) {
-            this.player1 = createPlayer("Tharivol", Champion.class, PlayerRaces.Human, new AttributeSet());
+            this.player1 = createPlayer("Tharivol", Champion.class, PlayerRaces.Human, new AttributeSet(), new SkillSet());
             this.addPlayer(this.player1);
             this.activePartyMembers.add(this.player1);
 

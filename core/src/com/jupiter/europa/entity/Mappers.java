@@ -34,6 +34,7 @@ import com.jupiter.europa.entity.component.SizeComponent;
 import com.jupiter.europa.entity.component.MovementResourceComponent;
 import com.jupiter.europa.entity.component.NameComponent;
 import com.jupiter.europa.entity.component.RaceComponent;
+import com.jupiter.europa.entity.component.SkillsComponent;
 import com.jupiter.europa.entity.component.WalkComponent;
 
 /**
@@ -53,6 +54,7 @@ public final class Mappers {
     public static final ComponentMapper<RaceComponent> race = ComponentMapper.getFor(RaceComponent.class);
     public static final ComponentMapper<RenderComponent> render = ComponentMapper.getFor(RenderComponent.class);
     public static final ComponentMapper<SizeComponent> size = ComponentMapper.getFor(SizeComponent.class);
+    public static final ComponentMapper<SkillsComponent> skills = ComponentMapper.getFor(SkillsComponent.class);
     public static final ComponentMapper<WalkComponent> walk = ComponentMapper.getFor(WalkComponent.class);
     
     
