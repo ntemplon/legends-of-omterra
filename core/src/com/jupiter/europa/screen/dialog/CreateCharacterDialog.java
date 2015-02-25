@@ -139,6 +139,9 @@ public class CreateCharacterDialog extends ObservableDialog {
         super.setSize(width, height);
         this.selectRaceClass.setSize(width, height);
         this.selectAttributes.setSize(width, height);
+        if (this.selectSkills != null) {
+            this.selectSkills.setSize(width, height);
+        }
 
         this.width = width;
         this.height = height;
