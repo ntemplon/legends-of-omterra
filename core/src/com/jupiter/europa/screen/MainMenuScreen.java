@@ -88,6 +88,13 @@ import java.nio.file.Path;
  * @author Nathan Templon
  */
 public class MainMenuScreen implements Screen, InputProcessor {
+    
+    // Enumerations
+    public enum DialogExitStates {
+        NEXT,
+        BACK
+    }
+    
 
     // Constants
     public static final Path MAIN_MENU_SKIN_DIRECTORY = SKINS_DIRECTORY.resolve("main_menu");

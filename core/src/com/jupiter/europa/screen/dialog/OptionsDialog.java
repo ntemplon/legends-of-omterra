@@ -110,8 +110,8 @@ public class OptionsDialog extends ObservableDialog {
         });
 
         this.optionsButtonTable = new Table();
-        this.optionsButtonTable.add(this.optionsAcceptButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right().expandX();
-        this.optionsButtonTable.add(this.optionsCancelButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right();
+        this.optionsButtonTable.add(this.optionsCancelButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right().expandX();
+        this.optionsButtonTable.add(this.optionsAcceptButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right();
 
         // Create and Add Tabs
         this.audioTable = new AudioOptionsTable(this.skin);

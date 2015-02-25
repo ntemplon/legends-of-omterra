@@ -63,6 +63,22 @@ public abstract class CharacterClass implements Serializable, Initializable {
 
 
     // Static Methods
+    public static CharacterClass getInstance(String className) {
+        if (CLASS_LOOKUP.containsKey(className)) {
+            Class<? extends CharacterClass> cc = CLASS_LOOKUP.get(className);
+            try {
+                return cc.newInstance();
+            }
+            catch (IllegalAccessException | InstantiationException ex) {
+                return null;
+            }
+            
+        }
+        else {
+            return null;
+        }
+    }
+    
     public static int goodSave(int level) {
         return (int) (10.0 + (50.0 * ((level - 1.0) / (MAX_LEVEL - 1.0))));
     }

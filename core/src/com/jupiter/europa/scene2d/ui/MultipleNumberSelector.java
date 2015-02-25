@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.jupiter.europa.scene2d.ui.NumberSelector.NumberSelectorStyle;
 import com.jupiter.europa.scene2d.ui.NumberSelector.ValueChangedEventArgs;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -51,7 +52,7 @@ public class MultipleNumberSelector extends Table {
     private final LabelStyle labelStyle;
     private final NumberSelectorStyle numberStyle;
     private final int spacing;
-    private final Set<String> values;
+    private final Collection<String> values;
 
     private final Map<String, NumberSelector> selectors = new LinkedHashMap<>();
 
@@ -121,10 +122,14 @@ public class MultipleNumberSelector extends Table {
         this.minimumNumber = minimumNumber;
         this.onValueChanged(null);
     }
+    
+    public final void setIncrement(int increment) {
+        this.selectors.keySet().stream().forEach((String key) -> this.selectors.get(key).setChangeAmount(increment));
+    }
 
 
     // Initialization
-    public MultipleNumberSelector(int maxPoints, AttributeSelectorStyle style, Set<String> values) {
+    public MultipleNumberSelector(int maxPoints, AttributeSelectorStyle style, Collection<String> values) {
         this.maxPoints = maxPoints;
 
         this.labelStyle = style.labelStyle;
@@ -168,7 +173,9 @@ public class MultipleNumberSelector extends Table {
     private void onValueChanged(ValueChangedEventArgs args) {
         int total = this.getTotalSelected();
         if (total >= this.getMaxPoints()) {
-            args.sender.setDecreaseEnabled(!(this.isUseMinimumNumber() && args.sender.getValue() <= this.getMinimumNumber()));
+            if (args != null) {
+                args.sender.setDecreaseEnabled(!(this.isUseMinimumNumber() && args.sender.getValue() <= this.getMinimumNumber()));
+            }
             this.selectors.keySet().stream().forEach((String val) -> this.selectors.get(val).setIncreaseEnabled(false));
         }
         else {

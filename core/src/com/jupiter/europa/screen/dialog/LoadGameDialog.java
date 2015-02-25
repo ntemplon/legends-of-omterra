@@ -148,9 +148,9 @@ public class LoadGameDialog extends ObservableDialog {
         });
 
         this.buttonTable = new Table();
-        this.buttonTable.add(this.okButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right().expandX();
+        this.buttonTable.add(this.cancelButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right().expandX();
         this.buttonTable.add(this.deleteButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right();
-        this.buttonTable.add(this.cancelButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right();
+        this.buttonTable.add(this.okButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right();
         
         this.mainTable.pad(MainMenuScreen.TABLE_PADDING);
 
@@ -281,8 +281,8 @@ public class LoadGameDialog extends ObservableDialog {
             this.mainTable = new Table();
             this.mainTable.add(this.titleLabel).colspan(2).width(MainMenuScreen.DIALOG_WIDTH).expandX().fillX();
             this.mainTable.row();
-            this.mainTable.add(this.yesButton).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).space(MainMenuScreen.COMPONENT_SPACING).right();
-            this.mainTable.add(this.noButton).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).space(MainMenuScreen.COMPONENT_SPACING).left();
+            this.mainTable.add(this.noButton).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).space(MainMenuScreen.COMPONENT_SPACING).right();
+            this.mainTable.add(this.yesButton).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).space(MainMenuScreen.COMPONENT_SPACING).left();
             
             this.mainTable.padLeft(MainMenuScreen.TABLE_PADDING);
             this.mainTable.padRight(MainMenuScreen.TABLE_PADDING);
