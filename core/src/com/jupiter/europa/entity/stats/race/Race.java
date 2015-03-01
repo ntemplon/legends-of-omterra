@@ -43,7 +43,7 @@ public interface Race {
             public int getNumberOfFeatsAtFirstLevel() {return 1;}
             
             @Override
-            public int getBonusSkillPoints() { return 1; }
+            public int getBonusSkillPoints() { return 5; }
             
             @Override
             public Set<Skills> getClassSkills() {

@@ -26,6 +26,8 @@ package com.jupiter.europa.entity.stats;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -51,6 +53,24 @@ public class SkillSet implements Serializable {
         STEALTH,
         USE_MAGIC_DEVICE;
 
+        // Static Fields
+        private static Map<String, Skills> displayNameMap;
+
+
+        // Static Methods
+        public static Skills getByDisplayName(String displayName) {
+            if (displayNameMap == null) {
+                displayNameMap = new HashMap<>();
+                Arrays.asList(Skills.values()).stream()
+                        .forEach((Skills skill) -> {
+                            displayNameMap.put(skill.getDisplayName(), skill);
+                        });
+            }
+
+            return displayNameMap.get(displayName);
+        }
+
+
         // Fields
         private final String displayName;
 
@@ -73,14 +93,14 @@ public class SkillSet implements Serializable {
         public String getDisplayName() {
             return this.displayName;
         }
-        
+
     }
-    
-    
+
+
     // Fields
     private final Map<Skills, Integer> skills = new TreeMap<>();
-    
-    
+
+
     // Properties
     public int getSkill(Skills skill) {
         if (this.skills.containsKey(skill)) {
@@ -88,20 +108,20 @@ public class SkillSet implements Serializable {
         }
         return 0;
     }
-    
+
     public void setSkill(Skills skill, int value) {
         this.skills.put(skill, value);
     }
-    
-    
+
+
     // Initialization
     public SkillSet() {
         for (Skills skill : Skills.values()) {
             this.skills.put(skill, 0);
         }
     }
-    
-    
+
+
     // Serializable (Json) Implementation
     @Override
     public void write(Json json) {

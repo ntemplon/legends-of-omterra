@@ -31,6 +31,7 @@ import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.entity.Families;
 import com.jupiter.europa.entity.Mappers;
 import com.jupiter.europa.entity.messaging.RequestEffectAddMessage;
+import com.jupiter.europa.entity.stats.AttributeSet;
 import com.jupiter.europa.entity.stats.SkillSet.Skills;
 import com.jupiter.europa.entity.trait.TraitPool;
 import com.jupiter.europa.entity.trait.feat.FeatPool;
@@ -38,6 +39,8 @@ import com.jupiter.europa.entity.stats.race.Race;
 import com.jupiter.europa.entity.trait.Trait;
 import com.jupiter.europa.entity.trait.feat.Feat;
 import com.jupiter.europa.util.Initializable;
+import com.jupiter.ganymede.event.Event;
+import com.jupiter.ganymede.event.Listener;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -53,13 +56,14 @@ public abstract class CharacterClass implements Serializable, Initializable {
 
     // Constants
     public static final int MAX_LEVEL = 20;
-    
+
     public static final Map<String, Class<? extends CharacterClass>> CLASS_LOOKUP = new HashMap<>();
     public static final String[] AVAILABLE_CLASSES = getAvailableClasses();
 
     private static final String LEVEL_KEY = "level";
     private static final String OWNER_ID_KEY = "owner-id";
     private static final String FEAT_POOL_KEY = "feats";
+    public static final String AVAILABLE_SKILL_POINTS_KEY = "skill-points";
 
 
     // Static Methods
@@ -72,13 +76,13 @@ public abstract class CharacterClass implements Serializable, Initializable {
             catch (IllegalAccessException | InstantiationException ex) {
                 return null;
             }
-            
+
         }
         else {
             return null;
         }
     }
-    
+
     public static int goodSave(int level) {
         return (int) (10.0 + (50.0 * ((level - 1.0) / (MAX_LEVEL - 1.0))));
     }
@@ -122,35 +126,38 @@ public abstract class CharacterClass implements Serializable, Initializable {
 
         return (int) Math.round(totalBonus);
     }
-    
+
     private static String[] getAvailableClasses() {
         Reflections refl = new Reflections("com.jupiter.europa");
         Set<Class<? extends CharacterClass>> classes = refl.getSubTypesOf(CharacterClass.class);
         String[] classNames = new String[classes.size()];
-        
+
         int i = 0;
-        for(Class<? extends CharacterClass> charClass : classes) {
+        for (Class<? extends CharacterClass> charClass : classes) {
             String name = charClass.getSimpleName();
             classNames[i] = name;
             CLASS_LOOKUP.put(name, charClass);
             i++;
         }
-        
+
         Arrays.sort(classNames);
         return classNames;
     }
 
 
     // Fields
+    private final Event<LevelUpArgs> levelUp = new Event();
+    
     private int level;
     private long ownerId = -1;
     private Entity owner;
     private final Set<TraitPool<? extends Trait>> abilityPools = new LinkedHashSet<>();
     private FeatPool featPool;
+    private int availableSkillPoints;
 
 
     // Properties
-    public int getLevel() {
+    public final int getLevel() {
         return this.level;
     }
 
@@ -167,18 +174,18 @@ public abstract class CharacterClass implements Serializable, Initializable {
     public abstract int getReflexes();
 
     public abstract int getWill();
-    
+
     public abstract Set<Skills> getClassSkills();
 
     public Set<TraitPool<? extends Trait>> getAbilityPools() {
         return this.abilityPools;
     }
 
-    public Entity getOwner() {
+    public final Entity getOwner() {
         return this.owner;
     }
 
-    public void setOwner(Entity owner) {
+    public final void setOwner(Entity owner) {
         this.owner = owner;
 
         this.abilityPools.stream().forEach((TraitPool<?> pool) -> {
@@ -201,24 +208,29 @@ public abstract class CharacterClass implements Serializable, Initializable {
         return this.featPool;
     }
 
+    public int getMaxPointsPerSkill() {
+        return 5 * (this.getLevel() + 3);
+    }
+
+    public int getAvailableSkillPoints() {
+        return this.availableSkillPoints;
+    }
+
 
     // Initialization
     public CharacterClass() {
         this.level = 1;
     }
 
-    public void create() {
-        this.featPool = new FeatPool();
-        this.featPool.increaseCapacity(1);
-
-//        this.initialize();
-    }
-
     @Override
     public void initialize() {
-        if (this.featPool == null) {
-            this.featPool = new FeatPool();
-        }
+        // Skills
+        this.computeAvailableSkillPoints();
+        this.availableSkillPoints *= 4; // Account for 4x skill points at first level
+
+        // Feats
+        this.featPool = new FeatPool();
+        this.featPool.increaseCapacity(1);
 
         this.abilityPools.add(this.featPool);
 
@@ -252,7 +264,25 @@ public abstract class CharacterClass implements Serializable, Initializable {
             if (this.level % 3 == 0) {
                 this.featPool.increaseCapacity(1);
             }
+            
+            this.levelUp.dispatch(new LevelUpArgs(this, this.getLevel()));
         }
+    }
+    
+    public boolean addLevelUpListener(Listener<LevelUpArgs> listener) {
+        return this.levelUp.addListener(listener);
+    }
+    
+    public boolean removeLevelUpListener(Listener<LevelUpArgs> listener) {
+        return this.levelUp.removeListener(listener);
+    }
+
+
+    // Private Methods
+    private void computeAvailableSkillPoints() {
+        int intelligence = Mappers.attributes.get(this.getOwner()).getBaseAttributes().getAttribute(AttributeSet.Attributes.INTELLIGENCE);
+        Race race = Mappers.race.get(this.getOwner()).getRace();
+        this.availableSkillPoints += this.getSkillPointsPerLevel() + race.getBonusSkillPoints() + intelligence / 2;
     }
 
 
@@ -262,6 +292,7 @@ public abstract class CharacterClass implements Serializable, Initializable {
         json.writeValue(LEVEL_KEY, this.level);
         json.writeValue(OWNER_ID_KEY, this.owner.getId());
         json.writeValue(FEAT_POOL_KEY, this.featPool, this.featPool.getClass());
+        json.writeValue(AVAILABLE_SKILL_POINTS_KEY, this.getAvailableSkillPoints());
     }
 
     @Override
@@ -277,6 +308,27 @@ public abstract class CharacterClass implements Serializable, Initializable {
         if (jsonData.has(FEAT_POOL_KEY)) {
             this.featPool = json.fromJson(FeatPool.class, jsonData.get(FEAT_POOL_KEY).prettyPrint(EuropaGame.PRINT_SETTINGS));
         }
+
+        if (jsonData.has(AVAILABLE_SKILL_POINTS_KEY)) {
+            this.availableSkillPoints = jsonData.getInt(AVAILABLE_SKILL_POINTS_KEY);
+        }
+    }
+    
+    
+    // Nested Classes
+    public static class LevelUpArgs {
+        
+        // Fields
+        public final int level;
+        public final CharacterClass characterClass;
+        
+        
+        // Initialization
+        public LevelUpArgs(CharacterClass charClass, int level) {
+            this.level = level;
+            this.characterClass = charClass;
+        }
+        
     }
 
 }

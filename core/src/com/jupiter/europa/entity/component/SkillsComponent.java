@@ -41,6 +41,10 @@ public class SkillsComponent extends Component implements Serializable {
     public final List<Skills> getClassSkills() {
         return this.classSkillsAccess;
     }
+    
+    public final int getSkillPointsSpent() {
+        return this.getClassSkills().stream().mapToInt((Skills skill) -> this.skills.getSkill(skill)).sum();
+    }
 
 
     // Initialization

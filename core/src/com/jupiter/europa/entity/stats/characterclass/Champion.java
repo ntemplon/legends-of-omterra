@@ -91,7 +91,7 @@ public class Champion extends CharacterClass {
     public Set<Skills> getClassSkills() {
         return this.classSkillsAccess;
     }
-
+    
 
     // Initialization
     public Champion() {
@@ -99,8 +99,8 @@ public class Champion extends CharacterClass {
     }
     
     @Override
-    public void create() {
-        super.create();
+    public void initialize() {
+        super.initialize();
         this.getFeatPool().increaseCapacity(1);
     }
 
@@ -127,6 +127,7 @@ public class Champion extends CharacterClass {
     @Override
     public void read(Json json, JsonValue jsonData) {
         super.read(json, jsonData);
+
     }
 
 }

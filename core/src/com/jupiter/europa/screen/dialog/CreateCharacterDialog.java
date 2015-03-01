@@ -44,8 +44,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.entity.EuropaEntity;
+import com.jupiter.europa.entity.Mappers;
 import com.jupiter.europa.entity.Party;
+import com.jupiter.europa.entity.component.CharacterClassComponent;
 import com.jupiter.europa.entity.component.MovementResourceComponent;
+import com.jupiter.europa.entity.component.SkillsComponent;
 import com.jupiter.europa.entity.stats.AttributeSet;
 import com.jupiter.europa.entity.stats.AttributeSet.Attributes;
 import com.jupiter.europa.entity.stats.SkillSet;
@@ -58,10 +61,9 @@ import com.jupiter.europa.scene2d.ui.MultipleNumberSelector.AttributeSelectorSty
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.screen.MainMenuScreen;
 import com.jupiter.europa.screen.MainMenuScreen.DialogExitStates;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -125,7 +127,6 @@ public class CreateCharacterDialog extends ObservableDialog {
         this.selectAttributes.addDialogListener(this::onSelectAttributesHide, DialogEvents.HIDDEN);
         this.selectSkills = new SelectSkillsDialog(skin, 8, 4, Arrays.asList(Skills.values()));
         this.selectSkills.addDialogListener(this::onSelectSkillsHide, DialogEvents.HIDDEN);
-        
 
         this.lastDialog = this.selectRaceClass;
 
@@ -166,19 +167,14 @@ public class CreateCharacterDialog extends ObservableDialog {
 
     private void onSelectAttributesHide(DialogEventArgs args) {
         if (this.selectAttributes.getExitState() == DialogExitStates.NEXT) {
-            Set<Skills> classSkills = new HashSet<>();
-            
-            CharacterClass instance = CharacterClass.getInstance(this.selectRaceClass.getSelectedClass());
-            if (instance != null) {
-                classSkills.addAll(instance.getClassSkills());
-            }
-            
-            classSkills.addAll(this.selectRaceClass.getSelectedRace().getClassSkills());
-            
-            List<Skills> skillList = new ArrayList<>(classSkills);
-            Collections.sort(skillList);
-            
-            this.selectSkills = new SelectSkillsDialog(this.skin, 16, 4, skillList);
+            this.createEntity();
+
+            SkillsComponent skills = Mappers.skills.get(this.createdEntity);
+            List<Skills> skillList = skills.getClassSkills();
+            CharacterClassComponent classComp = Mappers.characterClass.get(this.createdEntity);
+
+            this.selectSkills = new SelectSkillsDialog(this.skin, classComp.getCharacterClass().getAvailableSkillPoints() - skills.getSkillPointsSpent(),
+                    classComp.getCharacterClass().getMaxPointsPerSkill(), skillList);
             this.selectSkills.addDialogListener(this::onSelectSkillsHide, DialogEvents.HIDDEN);
             this.showDialog(this.selectSkills);
         }
@@ -186,7 +182,7 @@ public class CreateCharacterDialog extends ObservableDialog {
             this.showDialog(this.selectRaceClass);
         }
     }
-    
+
     private void onSelectSkillsHide(DialogEventArgs args) {
         if (this.selectSkills.getExitState() == DialogExitStates.NEXT) {
             this.exitState = CreateCharacterExitStates.OK;
@@ -204,15 +200,26 @@ public class CreateCharacterDialog extends ObservableDialog {
     }
 
     private void concludeDialog() {
-        this.createdEntity = Party.createPlayer(this.selectRaceClass.getCharacterName(), CharacterClass.CLASS_LOOKUP
-                .get(this.selectRaceClass.getSelectedClass()), this.selectRaceClass.getSelectedRace(), this.selectAttributes.getAttributes(), new SkillSet());
+        SkillSet skills = Mappers.skills.get(this.createdEntity).getSkills();
+
+        Map<Skills, Integer> skillLevels = this.selectSkills.getSelectedSkills();
+
+        skillLevels.keySet().stream().forEach((Skills skill) ->
+                skills.setSkill(skill, skillLevels.get(skill))
+        );
+
         this.hide();
+    }
+
+    private void createEntity() {
+        this.createdEntity = Party.createPlayer(this.selectRaceClass.getCharacterName(), CharacterClass.CLASS_LOOKUP
+                .get(this.selectRaceClass.getSelectedClass()), this.selectRaceClass.getSelectedRace(), this.selectAttributes.getAttributes());
     }
 
 
     // Nested Classes
     private static class SelectRaceClassDialog extends ObservableDialog {
-        
+
         // Constants
         private static final String DIALOG_NAME = "";
         private static final String TITLE = "Select a Race and Class";
@@ -516,48 +523,58 @@ public class CreateCharacterDialog extends ObservableDialog {
         // Constants
         private static final String DIALOG_TITLE = "";
         private static final String TITLE = "Select Skills";
-        
-        
+
+
         // Fields
         private final Skin skin;
-        
+
         private final List<Skills> selectableSkills;
         private final int skillPointsAvailable;
         private final int maxPerSkill;
-        
+
         private Table mainTable;
         private Label titleLabel;
         private MultipleNumberSelector skillSelector;
         private Table buttonTable;
         private TextButton nextButton;
         private TextButton backButton;
-        
+
         private DialogExitStates exitState;
-        
-        
+
+
         // Properties
         public final DialogExitStates getExitState() {
             return this.exitState;
         }
-        
+
         public final int getMaxPointsPerSkill() {
             return this.maxPerSkill;
+        }
+
+        public final Map<Skills, Integer> getSelectedSkills() {
+            Map<Skills, Integer> values = new HashMap<>();
+            Map<String, Integer> selected = this.skillSelector.getValues();
+            selected.keySet().stream()
+                    .forEach((String key) ->
+                            values.put(Skills.getByDisplayName(key), selected.get(key))
+                    );
+            return values;
         }
 
 
         // Initialization
         private SelectSkillsDialog(Skin skin, int skillPointsAvailable, int maxPerSkill, List<Skills> selectableSkills) {
             super(DIALOG_TITLE, skin.get(WindowStyle.class));
-            
+
             this.skin = skin;
             this.selectableSkills = selectableSkills;
             this.skillPointsAvailable = skillPointsAvailable;
             this.maxPerSkill = maxPerSkill;
-            
+
             this.initComponent();
         }
-        
-        
+
+
         // Private Methods
         private void initComponent() {
             this.titleLabel = new Label(TITLE, skin.get(LabelStyle.class));
@@ -566,11 +583,12 @@ public class CreateCharacterDialog extends ObservableDialog {
 
             // Create Attribute Selector
             List<String> skillNames = this.selectableSkills.stream().map((Skills skill) -> skill.getDisplayName()).collect(Collectors.toList());
-            this.skillSelector = new MultipleNumberSelector(this.skillPointsAvailable, this.skin.get(AttributeSelectorStyle.class), Collections.unmodifiableList(skillNames));
+            this.skillSelector = new MultipleNumberSelector(this.skillPointsAvailable, this.skin.get(AttributeSelectorStyle.class), Collections
+                    .unmodifiableList(skillNames));
             this.skillSelector.setUseMaximumNumber(true);
             this.skillSelector.setMaximumNumber(this.maxPerSkill);
-            this.skillSelector.setIncrement(1);
-            
+            this.skillSelector.setIncrement(5);
+
             this.nextButton = new TextButton("Next", skin.get(TextButton.TextButtonStyle.class));
             this.nextButton.addListener(new ClickListener() {
                 @Override
@@ -607,12 +625,12 @@ public class CreateCharacterDialog extends ObservableDialog {
 
             this.getContentTable().add(this.mainTable).expand().fillY().width(MainMenuScreen.DIALOG_WIDTH);
         }
-        
+
         private void onNextButton() {
             this.exitState = DialogExitStates.NEXT;
             this.hide();
         }
-        
+
         private void onBackButton() {
             this.exitState = DialogExitStates.BACK;
             this.hide();

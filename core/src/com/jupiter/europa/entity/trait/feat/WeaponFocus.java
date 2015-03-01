@@ -23,12 +23,18 @@
  */
 package com.jupiter.europa.entity.trait.feat;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import com.jupiter.europa.entity.Families;
+import com.jupiter.europa.entity.Mappers;
 import com.jupiter.europa.entity.effects.AttributeModifierEffect;
 import com.jupiter.europa.entity.effects.Effect;
 import com.jupiter.europa.entity.stats.AttributeSet;
+import com.jupiter.europa.entity.stats.AttributeSet.Attributes;
+import com.jupiter.europa.entity.stats.characterclass.CharacterClass;
+import com.jupiter.europa.entity.stats.characterclass.CharacterClass.LevelUpArgs;
 import com.jupiter.europa.entity.trait.Qualifications;
 import com.jupiter.europa.entity.trait.FeatNotPresentQualifications;
 import java.util.HashMap;
@@ -88,19 +94,44 @@ public class WeaponFocus implements Feat {
     private static class WeaponFocusEffect extends AttributeModifierEffect {
         
         // Fields
-        private final Map<AttributeSet.Attributes, Integer> modifiers = new HashMap<>();
+        private final Map<Attributes, Integer> modifiers = new HashMap<>();
         
         
         // Properties
         @Override
-        public Map<AttributeSet.Attributes, Integer> getModifiers() {
+        public Map<Attributes, Integer> getModifiers() {
             return this.modifiers;
         }
         
         
         // Initialization
-        public WeaponFocusEffect() {
-            this.modifiers.put(AttributeSet.Attributes.ATTACK_BONUS, 10);
+        private WeaponFocusEffect() {
+            this.modifiers.put(Attributes.ATTACK_BONUS, 10);
+        }
+        
+        
+        // Public Methods
+        @Override
+        public void onAdded(Entity entity) {
+            if (Families.classed.matches(entity)) {
+                CharacterClass charClass = Mappers.characterClass.get(entity).getCharacterClass();
+                
+                this.modifiers.put(Attributes.ATTACK_BONUS, 5 + charClass.getLevel());
+                
+                charClass.addLevelUpListener((LevelUpArgs args) -> {
+                    int oldValue = this.modifiers.get(Attributes.ATTACK_BONUS);
+                    int newValue = 5 + charClass.getLevel();
+                    if (newValue != oldValue) {
+                        this.modifiers.put(Attributes.ATTACK_BONUS, newValue);
+                        if (Families.attributed.matches(entity)) {
+                            AttributeSet attributes = Mappers.attributes.get(entity).getCurrentAttributes();
+                            attributes.setAttribute(Attributes.ATTACK_BONUS, attributes.getAttribute(Attributes.ATTACK_BONUS) + (newValue - oldValue));
+                        }
+                    }
+                });
+            }
+            
+            super.onAdded(entity);
         }
         
     }

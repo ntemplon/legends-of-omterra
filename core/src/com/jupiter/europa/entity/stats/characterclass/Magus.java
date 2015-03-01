@@ -37,7 +37,7 @@ import java.util.TreeSet;
  * @author Nathan Templon
  */
 public class Magus extends CharacterClass {
-    
+
     // Fields
     private final Set<SkillSet.Skills> classSkills = new TreeSet<>(Arrays.asList(new SkillSet.Skills[] {
         Skills.CRAFT,
@@ -63,7 +63,7 @@ public class Magus extends CharacterClass {
 
     @Override
     public int getSkillPointsPerLevel() {
-        return 1;
+        return 5;
     }
 
     @Override
@@ -100,6 +100,15 @@ public class Magus extends CharacterClass {
     // Initialization
     public Magus() {
         
+    }
+    
+    
+    // Public Methods
+    @Override
+    public void levelUp() {
+        if (this.getLevel() < MAX_LEVEL) {
+            super.levelUp();
+        }
     }
     
     

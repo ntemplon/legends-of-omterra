@@ -56,7 +56,6 @@ public abstract class AttributeModifierEffect implements Effect {
             Map<Attributes, Integer> modifiers = this.getModifiers();
             modifiers.keySet().stream().forEach((Attributes attribute) -> {
                 attributes.setAttribute(attribute, attributes.getAttribute(attribute) + modifiers.get(attribute));
-                System.out.println(this.getClass().getName() + ": " + attributes.getAttribute(attribute));
             });
         }
     }

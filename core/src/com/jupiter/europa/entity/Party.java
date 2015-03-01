@@ -72,7 +72,7 @@ public class Party implements Serializable {
     
     
     // Static Methods
-    public static EuropaEntity createPlayer(String name, Class<? extends CharacterClass> charClass, Race race, AttributeSet attributes, SkillSet skills) {
+    public static EuropaEntity createPlayer(String name, Class<? extends CharacterClass> charClass, Race race, AttributeSet attributes) {
         // NOTE: Order of component creation is important!
         EuropaEntity entity = new EuropaEntity();
 
@@ -98,7 +98,7 @@ public class Party implements Serializable {
         classSkills.addAll(race.getClassSkills());
         List<Skills> sorted = new ArrayList<>(classSkills);
         Collections.sort(sorted);
-        entity.add(new SkillsComponent(skills, sorted));
+        entity.add(new SkillsComponent(new SkillSet(), sorted));
         
         entity.add(classComponent);
 
@@ -123,26 +123,7 @@ public class Party implements Serializable {
 
     // Initialization
     public Party() {
-        this(false);
-    }
 
-    public Party(boolean createNew) {
-        if (createNew) {
-            this.player1 = createPlayer("Tharivol", Champion.class, PlayerRaces.Human, new AttributeSet(), new SkillSet());
-            this.addPlayer(this.player1);
-            this.activePartyMembers.add(this.player1);
-
-            // DEBUG - Assign Default Feats
-            CharacterClass charClass = Mappers.characterClass.get(this.player1).getCharacterClass();
-            FeatPool feats = charClass.getFeatPool();
-
-            feats.setAutoQualify(true);
-            feats.getSources().stream().forEach((Feat source) -> {
-                if (feats.getNumberOfSelections() < feats.getCapacity()) {
-                    feats.select(source);
-                }
-            });
-        }
     }
     
     

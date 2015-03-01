@@ -66,7 +66,6 @@ public class CharacterClassComponent extends Component implements Serializable, 
         catch (InstantiationException | IllegalAccessException ex) {
             this.characterClass = new Champion();
         }
-        this.characterClass.create();
         this.characterClass.setOwner(owner);
     }
     
