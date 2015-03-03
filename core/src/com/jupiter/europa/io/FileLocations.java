@@ -23,8 +23,9 @@
  */
 package com.jupiter.europa.io;
 
-import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -60,14 +61,14 @@ public final class FileLocations {
     static {
         Field[] fields = FileLocations.class.getDeclaredFields();
         for (Field field : fields) {
-            if (File.class.isAssignableFrom(field.getType()) && java.lang.reflect.Modifier.isStatic(field.getModifiers())) {
+            if (Path.class.isAssignableFrom(field.getType()) && java.lang.reflect.Modifier.isStatic(field.getModifiers())) {
                 try {
-                    File file = (File) field.get(null);
-                    if (!file.exists()) {
-                        file.mkdirs();
+                    Path file = (Path) field.get(null);
+                    if (!Files.exists(file)) {
+                        Files.createDirectories(file.getParent());
                     }
                 }
-                catch (IllegalArgumentException | IllegalAccessException ex) {
+                catch (IllegalArgumentException | IllegalAccessException | IOException ex) {
                     
                 }
                 finally {
