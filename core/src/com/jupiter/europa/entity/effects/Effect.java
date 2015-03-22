@@ -32,7 +32,7 @@ import com.badlogic.gdx.utils.Json.Serializable;
  */
 public interface Effect extends Serializable {
     
-    void onAdded(Entity entity);
+    void onAdd(Entity entity);
     void onRemove(Entity entity);
     void update(float deltaT);
     void onCombatTurnStart();

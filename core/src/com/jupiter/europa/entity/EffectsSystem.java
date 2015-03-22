@@ -63,7 +63,7 @@ public class EffectsSystem extends EntitySystem implements Listener<Message>, Se
     private void onEffectAddedRequest(RequestEffectAddMessage message) {
         if (Families.affectables.matches(message.entity)) {
             Mappers.effects.get(message.entity).effects.add(message.effect);
-            message.effect.onAdded(message.entity);
+            message.effect.onAdd(message.entity);
             EuropaGame.game.getMessageSystem().publish(new EffectAddedMessage(message.entity, message.effect));
         }
     }

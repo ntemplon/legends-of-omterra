@@ -38,9 +38,6 @@ import java.util.Map;
  * @author Nathan Templon
  */
 public abstract class AttributeModifierEffect implements Effect {
-
-    // Fields
-    private final Map<Attributes, Integer> defaultModifiers = new HashMap<>();
     
     
     // Properties
@@ -49,7 +46,7 @@ public abstract class AttributeModifierEffect implements Effect {
     
     // Public Methods
     @Override
-    public void onAdded(Entity entity) {
+    public void onAdd(Entity entity) {
         if (Families.attributed.matches(entity)) {
             AttributeSet attributes = Mappers.attributes.get(entity).getCurrentAttributes();
             

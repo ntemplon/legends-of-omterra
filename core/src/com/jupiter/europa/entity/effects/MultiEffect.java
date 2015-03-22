@@ -57,9 +57,9 @@ public class MultiEffect implements Effect {
 
     // Public Methods
     @Override
-    public void onAdded(Entity entity) {
+    public void onAdd(Entity entity) {
         for (Effect effect : this.effects) {
-            effect.onAdded(entity);
+            effect.onAdd(entity);
         }
     }
 

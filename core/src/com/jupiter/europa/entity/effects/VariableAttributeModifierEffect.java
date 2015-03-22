@@ -24,44 +24,85 @@
 package com.jupiter.europa.entity.effects;
 
 import com.badlogic.ashley.core.Entity;
+import com.jupiter.europa.entity.Families;
+import com.jupiter.europa.entity.Mappers;
+import com.jupiter.europa.entity.stats.AttributeSet;
 import com.jupiter.europa.entity.stats.AttributeSet.Attributes;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  *
  * @author Nathan Templon
  */
 public abstract class VariableAttributeModifierEffect extends AttributeModifierEffect {
-    
+
     // Fields
     private final Map<Attributes, Integer> modifiers = new HashMap<>();
-    
-    
+    private Entity attached = null;
+
+
     // Properties
     @Override
-    public Map<Attributes, Integer> getModifiers() {
+    public final Map<Attributes, Integer> getModifiers() {
         return this.modifiers;
     }
-    
-    
+
+
     // Initialization
     public VariableAttributeModifierEffect() {
-        
+
     }
-    
-    
+
+
     // Public Methods
     @Override
-    public void onAdded(Entity entity) {
-        // Trying to figure out what is going on here
-        Map<Attributes, Integer> newMods = this.computeModifiers(entity);
-        
-        Map<Attributes, Integer> oldMods = this.modifiers.keySet().stream()
-                .collect(Collectors.toMap((Attributes attr) -> attr, (Attributes attr) -> this.modifiers.get(attr)));
+    public void onAdd(Entity entity) {
+        if (Families.attributed.matches(entity)) {
+            this.attached = entity;
+            this.recomputeAttributes();
+        }
+        else {
+            this.attached = null;
+        }
     }
     
-    public abstract Map<Attributes, Integer> computeModifiers(Entity entity);
+    @Override
+    public void onRemove(Entity entity) {
+        this.attached = null;
+    }
     
+    @Override
+    public void onCombatTurnStart() {
+        this.recomputeAttributes();
+    }
+
+    @Override
+    public void onCombatTurnEnd() {
+        this.recomputeAttributes();
+    }
+
+    @Override
+    public void onOutOfCombatTurn() {
+        this.recomputeAttributes();
+    }
+
+    public abstract Map<Attributes, Integer> computeModifiers(Entity entity);
+
+
+    // Private Methods
+    private void recomputeAttributes() {
+        if (this.attached != null) {
+            Map<Attributes, Integer> oldMods = new HashMap<>(this.modifiers);
+
+            this.modifiers.clear();
+            this.modifiers.putAll(this.computeModifiers(this.attached));
+
+            AttributeSet attributes = Mappers.attributes.get(this.attached).getCurrentAttributes();
+            this.modifiers.keySet().stream().forEach((Attributes attribute) -> {
+                attributes.setAttribute(attribute, attributes.getAttribute(attribute) + this.modifiers.get(attribute) - oldMods.get(attribute));
+            });
+        }
+    }
+
 }
