@@ -66,7 +66,7 @@ import com.jupiter.europa.io.FileLocations;
 import static com.jupiter.europa.io.FileLocations.SKINS_DIRECTORY;
 import com.jupiter.europa.save.SaveGame;
 import com.jupiter.europa.scene2d.ui.MultipleNumberSelector;
-import com.jupiter.europa.scene2d.ui.MultipleNumberSelector.AttributeSelectorStyle;
+import com.jupiter.europa.scene2d.ui.MultipleNumberSelector.MultipleNumberSelectorStyle;
 import com.jupiter.europa.scene2d.ui.NumberSelector.NumberSelectorStyle;
 import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEventArgs;
 import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEvents;
@@ -147,7 +147,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
     public static final int TABLE_PADDING = 14;
     public static final int LIST_WRAPPER_PADDING = 20;
 
-    public static final int DIALOG_WIDTH = 640;
+    public static final int DIALOG_WIDTH = 850;
 
     public static final Color BACKGROUND_COLOR = new Color(Color.WHITE);
     public static final Color SELECTION_COLOR = new Color(0.0f, 0.0f, 0.0f, 0.2f);
@@ -380,7 +380,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
         skin.add(DEFAULT_KEY, numberStyle);
         
         // AttributeSelectorStyle
-        AttributeSelectorStyle attrStyle = new MultipleNumberSelector.AttributeSelectorStyle();
+        MultipleNumberSelectorStyle attrStyle = new MultipleNumberSelector.MultipleNumberSelectorStyle();
         attrStyle.labelStyle = infoStyle;
         attrStyle.numberSelectorStyle = numberStyle;
         attrStyle.spacing = COMPONENT_SPACING;

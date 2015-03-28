@@ -30,6 +30,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.entity.Families;
 import com.jupiter.europa.entity.Mappers;
+import com.jupiter.europa.entity.component.AttributesComponent;
 import com.jupiter.europa.entity.messaging.RequestEffectAddMessage;
 import com.jupiter.europa.entity.stats.AttributeSet;
 import com.jupiter.europa.entity.stats.SkillSet.Skills;
@@ -280,7 +281,8 @@ public abstract class CharacterClass implements Serializable, Initializable {
 
     // Private Methods
     private void computeAvailableSkillPoints() {
-        int intelligence = Mappers.attributes.get(this.getOwner()).getBaseAttributes().getAttribute(AttributeSet.Attributes.INTELLIGENCE);
+        AttributesComponent comp = Mappers.attributes.get(this.getOwner());
+        int intelligence = comp.getBaseAttributes().getAttribute(AttributeSet.Attributes.INTELLIGENCE);
         Race race = Mappers.race.get(this.getOwner()).getRace();
         this.availableSkillPoints += this.getSkillPointsPerLevel() + race.getBonusSkillPoints() + intelligence / 2;
     }

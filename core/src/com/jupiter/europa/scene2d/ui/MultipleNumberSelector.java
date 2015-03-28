@@ -49,6 +49,7 @@ public class MultipleNumberSelector extends Table {
 
     // Fields
     private final int maxPoints;
+    private final int numColumns;
     private final LabelStyle labelStyle;
     private final NumberSelectorStyle numberStyle;
     private final int spacing;
@@ -75,18 +76,18 @@ public class MultipleNumberSelector extends Table {
 
     public final Map<String, Integer> getValues() {
         Map<String, Integer> currentValues = new HashMap<>();
-        
+
         this.selectors.keySet().stream().forEach((String key) -> currentValues.put(key, this.selectors.get(key).getValue()));
-        
+
         return Collections.unmodifiableMap(currentValues);
     }
-    
+
     public final void setValues(Map<String, Integer> values) {
         this.selectors.keySet().stream().filter((String val) -> this.selectors.containsKey(val)).forEach((String val) -> {
             this.selectors.get(val).setValue(values.get(val));
         });
     }
-    
+
     public final boolean isUseMaximumNumber() {
         return useMaximumNumber;
     }
@@ -122,29 +123,34 @@ public class MultipleNumberSelector extends Table {
         this.minimumNumber = minimumNumber;
         this.onValueChanged(null);
     }
-    
+
     public final void setIncrement(int increment) {
         this.selectors.keySet().stream().forEach((String key) -> this.selectors.get(key).setChangeAmount(increment));
     }
 
 
     // Initialization
-    public MultipleNumberSelector(int maxPoints, AttributeSelectorStyle style, Collection<String> values) {
+    public MultipleNumberSelector(int maxPoints, MultipleNumberSelectorStyle style, Collection<String> values, int numColumns) {
         this.maxPoints = maxPoints;
+        this.numColumns = numColumns;
 
         this.labelStyle = style.labelStyle;
         this.numberStyle = style.numberSelectorStyle;
         this.spacing = style.spacing;
         this.values = values;
-        
+
         this.setMaximumNumber(this.maxPoints);
         this.setMinimumNumber(0);
         this.setUseMaximumNumber(true);
         this.setUseMinimumNumber(true);
 
         this.initComponents();
-        
+
         this.onValueChanged(null);
+    }
+
+    public MultipleNumberSelector(int maxPoints, MultipleNumberSelectorStyle style, Collection<String> values) {
+        this(maxPoints, style, values, 1);
     }
 
 
@@ -156,18 +162,34 @@ public class MultipleNumberSelector extends Table {
         Table totalTable = new Table();
         totalTable.add(this.totalLabel).left().space(this.spacing);
         totalTable.add(totalValueLabel).left().expandX().space(this.spacing);
-        this.add(totalTable).colspan(2);
+        this.add(totalTable).colspan(2 * this.numColumns);
         this.row();
 
-        this.values.stream().forEach((String value) -> {
+        int addedToRow = 0;
+        for (String value : this.values) {
             Label label = new Label(value, this.labelStyle);
             NumberSelector selector = new NumberSelector(numberStyle);
             this.selectors.put(value, selector);
-            this.add(label).left().space(spacing * 2).padTop(10);
-            this.add(selector).left().expandX().fillX().space(spacing);
-            this.row();
+
+            if (addedToRow >= 1) {
+                this.add(label).left().space(spacing * 2).padTop(10).padLeft(30);
+            }
+            else {
+                this.add(label).left().space(spacing * 2).padTop(10);
+            }
+
+            if (addedToRow == this.numColumns - 1) {
+                this.add(selector).left().expandX().fillX().space(spacing);
+                this.row();
+                addedToRow = 0;
+            }
+            else {
+                this.add(selector).left().space(spacing);
+                addedToRow++;
+            }
+
             selector.addValueChangedListener(this::onValueChanged);
-        });
+        }
     }
 
     private void onValueChanged(ValueChangedEventArgs args) {
@@ -193,7 +215,7 @@ public class MultipleNumberSelector extends Table {
 
 
     // NestedClasses
-    public static class AttributeSelectorStyle {
+    public static class MultipleNumberSelectorStyle {
 
         // Fields
         public LabelStyle labelStyle;
@@ -202,7 +224,7 @@ public class MultipleNumberSelector extends Table {
 
 
         // Initialization
-        public AttributeSelectorStyle() {
+        public MultipleNumberSelectorStyle() {
 
         }
 

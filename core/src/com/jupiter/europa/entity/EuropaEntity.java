@@ -29,6 +29,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
 import com.jupiter.europa.EuropaGame;
+import com.jupiter.europa.entity.component.OwnedComponent;
 import com.jupiter.europa.util.Initializable;
 
 /**
@@ -47,6 +48,9 @@ public class EuropaEntity extends Entity implements Serializable {
     // Public Methods
     public void initializeComponents() {
         for(Component component : this.getComponents()) {
+            if (component instanceof OwnedComponent) {
+                ((OwnedComponent)component).setOwner(this);
+            }
             if (component instanceof Initializable) {
                 ((Initializable)component).initialize();
             }

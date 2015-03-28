@@ -56,8 +56,9 @@ import com.jupiter.europa.entity.stats.SkillSet.Skills;
 import com.jupiter.europa.entity.stats.characterclass.CharacterClass;
 import com.jupiter.europa.entity.stats.race.Race;
 import com.jupiter.europa.io.FileLocations;
+import com.jupiter.europa.scene2d.ui.AttributeSelector;
 import com.jupiter.europa.scene2d.ui.MultipleNumberSelector;
-import com.jupiter.europa.scene2d.ui.MultipleNumberSelector.AttributeSelectorStyle;
+import com.jupiter.europa.scene2d.ui.MultipleNumberSelector.MultipleNumberSelectorStyle;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.screen.MainMenuScreen;
 import com.jupiter.europa.screen.MainMenuScreen.DialogExitStates;
@@ -95,7 +96,7 @@ public class CreateCharacterDialog extends ObservableDialog {
 
 
     // Fields
-    private final SelectRaceClassDialog selectRaceClass;
+    private final SelectRaceClassAttributesDialog selectRaceClass;
     private final SelectAttributesDialog selectAttributes;
     private SelectSkillsDialog selectSkills;
     private final Skin skin = getSkin();
@@ -121,7 +122,7 @@ public class CreateCharacterDialog extends ObservableDialog {
     public CreateCharacterDialog() {
         super(DIALOG_NAME, getSkin().get(WindowStyle.class));
 
-        this.selectRaceClass = new SelectRaceClassDialog(skin);
+        this.selectRaceClass = new SelectRaceClassAttributesDialog(skin);
         this.selectRaceClass.addDialogListener(this::onSelectRaceClassHide, DialogEvents.HIDDEN);
         this.selectAttributes = new SelectAttributesDialog(skin, new TextureRegionDrawable());
         this.selectAttributes.addDialogListener(this::onSelectAttributesHide, DialogEvents.HIDDEN);
@@ -200,13 +201,19 @@ public class CreateCharacterDialog extends ObservableDialog {
     }
 
     private void concludeDialog() {
-        SkillSet skills = Mappers.skills.get(this.createdEntity).getSkills();
+        if (this.createdEntity != null) {
+            SkillsComponent comp = Mappers.skills.get(this.createdEntity);
 
-        Map<Skills, Integer> skillLevels = this.selectSkills.getSelectedSkills();
+            if (comp != null) {
+                SkillSet skills = comp.getSkills();
 
-        skillLevels.keySet().stream().forEach((Skills skill) ->
-                skills.setSkill(skill, skillLevels.get(skill))
-        );
+                Map<Skills, Integer> skillLevels = this.selectSkills.getSelectedSkills();
+
+                skillLevels.keySet().stream().forEach((Skills skill) ->
+                        skills.setSkill(skill, skillLevels.get(skill))
+                );
+            }
+        }
 
         this.hide();
     }
@@ -218,7 +225,7 @@ public class CreateCharacterDialog extends ObservableDialog {
 
 
     // Nested Classes
-    private static class SelectRaceClassDialog extends ObservableDialog {
+    private static class SelectRaceClassAttributesDialog extends ObservableDialog {
 
         // Constants
         private static final String DIALOG_NAME = "";
@@ -243,6 +250,7 @@ public class CreateCharacterDialog extends ObservableDialog {
         private Image raceClassPreview;
         private TextButton backButton;
         private TextButton nextButton;
+        private MultipleNumberSelector attributeSelector;
 
         private DialogExitStates exitState = DialogExitStates.BACK;
 
@@ -268,13 +276,23 @@ public class CreateCharacterDialog extends ObservableDialog {
             return this.nameField.getText();
         }
 
+        public final AttributeSet getAttributes() {
+            return null;
+        }
+
 
         // Initialization
-        private SelectRaceClassDialog(Skin skin) {
+        private SelectRaceClassAttributesDialog(Skin skin) {
             super(DIALOG_NAME, skin.get(WindowStyle.class));
             this.skin = skin;
 
             this.initComponents();
+
+            this.addDialogListener((DialogEventArgs args) -> {
+                this.nextButton.setChecked(false);
+                this.backButton.setChecked(false);
+            },
+                    DialogEvents.SHOWN);
         }
 
 
@@ -298,7 +316,7 @@ public class CreateCharacterDialog extends ObservableDialog {
             this.raceSelectBox.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                    SelectRaceClassDialog.this.updateNewCharacterPreview();
+                    SelectRaceClassAttributesDialog.this.updateNewCharacterPreview();
                 }
             });
 
@@ -307,7 +325,7 @@ public class CreateCharacterDialog extends ObservableDialog {
             this.classSelectBox.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                    SelectRaceClassDialog.this.updateNewCharacterPreview();
+                    SelectRaceClassAttributesDialog.this.updateNewCharacterPreview();
                 }
             });
 
@@ -315,8 +333,8 @@ public class CreateCharacterDialog extends ObservableDialog {
             this.backButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if (event.getButton() == Input.Buttons.LEFT && !SelectRaceClassDialog.this.backButton.isDisabled()) {
-                        SelectRaceClassDialog.this.onRaceClassBackButton();
+                    if (event.getButton() == Input.Buttons.LEFT && !SelectRaceClassAttributesDialog.this.backButton.isDisabled()) {
+                        SelectRaceClassAttributesDialog.this.onRaceClassBackButton();
                     }
                 }
             });
@@ -325,8 +343,8 @@ public class CreateCharacterDialog extends ObservableDialog {
             this.nextButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if (event.getButton() == Input.Buttons.LEFT && !SelectRaceClassDialog.this.nextButton.isDisabled()) {
-                        SelectRaceClassDialog.this.onRaceClassNextButton();
+                    if (event.getButton() == Input.Buttons.LEFT && !SelectRaceClassAttributesDialog.this.nextButton.isDisabled()) {
+                        SelectRaceClassAttributesDialog.this.onRaceClassNextButton();
                     }
                 }
             });
@@ -414,7 +432,7 @@ public class CreateCharacterDialog extends ObservableDialog {
 
         private Table mainTable;
         private Label titleLabel;
-        private MultipleNumberSelector attributeSelector;
+        private AttributeSelector attributeSelector;
         private Table buttonTable;
         private TextButton nextButton;
         private TextButton backButton;
@@ -465,9 +483,7 @@ public class CreateCharacterDialog extends ObservableDialog {
             this.mainTable = new Table();
 
             // Create Attribute Selector
-            Set<String> attributeNames = new LinkedHashSet<>();
-            AttributeSet.PRIMARY_ATTRIBUTES.stream().forEach((Attributes attr) -> attributeNames.add(attr.getDisplayName()));
-            this.attributeSelector = new MultipleNumberSelector(50, this.skin.get(AttributeSelectorStyle.class), Collections.unmodifiableSet(attributeNames));
+            this.attributeSelector = new AttributeSelector(50, this.skin.get(MultipleNumberSelectorStyle.class), 2);
 
             this.nextButton = new TextButton("Next", skin.get(TextButton.TextButtonStyle.class));
             this.nextButton.addListener(new ClickListener() {
@@ -583,7 +599,7 @@ public class CreateCharacterDialog extends ObservableDialog {
 
             // Create Attribute Selector
             List<String> skillNames = this.selectableSkills.stream().map((Skills skill) -> skill.getDisplayName()).collect(Collectors.toList());
-            this.skillSelector = new MultipleNumberSelector(this.skillPointsAvailable, this.skin.get(AttributeSelectorStyle.class), Collections
+            this.skillSelector = new MultipleNumberSelector(this.skillPointsAvailable, this.skin.get(MultipleNumberSelectorStyle.class), Collections
                     .unmodifiableList(skillNames));
             this.skillSelector.setUseMaximumNumber(true);
             this.skillSelector.setMaximumNumber(this.maxPerSkill);

@@ -37,7 +37,7 @@ import com.jupiter.europa.util.Initializable;
  *
  * @author Nathan Templon
  */
-public class CharacterClassComponent extends Component implements Serializable, Initializable {
+public class CharacterClassComponent extends Component implements Serializable, Initializable, OwnedComponent {
 
     // Constants
     private static final String CHARACTER_CLASS_TYPE_KEY = "class-type";
@@ -51,6 +51,16 @@ public class CharacterClassComponent extends Component implements Serializable, 
     // Properties
     public CharacterClass getCharacterClass() {
         return this.characterClass;
+    }
+    
+    @Override
+    public Entity getOwner() {
+        return this.characterClass.getOwner();
+    }
+    
+    @Override
+    public void setOwner(Entity owner) {
+        this.characterClass.setOwner(owner);
     }
 
 

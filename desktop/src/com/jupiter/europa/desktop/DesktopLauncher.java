@@ -37,7 +37,7 @@ public class DesktopLauncher {
         
         LwjglFrame frame = new LwjglFrame(game, config);
 
-        frame.setMinimumSize(new Dimension(640, 480));
+        frame.setMinimumSize(new Dimension(1024, 720));
         frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
