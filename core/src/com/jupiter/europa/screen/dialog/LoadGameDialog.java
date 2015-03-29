@@ -7,7 +7,6 @@ package com.jupiter.europa.screen.dialog;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -18,12 +17,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.jupiter.europa.EuropaGame;
+import com.jupiter.europa.scene2d.ui.EuropaButton;
+import com.jupiter.europa.scene2d.ui.EuropaButton.ClickEvent;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.screen.MainMenuScreen;
 import static com.jupiter.europa.screen.MainMenuScreen.DEFAULT_KEY;
 import static com.jupiter.europa.screen.MainMenuScreen.INFO_STYLE_KEY;
 import static com.jupiter.europa.screen.MainMenuScreen.LIST_BACKGROUND_KEY;
-import static com.jupiter.europa.screen.MainMenuScreen.POPUP_BACKGROUND_KEY;
 
 /**
  *
@@ -58,9 +58,9 @@ public class LoadGameDialog extends ObservableDialog {
     private List gameList;
     private ScrollPane gameListPane;
     private Table buttonTable;
-    private TextButton okButton;
-    private TextButton cancelButton;
-    private TextButton deleteButton;
+    private EuropaButton okButton;
+    private EuropaButton cancelButton;
+    private EuropaButton deleteButton;
     
     private float width, height;
 
@@ -114,38 +114,14 @@ public class LoadGameDialog extends ObservableDialog {
         this.listTable.add(this.gameListPane).pad(MainMenuScreen.LIST_WRAPPER_PADDING).expand().fill();
         this.listTable.background(skin.get(LIST_BACKGROUND_KEY, SpriteDrawable.class));
 
-        this.okButton = new TextButton("Accept", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
-        this.okButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Input.Buttons.LEFT && !LoadGameDialog.this.okButton.isDisabled()) {
-                    LoadGameDialog.this.onLoadClick();
-                }
-                LoadGameDialog.this.okButton.setChecked(false);
-            }
-        });
+        this.okButton = new EuropaButton("Accept", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
+        this.okButton.addClickListener(this::onLoadClick);
 
-        this.cancelButton = new TextButton("Cancel", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
-        this.cancelButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Input.Buttons.LEFT && !LoadGameDialog.this.cancelButton.isDisabled()) {
-                    LoadGameDialog.this.onCancelClick();
-                }
-                LoadGameDialog.this.cancelButton.setChecked(false);
-            }
-        });
+        this.cancelButton = new EuropaButton("Cancel", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
+        this.cancelButton.addClickListener(this::onCancelClick);
 
-        this.deleteButton = new TextButton("Delete", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
-        this.deleteButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Input.Buttons.LEFT && !LoadGameDialog.this.deleteButton.isDisabled()) {
-                    LoadGameDialog.this.onDeleteClick();
-                }
-                LoadGameDialog.this.deleteButton.setChecked(false);
-            }
-        });
+        this.deleteButton = new EuropaButton("Delete", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
+        this.deleteButton.addClickListener(this::onDeleteClick);
 
         this.buttonTable = new Table();
         this.buttonTable.add(this.cancelButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right().expandX();
@@ -166,19 +142,19 @@ public class LoadGameDialog extends ObservableDialog {
         this.getContentTable().add(this.mainTable).center().expandY().fillY().width(MainMenuScreen.DIALOG_WIDTH);
     }
 
-    private void onLoadClick() {
+    private void onLoadClick(ClickEvent event) {
         this.gameToLoad = this.gameList.getSelected().toString();
         this.exitState = LoadGameExitStates.LOAD;
         this.hide();
     }
 
-    private void onCancelClick() {
+    private void onCancelClick(ClickEvent event) {
         this.gameToLoad = "";
         this.exitState = LoadGameExitStates.CANCEL;
         this.hide();
     }
 
-    private void onDeleteClick() {
+    private void onDeleteClick(ClickEvent event) {
         this.confirmDeleteDialog = new ConfirmDeleteSaveDialog(this.gameList.getSelected().toString(), this.skin);
         this.confirmDeleteDialog.addDialogListener(this::onConfirmDeleteSaveDialogClose, DialogEvents.HIDDEN);
         this.confirmDeleteDialog.show(this.getStage());

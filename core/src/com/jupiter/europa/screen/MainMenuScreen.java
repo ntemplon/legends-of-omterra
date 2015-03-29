@@ -65,6 +65,8 @@ import com.jupiter.europa.geometry.Size;
 import com.jupiter.europa.io.FileLocations;
 import static com.jupiter.europa.io.FileLocations.SKINS_DIRECTORY;
 import com.jupiter.europa.save.SaveGame;
+import com.jupiter.europa.scene2d.ui.EuropaButton;
+import com.jupiter.europa.scene2d.ui.EuropaButton.ClickEvent;
 import com.jupiter.europa.scene2d.ui.MultipleNumberSelector;
 import com.jupiter.europa.scene2d.ui.MultipleNumberSelector.MultipleNumberSelectorStyle;
 import com.jupiter.europa.scene2d.ui.NumberSelector.NumberSelectorStyle;
@@ -397,12 +399,12 @@ public class MainMenuScreen implements Screen, InputProcessor {
     private Table titleTable;
     private Table buttonTable;
     private Table titleWrapperTable;
-    private TextButton newGameButton;
-    private TextButton loadGameButton;
-    private TextButton multiplayerButton;
-    private TextButton optionsButton;
-    private TextButton creditsButton;
-    private TextButton quitButton;
+    private EuropaButton newGameButton;
+    private EuropaButton loadGameButton;
+    private EuropaButton multiplayerButton;
+    private EuropaButton optionsButton;
+    private EuropaButton creditsButton;
+    private EuropaButton quitButton;
 
     private CreateCharacterDialog createCharacterDialog;
     private NewGameDialog newGameDialog;
@@ -547,73 +549,25 @@ public class MainMenuScreen implements Screen, InputProcessor {
         this.buttonTable.setFillParent(false);
         this.buttonTable.center();
 
-        this.newGameButton = new TextButton("New Game", skin.get(DEFAULT_KEY, TextButtonStyle.class)); // Use the initialized skin
-        this.newGameButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Input.Buttons.LEFT && !MainMenuScreen.this.newGameButton.isDisabled()) {
-                    MainMenuScreen.this.onNewGameClick();
-                }
-                MainMenuScreen.this.newGameButton.setChecked(false);
-            }
-        });
+        this.newGameButton = new EuropaButton("New Game", skin.get(DEFAULT_KEY, TextButtonStyle.class)); // Use the initialized skin
+        this.newGameButton.addClickListener(this::onNewGameClick);
 
-        this.loadGameButton = new TextButton("Load Game", skin.get(DEFAULT_KEY, TextButtonStyle.class));
-        this.loadGameButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Input.Buttons.LEFT && !MainMenuScreen.this.loadGameButton.isDisabled()) {
-                    MainMenuScreen.this.onLoadGameClick();
-                }
-                MainMenuScreen.this.loadGameButton.setChecked(false);
-            }
-        });
+        this.loadGameButton = new EuropaButton("Load Game", skin.get(DEFAULT_KEY, TextButtonStyle.class));
+        this.loadGameButton.addClickListener(this::onLoadGameClick);
         this.loadGameButton.setDisabled(EuropaGame.game.getSaveNames().length == 0);
 
-        this.multiplayerButton = new TextButton("Multiplayer", skin.get(DEFAULT_KEY, TextButtonStyle.class));
-        this.multiplayerButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Input.Buttons.LEFT && !MainMenuScreen.this.multiplayerButton.isDisabled()) {
-                    MainMenuScreen.this.onMultiplayerClick();
-                }
-                MainMenuScreen.this.multiplayerButton.setChecked(false);
-            }
-        });
+        this.multiplayerButton = new EuropaButton("Multiplayer", skin.get(DEFAULT_KEY, TextButtonStyle.class));
+        this.multiplayerButton.addClickListener(this::onMultiplayerClick);
         this.multiplayerButton.setDisabled(true);
 
-        this.optionsButton = new TextButton("Options", skin.get(DEFAULT_KEY, TextButtonStyle.class));
-        this.optionsButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Input.Buttons.LEFT && !MainMenuScreen.this.optionsButton.isDisabled()) {
-                    MainMenuScreen.this.onOptionsClick();
-                }
-                MainMenuScreen.this.optionsButton.setChecked(false);
-            }
-        });
+        this.optionsButton = new EuropaButton("Options", skin.get(DEFAULT_KEY, TextButtonStyle.class));
+        this.optionsButton.addClickListener(this::onOptionsClick);
 
-        this.creditsButton = new TextButton("Credits", skin.get(DEFAULT_KEY, TextButtonStyle.class));
-        this.creditsButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Input.Buttons.LEFT && !MainMenuScreen.this.creditsButton.isDisabled()) {
-                    MainMenuScreen.this.onCreditsClick();
-                }
-                MainMenuScreen.this.creditsButton.setChecked(false);
-            }
-        });
+        this.creditsButton = new EuropaButton("Credits", skin.get(DEFAULT_KEY, TextButtonStyle.class));
+        this.creditsButton.addClickListener(this::onCreditsClick);
 
-        this.quitButton = new TextButton("Exit", skin.get(DEFAULT_KEY, TextButtonStyle.class));
-        this.quitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Input.Buttons.LEFT && !MainMenuScreen.this.quitButton.isDisabled()) {
-                    MainMenuScreen.this.onQuitClick();
-                }
-                MainMenuScreen.this.quitButton.setChecked(false);
-            }
-        });
+        this.quitButton = new EuropaButton("Exit", skin.get(DEFAULT_KEY, TextButtonStyle.class));
+        this.quitButton.addClickListener(this::onQuitClick);
 
         // Configure Button Table
         this.buttonTable.add(this.newGameButton).width(TITLE_BUTTON_WIDTH).space(MainMenuScreen.COMPONENT_SPACING);
@@ -661,31 +615,31 @@ public class MainMenuScreen implements Screen, InputProcessor {
         this.stage.addActor(this.titleTable);
     }
 
-    private void onNewGameClick() {
+    private void onNewGameClick(ClickEvent event) {
         this.createCharacterDialog = new CreateCharacterDialog();
         this.createCharacterDialog.addDialogListener(this::onCharacterCreationCompleted, DialogEvents.HIDDEN);
         this.showDialog(this.createCharacterDialog);
     }
 
-    private void onLoadGameClick() {
+    private void onLoadGameClick(ClickEvent event) {
         this.loadGameDialog = new LoadGameDialog();
         this.loadGameDialog.addDialogListener(this::onLoadGameDialogHidden, DialogEvents.HIDDEN);
         this.showDialog(this.loadGameDialog);
     }
 
-    private void onMultiplayerClick() {
+    private void onMultiplayerClick(ClickEvent event) {
         System.out.println("Multiplayer is not yet implemented!");
     }
 
-    private void onOptionsClick() {
+    private void onOptionsClick(ClickEvent event) {
         this.showDialog(this.optionsDialog);
     }
 
-    private void onCreditsClick() {
+    private void onCreditsClick(ClickEvent event) {
         this.showDialog(this.creditsDialog);
     }
 
-    private void onQuitClick() {
+    private void onQuitClick(ClickEvent event) {
         Gdx.app.exit();
     }
 

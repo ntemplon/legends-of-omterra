@@ -27,11 +27,13 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
+import com.jupiter.ganymede.event.Event;
+import com.jupiter.ganymede.event.Listener;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  *
@@ -55,7 +57,8 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
     private final List<T> selected;
     private int capacity;
 
-    private final Set<TraitPoolListener<T>> listeners = new LinkedHashSet<>();
+//    private final Set<TraitPoolListener<T>> listeners = new LinkedHashSet<>();
+    private final Event<TraitPoolEvent<T>> selection = new Event<>();
 
     private boolean autoQualify = false;
 
@@ -100,8 +103,8 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
 
     // Initialization
     public TraitPool() {
-        this.source = new LinkedHashSet<>();
-        this.qualified = new LinkedHashSet<>();
+        this.source = new TreeSet<>();
+        this.qualified = new TreeSet<>();
         this.selected = new ArrayList<>();
 
         this.capacity = 0;
@@ -147,7 +150,7 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
             this.selected.add(trait);
 
             // Dispatch Message
-            this.listeners.stream().forEach((TraitPoolListener<T> listener) -> listener.traitSelected(this, trait));
+            this.selection.dispatch(new TraitPoolEvent(this, trait));
 
             if (this.autoQualify) {
                 this.reassesQualifications();
@@ -158,17 +161,12 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
         return false;
     }
 
-    public void addListener(TraitPoolListener<T> listener) {
-        if (listener != null) {
-            this.listeners.add(listener);
-        }
+    public boolean addSelectionListener(Listener<TraitPoolEvent<T>> listener) {
+        return this.selection.addListener(listener);
     }
 
-    public boolean removeListener(TraitPoolListener<T> listener) {
-        if (listener != null) {
-            return this.listeners.remove(listener);
-        }
-        return false;
+    public boolean removeSelectionListener(Listener<TraitPoolEvent<T>> listener) {
+        return this.selection.removeListener(listener);
     }
 
 
@@ -213,6 +211,23 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
                 });
             }
         }
+    }
+    
+    
+    // Nested Classes
+    public static class TraitPoolEvent<T extends Trait> {
+        
+        // Fields
+        public final TraitPool<T> pool;
+        public final T trait;
+        
+        
+        // Intialization
+        public TraitPoolEvent(TraitPool<T> pool, T trait) {
+            this.pool = pool;
+            this.trait = trait;
+        }
+        
     }
 
 }

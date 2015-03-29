@@ -23,10 +23,8 @@
  */
 package com.jupiter.europa.screen.dialog;
 
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -38,7 +36,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -152,8 +149,6 @@ public class CreateCharacterDialog extends ObservableDialog {
 
     private void onSelectRaceClassHide(DialogEventArgs args) {
         if (this.selectRaceClass.getExitState() == DialogExitStates.NEXT) {
-//            this.selectAttributes.setCharacterPreview(this.selectRaceClass.getCharacterPortrait());
-//            this.showDialog(this.selectAttributes);
             this.createEntity();
 
             SkillsComponent skills = Mappers.skills.get(this.createdEntity);
@@ -476,11 +471,11 @@ public class CreateCharacterDialog extends ObservableDialog {
             this.buttonTable.add(this.backButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right().expandX();
             this.buttonTable.add(this.nextButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right();
 
-            this.mainTable.add(this.titleLabel).colspan(2).center().top();
+            this.mainTable.add(this.titleLabel).center().top();
             this.mainTable.row();
-            this.mainTable.add(this.skillSelector).expandY().center().left();
+            this.mainTable.add(this.skillSelector).expandY().center().top();
             this.mainTable.row();
-            this.mainTable.add(buttonTable).space(MainMenuScreen.COMPONENT_SPACING).bottom().right().colspan(2).expandX().fillX();
+            this.mainTable.add(buttonTable).space(MainMenuScreen.COMPONENT_SPACING).bottom().right().expandX().fillX();
             this.mainTable.row();
 
             this.mainTable.pad(MainMenuScreen.TABLE_PADDING);

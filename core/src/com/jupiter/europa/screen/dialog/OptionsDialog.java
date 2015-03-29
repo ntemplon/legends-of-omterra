@@ -16,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.jupiter.europa.EuropaGame;
+import com.jupiter.europa.scene2d.ui.EuropaButton;
+import com.jupiter.europa.scene2d.ui.EuropaButton.ClickEvent;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.scene2d.ui.TabbedPane;
 import com.jupiter.europa.screen.MainMenuScreen;
@@ -52,8 +54,8 @@ public class OptionsDialog extends ObservableDialog {
     private Table mainTable;
     private Label optionsLabel;
     private TabbedPane optionsPane;
-    private TextButton optionsAcceptButton;
-    private TextButton optionsCancelButton;
+    private EuropaButton optionsAcceptButton;
+    private EuropaButton optionsCancelButton;
     private Table optionsButtonTable;
 
     private AudioOptionsTable audioTable;
@@ -75,7 +77,7 @@ public class OptionsDialog extends ObservableDialog {
         this.skin = getSkin();
 
         this.initComponent();
-        
+
         this.addDialogListener((DialogEventArgs args) -> this.loadSettings(), DialogEvents.SHOWN);
     }
 
@@ -85,32 +87,16 @@ public class OptionsDialog extends ObservableDialog {
         this.mainTable = new Table();
         this.optionsLabel = new Label("Options", skin.get(DEFAULT_KEY, Label.LabelStyle.class));
         this.optionsPane = new TabbedPane(skin.get(TAB_STYLE_KEY, TextButton.TextButtonStyle.class));
-        
-        this.optionsAcceptButton = new TextButton("Accept", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
-        this.optionsAcceptButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Input.Buttons.LEFT && !OptionsDialog.this.optionsAcceptButton.isDisabled()) {
-                    OptionsDialog.this.applySettings();
-                    OptionsDialog.this.hide();
-                }
-                OptionsDialog.this.optionsAcceptButton.setChecked(false);
-            }
-        });
-        
-        this.optionsCancelButton = new TextButton("Cancel", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
-        this.optionsCancelButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Input.Buttons.LEFT && !OptionsDialog.this.optionsCancelButton.isDisabled()) {
-                    OptionsDialog.this.hide();
-                }
-                OptionsDialog.this.optionsCancelButton.setChecked(false);
-            }
-        });
+
+        this.optionsAcceptButton = new EuropaButton("Accept", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
+        this.optionsAcceptButton.addClickListener(this::onAcceptClick);
+
+        this.optionsCancelButton = new EuropaButton("Cancel", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
+        this.optionsCancelButton.addClickListener(this::onCancelClick);
 
         this.optionsButtonTable = new Table();
-        this.optionsButtonTable.add(this.optionsCancelButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right().expandX();
+        this.optionsButtonTable.add(this.optionsCancelButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right()
+                .expandX();
         this.optionsButtonTable.add(this.optionsAcceptButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right();
 
         // Create and Add Tabs
@@ -124,13 +110,22 @@ public class OptionsDialog extends ObservableDialog {
         this.mainTable.add(this.optionsPane).expand().fill().top();
         this.mainTable.row();
         this.mainTable.add(this.optionsButtonTable).expandX().fillX().right();
-        
+
         this.mainTable.pad(MainMenuScreen.TABLE_PADDING);
         this.mainTable.background(this.skin.get(MainMenuScreen.DIALOG_BACKGROUND_KEY, SpriteDrawable.class));
 
         this.getContentTable().add(this.mainTable).center().expandY().fillY().width(MainMenuScreen.DIALOG_WIDTH);
     }
+
+    private void onAcceptClick(ClickEvent event) {
+        this.applySettings();
+        this.hide();
+    }
     
+    private void onCancelClick(ClickEvent event) {
+        this.hide();
+    }
+
     private void loadSettings() {
         this.audioTable.setMusicVolume(EuropaGame.game.getSettings().musicVolume.get());
     }
@@ -148,13 +143,13 @@ public class OptionsDialog extends ObservableDialog {
         private final Skin skin;
         private final Label volumeLabel;
         private final Slider musicSlider;
-        
-        
+
+
         // Properties
         public final void setMusicVolume(float volume) {
             this.musicSlider.setValue(volume);
         }
-        
+
         public final float getMusicVolume() {
             return this.musicSlider.getValue();
         }
@@ -163,15 +158,15 @@ public class OptionsDialog extends ObservableDialog {
         // Initialization
         private AudioOptionsTable(Skin skin) {
             this.skin = skin;
-            
+
             this.volumeLabel = new Label("Volumne:", skin.get(MainMenuScreen.INFO_STYLE_KEY, LabelStyle.class));
 
             this.musicSlider = new Slider(0f, 1f, 0.05f, false, skin.get(DEFAULT_KEY, Slider.SliderStyle.class));
-            
+
             this.add(this.volumeLabel).space(MainMenuScreen.COMPONENT_SPACING).center().left();
             this.add(this.musicSlider).space(MainMenuScreen.COMPONENT_SPACING).center().minHeight(20).expandX().fillX();
             this.row();
-            
+
             this.pad(MainMenuScreen.TABLE_PADDING);
         }
 
@@ -188,7 +183,7 @@ public class OptionsDialog extends ObservableDialog {
         // Initialization
         private GraphicOptionsTable(Skin skin) {
             this.skin = skin;
-            
+
             this.pad(MainMenuScreen.TABLE_PADDING);
         }
 

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Nathan Templon.
+ * Copyright 2015 Nathan Templon.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,29 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jupiter.europa.entity.trait;
+package com.jupiter.europa.screen.dialog;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.utils.Json.Serializable;
-import com.jupiter.europa.entity.effects.Effect;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.jupiter.europa.entity.trait.Trait;
+import com.jupiter.europa.entity.trait.TraitPool;
+import com.jupiter.europa.scene2d.ui.ObservableDialog;
 
 /**
  *
  * @author Nathan Templon
+ * @param <T>
  */
-public interface Trait extends Serializable, Comparable<Trait> {
+public class SelectTraitDialog<T extends Trait> extends ObservableDialog {
+    
+    // Fields
+    private final TraitPool<T> pool;
+    
     
     // Properties
-    Qualifications getQualifications();
-    Sprite getIcon();
-    String getName();
-    String getDescription();
-    Effect getEffect();
+    public final TraitPool<T> getPool() {
+        return this.pool;
+    }
     
-    // Comparable
-    @Override
-    default int compareTo(Trait other) {
-        return this.getName().compareTo(other.getName());
+    
+    // Initialization
+    public SelectTraitDialog(String title, Skin skin, TraitPool<T> pool) {
+        super(title, skin);
+        this.pool = pool;
+    }
+    
+    public SelectTraitDialog(String title, Skin skin, String styleName, TraitPool<T> pool) {
+        super(title, skin, styleName);
+        this.pool = pool;
+    }
+    
+    public SelectTraitDialog(String title, WindowStyle style, TraitPool<T> pool) {
+        super(title, style);
+        this.pool = pool;
     }
     
 }

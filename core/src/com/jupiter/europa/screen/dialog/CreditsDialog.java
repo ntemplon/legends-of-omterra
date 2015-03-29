@@ -5,19 +5,17 @@
  */
 package com.jupiter.europa.screen.dialog;
 
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.jupiter.europa.EuropaGame;
+import com.jupiter.europa.scene2d.ui.EuropaButton;
+import com.jupiter.europa.scene2d.ui.EuropaButton.ClickEvent;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.screen.MainMenuScreen;
-import static com.jupiter.europa.screen.MainMenuScreen.CREDITS_BACKGROUND_KEY;
 import static com.jupiter.europa.screen.MainMenuScreen.DEFAULT_KEY;
 import static com.jupiter.europa.screen.MainMenuScreen.INFO_STYLE_KEY;
 
@@ -44,7 +42,7 @@ public class CreditsDialog extends ObservableDialog {
     private Table wrapperTable;
     private ScrollPane scrollPane;
     private Label label;
-    private TextButton returnButton;
+    private EuropaButton returnButton;
     
     
     // Initialization
@@ -60,16 +58,8 @@ public class CreditsDialog extends ObservableDialog {
         // Credits Dialog
         this.label = new Label(EuropaGame.game.getCredits(), skin.get(INFO_STYLE_KEY, Label.LabelStyle.class));
         this.scrollPane = new ScrollPane(this.label, skin.get(DEFAULT_KEY, ScrollPane.ScrollPaneStyle.class));
-        this.returnButton = new TextButton("Return to Menu", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
-        this.returnButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Input.Buttons.LEFT && !CreditsDialog.this.returnButton.isDisabled()) {
-                    CreditsDialog.this.hide();
-                }
-                CreditsDialog.this.returnButton.setChecked(false);
-            }
-        });
+        this.returnButton = new EuropaButton("Return to Menu", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
+        this.returnButton.addClickListener((ClickEvent e) -> this.hide());
         
         this.wrapperTable = new Table();
         this.wrapperTable.add(this.scrollPane).pad(MainMenuScreen.LIST_WRAPPER_PADDING).expand().fill();

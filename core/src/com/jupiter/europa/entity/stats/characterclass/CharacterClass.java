@@ -38,6 +38,7 @@ import com.jupiter.europa.entity.trait.TraitPool;
 import com.jupiter.europa.entity.trait.feat.FeatPool;
 import com.jupiter.europa.entity.stats.race.Race;
 import com.jupiter.europa.entity.trait.Trait;
+import com.jupiter.europa.entity.trait.TraitPool.TraitPoolEvent;
 import com.jupiter.europa.entity.trait.feat.Feat;
 import com.jupiter.europa.util.Initializable;
 import com.jupiter.ganymede.event.Event;
@@ -148,7 +149,7 @@ public abstract class CharacterClass implements Serializable, Initializable {
 
     // Fields
     private final Event<LevelUpArgs> levelUp = new Event();
-    
+
     private int level;
     private long ownerId = -1;
     private Entity owner;
@@ -221,13 +222,6 @@ public abstract class CharacterClass implements Serializable, Initializable {
     // Initialization
     public CharacterClass() {
         this.level = 1;
-    }
-
-    @Override
-    public void initialize() {
-        // Skills
-        this.computeAvailableSkillPoints();
-        this.availableSkillPoints *= 4; // Account for 4x skill points at first level
 
         // Feats
         this.featPool = new FeatPool();
@@ -235,9 +229,17 @@ public abstract class CharacterClass implements Serializable, Initializable {
 
         this.abilityPools.add(this.featPool);
 
+        this.featPool.addSelectionListener(this::onFeatSelection);
+    }
+
+    @Override
+    public void initialize() {
         if (this.ownerId > 0) {
             this.owner = EuropaGame.game.lastIdMapping.get(this.ownerId);
         }
+        
+        // Skills
+        this.computeAvailableSkillPoints();
 
         if (this.owner != null) {
             this.abilityPools.stream().forEach((TraitPool<?> pool) -> {
@@ -246,10 +248,6 @@ public abstract class CharacterClass implements Serializable, Initializable {
                 pool.reassesQualifications();
             });
         }
-
-        this.featPool.addListener((TraitPool<Feat> pool, Feat feat) -> {
-            EuropaGame.game.getMessageSystem().publish(new RequestEffectAddMessage(this.owner, feat.getEffect()));
-        });
     }
 
 
@@ -265,15 +263,15 @@ public abstract class CharacterClass implements Serializable, Initializable {
             if (this.level % 3 == 0) {
                 this.featPool.increaseCapacity(1);
             }
-            
+
             this.levelUp.dispatch(new LevelUpArgs(this, this.getLevel()));
         }
     }
-    
+
     public boolean addLevelUpListener(Listener<LevelUpArgs> listener) {
         return this.levelUp.addListener(listener);
     }
-    
+
     public boolean removeLevelUpListener(Listener<LevelUpArgs> listener) {
         return this.levelUp.removeListener(listener);
     }
@@ -284,7 +282,12 @@ public abstract class CharacterClass implements Serializable, Initializable {
         AttributesComponent comp = Mappers.attributes.get(this.getOwner());
         int intelligence = comp.getBaseAttributes().getAttribute(AttributeSet.Attributes.INTELLIGENCE);
         Race race = Mappers.race.get(this.getOwner()).getRace();
-        this.availableSkillPoints += this.getSkillPointsPerLevel() + race.getBonusSkillPoints() + intelligence / 2;
+        int pointsPerLevel = this.getSkillPointsPerLevel() + race.getBonusSkillPoints() + intelligence / 2;
+        this.availableSkillPoints = pointsPerLevel * (3 + this.getLevel());
+    }
+
+    private void onFeatSelection(TraitPoolEvent<Feat> event) {
+        EuropaGame.game.getMessageSystem().publish(new RequestEffectAddMessage(this.owner, event.trait.getEffect()));
     }
 
 
@@ -308,29 +311,33 @@ public abstract class CharacterClass implements Serializable, Initializable {
         }
 
         if (jsonData.has(FEAT_POOL_KEY)) {
+            if (this.featPool != null) {
+                this.abilityPools.remove(this.featPool);
+            }
             this.featPool = json.fromJson(FeatPool.class, jsonData.get(FEAT_POOL_KEY).prettyPrint(EuropaGame.PRINT_SETTINGS));
+            this.featPool.addSelectionListener(this::onFeatSelection);
         }
 
         if (jsonData.has(AVAILABLE_SKILL_POINTS_KEY)) {
             this.availableSkillPoints = jsonData.getInt(AVAILABLE_SKILL_POINTS_KEY);
         }
     }
-    
-    
+
+
     // Nested Classes
     public static class LevelUpArgs {
-        
+
         // Fields
         public final int level;
         public final CharacterClass characterClass;
-        
-        
+
+
         // Initialization
         public LevelUpArgs(CharacterClass charClass, int level) {
             this.level = level;
             this.characterClass = charClass;
         }
-        
+
     }
 
 }

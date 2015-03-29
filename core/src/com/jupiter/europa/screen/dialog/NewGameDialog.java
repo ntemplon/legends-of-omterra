@@ -23,8 +23,6 @@
  */
 package com.jupiter.europa.screen.dialog;
 
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -32,9 +30,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.jupiter.europa.EuropaGame;
+import com.jupiter.europa.scene2d.ui.EuropaButton;
+import com.jupiter.europa.scene2d.ui.EuropaButton.ClickEvent;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.screen.MainMenuScreen;
 import static com.jupiter.europa.screen.MainMenuScreen.DEFAULT_KEY;
@@ -74,8 +73,8 @@ public class NewGameDialog extends ObservableDialog {
     private List newGameWorldList;
     private ScrollPane worldPane;
     private Table buttonTable;
-    private TextButton nextButton;
-    private TextButton backButton;
+    private EuropaButton nextButton;
+    private EuropaButton backButton;
     
     private NewGameExitStates exitState;
     
@@ -118,25 +117,11 @@ public class NewGameDialog extends ObservableDialog {
         this.listWrapper.add(this.worldPane).pad(MainMenuScreen.LIST_WRAPPER_PADDING).expand().fill();
         this.listWrapper.background(skin.get(LIST_BACKGROUND_KEY, SpriteDrawable.class));
 
-        this.nextButton = new TextButton("Accept", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
-        this.nextButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Input.Buttons.LEFT && !NewGameDialog.this.nextButton.isDisabled()) {
-                    NewGameDialog.this.startNewGame();
-                }
-            }
-        });
+        this.nextButton = new EuropaButton("Accept", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
+        this.nextButton.addClickListener((ClickEvent event) -> this.startNewGame());
 
-        this.backButton = new TextButton("Back", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
-        this.backButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (event.getButton() == Input.Buttons.LEFT && !NewGameDialog.this.backButton.isDisabled()) {
-                    NewGameDialog.this.cancelNewGame();
-                }
-            }
-        });
+        this.backButton = new EuropaButton("Back", skin.get(DEFAULT_KEY, TextButton.TextButtonStyle.class));
+        this.backButton.addClickListener((ClickEvent event) -> this.cancelNewGame());
 
         this.buttonTable = new Table();
         this.buttonTable.add(this.backButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right().expandX();
