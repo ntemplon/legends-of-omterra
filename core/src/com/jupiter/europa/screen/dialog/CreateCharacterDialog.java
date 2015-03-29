@@ -50,13 +50,14 @@ import com.jupiter.europa.entity.component.CharacterClassComponent;
 import com.jupiter.europa.entity.component.MovementResourceComponent;
 import com.jupiter.europa.entity.component.SkillsComponent;
 import com.jupiter.europa.entity.stats.AttributeSet;
-import com.jupiter.europa.entity.stats.AttributeSet.Attributes;
 import com.jupiter.europa.entity.stats.SkillSet;
 import com.jupiter.europa.entity.stats.SkillSet.Skills;
 import com.jupiter.europa.entity.stats.characterclass.CharacterClass;
 import com.jupiter.europa.entity.stats.race.Race;
 import com.jupiter.europa.io.FileLocations;
 import com.jupiter.europa.scene2d.ui.AttributeSelector;
+import com.jupiter.europa.scene2d.ui.EuropaButton;
+import com.jupiter.europa.scene2d.ui.EuropaButton.ClickEvent;
 import com.jupiter.europa.scene2d.ui.MultipleNumberSelector;
 import com.jupiter.europa.scene2d.ui.MultipleNumberSelector.MultipleNumberSelectorStyle;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
@@ -65,10 +66,8 @@ import com.jupiter.europa.screen.MainMenuScreen.DialogExitStates;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -97,7 +96,6 @@ public class CreateCharacterDialog extends ObservableDialog {
 
     // Fields
     private final SelectRaceClassAttributesDialog selectRaceClass;
-    private final SelectAttributesDialog selectAttributes;
     private SelectSkillsDialog selectSkills;
     private final Skin skin = getSkin();
 
@@ -124,8 +122,6 @@ public class CreateCharacterDialog extends ObservableDialog {
 
         this.selectRaceClass = new SelectRaceClassAttributesDialog(skin);
         this.selectRaceClass.addDialogListener(this::onSelectRaceClassHide, DialogEvents.HIDDEN);
-        this.selectAttributes = new SelectAttributesDialog(skin, new TextureRegionDrawable());
-        this.selectAttributes.addDialogListener(this::onSelectAttributesHide, DialogEvents.HIDDEN);
         this.selectSkills = new SelectSkillsDialog(skin, 8, 4, Arrays.asList(Skills.values()));
         this.selectSkills.addDialogListener(this::onSelectSkillsHide, DialogEvents.HIDDEN);
 
@@ -140,7 +136,6 @@ public class CreateCharacterDialog extends ObservableDialog {
     public void setSize(float width, float height) {
         super.setSize(width, height);
         this.selectRaceClass.setSize(width, height);
-        this.selectAttributes.setSize(width, height);
         if (this.selectSkills != null) {
             this.selectSkills.setSize(width, height);
         }
@@ -157,17 +152,8 @@ public class CreateCharacterDialog extends ObservableDialog {
 
     private void onSelectRaceClassHide(DialogEventArgs args) {
         if (this.selectRaceClass.getExitState() == DialogExitStates.NEXT) {
-            this.selectAttributes.setCharacterPreview(this.selectRaceClass.getCharacterPortrait());
-            this.showDialog(this.selectAttributes);
-        }
-        else {
-            this.exitState = CreateCharacterExitStates.CANCELED;
-            this.concludeDialog();
-        }
-    }
-
-    private void onSelectAttributesHide(DialogEventArgs args) {
-        if (this.selectAttributes.getExitState() == DialogExitStates.NEXT) {
+//            this.selectAttributes.setCharacterPreview(this.selectRaceClass.getCharacterPortrait());
+//            this.showDialog(this.selectAttributes);
             this.createEntity();
 
             SkillsComponent skills = Mappers.skills.get(this.createdEntity);
@@ -180,7 +166,8 @@ public class CreateCharacterDialog extends ObservableDialog {
             this.showDialog(this.selectSkills);
         }
         else {
-            this.showDialog(this.selectRaceClass);
+            this.exitState = CreateCharacterExitStates.CANCELED;
+            this.concludeDialog();
         }
     }
 
@@ -190,7 +177,7 @@ public class CreateCharacterDialog extends ObservableDialog {
             this.concludeDialog();
         }
         else {
-            this.showDialog(this.selectAttributes);
+            this.showDialog(this.selectRaceClass);
         }
     }
 
@@ -220,7 +207,7 @@ public class CreateCharacterDialog extends ObservableDialog {
 
     private void createEntity() {
         this.createdEntity = Party.createPlayer(this.selectRaceClass.getCharacterName(), CharacterClass.CLASS_LOOKUP
-                .get(this.selectRaceClass.getSelectedClass()), this.selectRaceClass.getSelectedRace(), this.selectAttributes.getAttributes());
+                .get(this.selectRaceClass.getSelectedClass()), this.selectRaceClass.getSelectedRace(), this.selectRaceClass.getAttributes());
     }
 
 
@@ -248,9 +235,9 @@ public class CreateCharacterDialog extends ObservableDialog {
         private Label raceLabel;
         private Label classLabel;
         private Image raceClassPreview;
-        private TextButton backButton;
-        private TextButton nextButton;
-        private MultipleNumberSelector attributeSelector;
+        private EuropaButton backButton;
+        private EuropaButton nextButton;
+        private AttributeSelector attributeSelector;
 
         private DialogExitStates exitState = DialogExitStates.BACK;
 
@@ -277,7 +264,7 @@ public class CreateCharacterDialog extends ObservableDialog {
         }
 
         public final AttributeSet getAttributes() {
-            return null;
+            return this.attributeSelector.getAttributes();
         }
 
 
@@ -329,25 +316,13 @@ public class CreateCharacterDialog extends ObservableDialog {
                 }
             });
 
-            this.backButton = new TextButton("Back", skin.get(TextButton.TextButtonStyle.class));
-            this.backButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    if (event.getButton() == Input.Buttons.LEFT && !SelectRaceClassAttributesDialog.this.backButton.isDisabled()) {
-                        SelectRaceClassAttributesDialog.this.onRaceClassBackButton();
-                    }
-                }
-            });
+            this.backButton = new EuropaButton("Back", skin.get(TextButton.TextButtonStyle.class));
+            this.backButton.addClickListener(this::onRaceClassBackButton);
 
-            this.nextButton = new TextButton("Next", skin.get(TextButton.TextButtonStyle.class));
-            this.nextButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    if (event.getButton() == Input.Buttons.LEFT && !SelectRaceClassAttributesDialog.this.nextButton.isDisabled()) {
-                        SelectRaceClassAttributesDialog.this.onRaceClassNextButton();
-                    }
-                }
-            });
+            this.nextButton = new EuropaButton("Next", skin.get(TextButton.TextButtonStyle.class));
+            this.nextButton.addClickListener(this::onRaceClassNextButton);
+            
+            this.attributeSelector = new AttributeSelector(50, skin.get(MultipleNumberSelectorStyle.class), 2);
 
             this.nameTable = new Table();
             this.nameTable.add(this.nameLabel).left().space(MainMenuScreen.COMPONENT_SPACING);
@@ -356,13 +331,11 @@ public class CreateCharacterDialog extends ObservableDialog {
             this.mainTable = new Table();
 
             this.selectBoxTable = new Table();
-            this.selectBoxTable.add(this.raceLabel).fillX();
+            this.selectBoxTable.add(this.raceLabel).fillX().space(MainMenuScreen.COMPONENT_SPACING);
+            this.selectBoxTable.add(this.classLabel).fillX().space(MainMenuScreen.COMPONENT_SPACING).spaceLeft(5 * MainMenuScreen.COMPONENT_SPACING);
             this.selectBoxTable.row();
             this.selectBoxTable.add(this.raceSelectBox).minWidth(MainMenuScreen.TITLE_BUTTON_WIDTH).fillX();
-            this.selectBoxTable.row();
-            this.selectBoxTable.add(this.classLabel).fillX();
-            this.selectBoxTable.row();
-            this.selectBoxTable.add(this.classSelectBox).minWidth(MainMenuScreen.TITLE_BUTTON_WIDTH).fillX();
+            this.selectBoxTable.add(this.classSelectBox).minWidth(MainMenuScreen.TITLE_BUTTON_WIDTH).fillX().spaceLeft(5 * MainMenuScreen.COMPONENT_SPACING);
             this.selectBoxTable.row();
 
             this.mainTable.add(this.titleLabel).center().colspan(2);
@@ -373,6 +346,8 @@ public class CreateCharacterDialog extends ObservableDialog {
             this.mainTable.row();
             this.mainTable.add(this.selectBoxTable).left();
             this.mainTable.add(this.raceClassPreview).center();
+            this.mainTable.row();
+            this.mainTable.add(this.attributeSelector).colspan(2).center().top().padTop(40);
             this.mainTable.row();
             this.mainTable.add(new Image()).expandY().fillY();
             this.mainTable.row();
@@ -407,132 +382,18 @@ public class CreateCharacterDialog extends ObservableDialog {
             }
         }
 
-        private void onRaceClassBackButton() {
+        private void onRaceClassBackButton(ClickEvent event) {
             this.exitState = DialogExitStates.BACK;
             this.hide();
         }
 
-        private void onRaceClassNextButton() {
+        private void onRaceClassNextButton(ClickEvent event) {
             this.exitState = DialogExitStates.NEXT;
             this.hide();
         }
 
     }
-
-    private static class SelectAttributesDialog extends ObservableDialog {
-
-        // Constants
-        private static final String DIALOG_NAME = "";
-        private static final String TITLE = "Select Attributes";
-
-
-        // Fields
-        private final Image characterPreview;
-        private final Skin skin;
-
-        private Table mainTable;
-        private Label titleLabel;
-        private AttributeSelector attributeSelector;
-        private Table buttonTable;
-        private TextButton nextButton;
-        private TextButton backButton;
-
-        private DialogExitStates exitState;
-
-
-        // Properties
-        public final DialogExitStates getExitState() {
-            return this.exitState;
-        }
-
-        public final Drawable getCharacterPreview() {
-            return this.characterPreview.getDrawable();
-        }
-
-        public final void setCharacterPreview(Drawable preview) {
-            this.characterPreview.setDrawable(preview);
-        }
-
-        public final AttributeSet getAttributes() {
-            AttributeSet set = new AttributeSet();
-
-            Map<String, Integer> values = this.attributeSelector.getValues();
-            values.keySet().stream().forEach((String attrName) -> {
-                set.setAttribute(Attributes.getByDisplayName(attrName), values.get(attrName));
-            });
-
-            return set;
-        }
-
-
-        // Initialization
-        private SelectAttributesDialog(Skin skin, Drawable characterPreview) {
-            super(DIALOG_NAME, skin.get(WindowStyle.class));
-
-            this.characterPreview = new Image(characterPreview);
-            this.skin = skin;
-
-            this.initComponents();
-        }
-
-
-        // Private Methods
-        private void initComponents() {
-            this.titleLabel = new Label(TITLE, skin.get(LabelStyle.class));
-
-            this.mainTable = new Table();
-
-            // Create Attribute Selector
-            this.attributeSelector = new AttributeSelector(50, this.skin.get(MultipleNumberSelectorStyle.class), 2);
-
-            this.nextButton = new TextButton("Next", skin.get(TextButton.TextButtonStyle.class));
-            this.nextButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    if (event.getButton() == Input.Buttons.LEFT && !SelectAttributesDialog.this.nextButton.isDisabled()) {
-                        SelectAttributesDialog.this.onNextButton();
-                    }
-                }
-            });
-
-            this.backButton = new TextButton("Back", skin.get(TextButton.TextButtonStyle.class));
-            this.backButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    if (event.getButton() == Input.Buttons.LEFT && !SelectAttributesDialog.this.backButton.isDisabled()) {
-                        SelectAttributesDialog.this.onBackButton();
-                    }
-                }
-            });
-
-            this.buttonTable = new Table();
-            this.buttonTable.add(this.backButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right().expandX();
-            this.buttonTable.add(this.nextButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right();
-
-            this.mainTable.add(this.titleLabel).colspan(2).center().top();
-            this.mainTable.row();
-            this.mainTable.add(this.attributeSelector).expandY().center().left();
-            this.mainTable.row();
-            this.mainTable.add(buttonTable).space(MainMenuScreen.COMPONENT_SPACING).bottom().right().colspan(2).expandX().fillX();
-            this.mainTable.row();
-
-            this.mainTable.pad(MainMenuScreen.TABLE_PADDING);
-            this.mainTable.background(skin.get(MainMenuScreen.DIALOG_BACKGROUND_KEY, SpriteDrawable.class));
-
-            this.getContentTable().add(this.mainTable).expand().fillY().width(MainMenuScreen.DIALOG_WIDTH);
-        }
-
-        private void onNextButton() {
-            this.exitState = DialogExitStates.NEXT;
-            this.hide();
-        }
-
-        private void onBackButton() {
-            this.exitState = DialogExitStates.BACK;
-            this.hide();
-        }
-
-    }
+    
 
     private static class SelectSkillsDialog extends ObservableDialog {
 
@@ -552,8 +413,8 @@ public class CreateCharacterDialog extends ObservableDialog {
         private Label titleLabel;
         private MultipleNumberSelector skillSelector;
         private Table buttonTable;
-        private TextButton nextButton;
-        private TextButton backButton;
+        private EuropaButton nextButton;
+        private EuropaButton backButton;
 
         private DialogExitStates exitState;
 
@@ -600,30 +461,16 @@ public class CreateCharacterDialog extends ObservableDialog {
             // Create Attribute Selector
             List<String> skillNames = this.selectableSkills.stream().map((Skills skill) -> skill.getDisplayName()).collect(Collectors.toList());
             this.skillSelector = new MultipleNumberSelector(this.skillPointsAvailable, this.skin.get(MultipleNumberSelectorStyle.class), Collections
-                    .unmodifiableList(skillNames));
+                    .unmodifiableList(skillNames), 2);
             this.skillSelector.setUseMaximumNumber(true);
             this.skillSelector.setMaximumNumber(this.maxPerSkill);
             this.skillSelector.setIncrement(5);
 
-            this.nextButton = new TextButton("Next", skin.get(TextButton.TextButtonStyle.class));
-            this.nextButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    if (event.getButton() == Input.Buttons.LEFT && !SelectSkillsDialog.this.nextButton.isDisabled()) {
-                        SelectSkillsDialog.this.onNextButton();
-                    }
-                }
-            });
+            this.nextButton = new EuropaButton("Next", skin.get(TextButton.TextButtonStyle.class));
+            this.nextButton.addClickListener(this::onNextButton);
 
-            this.backButton = new TextButton("Back", skin.get(TextButton.TextButtonStyle.class));
-            this.backButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    if (event.getButton() == Input.Buttons.LEFT && !SelectSkillsDialog.this.backButton.isDisabled()) {
-                        SelectSkillsDialog.this.onBackButton();
-                    }
-                }
-            });
+            this.backButton = new EuropaButton("Back", skin.get(TextButton.TextButtonStyle.class));
+            this.backButton.addClickListener(this::onBackButton);
 
             this.buttonTable = new Table();
             this.buttonTable.add(this.backButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right().expandX();
@@ -642,12 +489,12 @@ public class CreateCharacterDialog extends ObservableDialog {
             this.getContentTable().add(this.mainTable).expand().fillY().width(MainMenuScreen.DIALOG_WIDTH);
         }
 
-        private void onNextButton() {
+        private void onNextButton(ClickEvent event) {
             this.exitState = DialogExitStates.NEXT;
             this.hide();
         }
 
-        private void onBackButton() {
+        private void onBackButton(ClickEvent event) {
             this.exitState = DialogExitStates.BACK;
             this.hide();
         }

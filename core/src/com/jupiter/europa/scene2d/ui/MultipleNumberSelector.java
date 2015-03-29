@@ -33,7 +33,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  *
@@ -179,12 +178,12 @@ public class MultipleNumberSelector extends Table {
             }
 
             if (addedToRow == this.numColumns - 1) {
-                this.add(selector).left().expandX().fillX().space(spacing);
+                this.add(selector).left().expandX().fillX().space(this.spacing);
                 this.row();
                 addedToRow = 0;
             }
             else {
-                this.add(selector).left().space(spacing);
+                this.add(selector).left().space(this.spacing);
                 addedToRow++;
             }
 
