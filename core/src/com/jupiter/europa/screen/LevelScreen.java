@@ -225,8 +225,8 @@ public class LevelScreen extends OverlayableScreen {
         }
         
         Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
-        Point frameLoc = EuropaGame.game.getContainingFrame().getLocationOnScreen();
-        Insets insets = EuropaGame.game.getContainingFrame().getInsets();
+        Point frameLoc = EuropaGame.game.getFrameLocation();
+        Insets insets = EuropaGame.game.getContainingInsets();
         
         int mouseX = mouseLoc.x - frameLoc.x - insets.left;
         int mouseY = mouseLoc.y - frameLoc.y - insets.top;

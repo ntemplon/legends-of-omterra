@@ -30,10 +30,9 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.jupiter.ganymede.event.Event;
 import com.jupiter.ganymede.event.Listener;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  *
@@ -52,14 +51,20 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
     // Fields
     private Entity owner;
 
-    private final Set<T> source;
-    private final Set<T> qualified;
-    private final List<T> selected;
+    private final List<T> source = new ArrayList<>();
+    private final List<T> qualified = new ArrayList<>();
+    private final List<T> selected = new ArrayList<>();
+    private final List<T> sourceAccess = Collections.unmodifiableList(this.source);
+    private final List<T> qualifiedAccess = Collections.unmodifiableList(this.qualified);
+    private final List<T> selectedAccess = Collections.unmodifiableList(this.selected);
     private int capacity;
 
     private final Event<TraitPoolEvent<T>> selection = new Event<>();
 
     private boolean autoQualify = false;
+    private boolean sorted = true;
+    private Comparator<T> sourceComparator;
+    private Comparator<T> selectedComparator;
 
 
     // Properties
@@ -84,11 +89,15 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
     }
 
     public List<T> getSelections() {
-        return this.selected;
+        return this.selectedAccess;
     }
 
-    public Set<T> getSources() {
-        return this.source;
+    public List<T> getSources() {
+        return this.sourceAccess;
+    }
+    
+    public List<T> getQualified() {
+        return this.qualifiedAccess;
     }
 
     public boolean getAutoQualify() {
@@ -99,13 +108,33 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
         this.autoQualify = autoQualify;
     }
 
+    public boolean isSorted() {
+        return this.sorted;
+    }
+
+    public void setSorted(boolean sorted) {
+        this.sorted = sorted;
+    }
+
+    public Comparator<T> getSourceComparator() {
+        return this.sourceComparator;
+    }
+
+    public void setSourceComparator(Comparator<T> comparator) {
+        this.sourceComparator = comparator;
+    }
+
+    public Comparator<T> getSelectedComparator() {
+        return this.selectedComparator;
+    }
+
+    public void setSelectedComparator(Comparator<T> comparator) {
+        this.selectedComparator = comparator;
+    }
+
 
     // Initialization
     public TraitPool() {
-        this.source = new TreeSet<>();
-        this.qualified = new TreeSet<>();
-        this.selected = new ArrayList<>();
-
         this.capacity = 0;
     }
 
@@ -117,14 +146,12 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
 
     // Public Methods
     public void addSource(T source) {
-        this.source.add(source);
-        if (this.autoQualify && source.getQualifications().qualifies(this.owner)) {
-            this.qualified.add(source);
-        }
+        this.addSourceInternal(source, true);
     }
 
-    public void addSource(Collection<T> source) {
-        source.stream().forEach((T instance) -> this.addSource(instance));
+    public void addSource(List<T> source) {
+        source.stream().forEach((T instance) -> this.addSourceInternal(instance, false));
+        this.sort();
     }
 
     public void increaseCapacity(int additional) {
@@ -154,7 +181,7 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
             if (this.autoQualify) {
                 this.reassesQualifications();
             }
-            
+
             return true;
         }
         return false;
@@ -166,6 +193,36 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
 
     public boolean removeSelectionListener(Listener<TraitPoolEvent<T>> listener) {
         return this.selection.removeListener(listener);
+    }
+
+
+    // Private Methods
+    private void addSourceInternal(T source, boolean resort) {
+        this.source.add(source);
+        if (this.autoQualify && source.getQualifications().qualifies(this.owner)) {
+            this.qualified.add(source);
+        }
+
+        if (resort) {
+            this.sort();
+        }
+    }
+
+    private void sort() {
+        if (this.isSorted()) {
+            if (this.getSourceComparator() == null) {
+                Collections.sort(this.source);
+                Collections.sort(this.qualified);
+            }
+            else {
+                Collections.sort(this.source, this.getSourceComparator());
+                Collections.sort(this.qualified, this.getSourceComparator());
+            }
+            
+            if (this.getSelectedComparator() != null) {
+                Collections.sort(this.selected, this.getSelectedComparator());
+            }
+        }
     }
 
 
@@ -211,22 +268,22 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
             }
         }
     }
-    
-    
+
+
     // Nested Classes
     public static class TraitPoolEvent<T extends Trait> {
-        
+
         // Fields
         public final TraitPool<T> pool;
         public final T trait;
-        
-        
+
+
         // Intialization
         public TraitPoolEvent(TraitPool<T> pool, T trait) {
             this.pool = pool;
             this.trait = trait;
         }
-        
+
     }
 
 }

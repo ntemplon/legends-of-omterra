@@ -37,6 +37,8 @@ public class TraitPoolSelector<T extends Trait> extends Table {
         this.labelStyle = style.labelStyle;
         this.scrollPaneStyle = style.scrollPaneStyle;
         this.pool = pool;
+        
+        this.initComponent();
     }
     
     public TraitPoolSelector(Skin skin, TraitPool<T> pool) {
@@ -53,6 +55,12 @@ public class TraitPoolSelector<T extends Trait> extends Table {
      * Applies the changes selected by the user to the provided trait pool.
      */
     public void applyChanges() {
+        
+    }
+    
+    
+    // Private Methods
+    private void initComponent() {
         
     }
     

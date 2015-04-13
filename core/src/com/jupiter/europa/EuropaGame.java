@@ -62,6 +62,8 @@ import com.jupiter.europa.util.Initializable;
 import com.jupiter.europa.world.Level;
 import com.jupiter.europa.world.World;
 import com.jupiter.ganymede.property.Property.PropertyChangedArgs;
+import java.awt.Insets;
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -105,6 +107,7 @@ public class EuropaGame extends Game implements InputProcessor {
     // Static Fields
     public static final EuropaGame game = new EuropaGame();
     public static final PrettyPrintSettings PRINT_SETTINGS = new PrettyPrintSettings();
+
     static {
         PRINT_SETTINGS.outputType = OutputType.json;
     }
@@ -232,9 +235,9 @@ public class EuropaGame extends Game implements InputProcessor {
     // Fields
     public final Engine entityEngine = new Engine(); // Ashley entity framework engine
     public final Map<Long, Entity> lastIdMapping = new HashMap<>();
-    
+
     private final GameTimer timer = new GameTimer();
-    
+
     private JFrame frame;
 
     private LevelScreen levelScreen;
@@ -327,11 +330,21 @@ public class EuropaGame extends Game implements InputProcessor {
     public Settings getSettings() {
         return this.settings;
     }
-    
-    public JFrame getContainingFrame() {
-        return this.frame;
+
+    public Insets getContainingInsets() {
+        if (this.frame != null) {
+            return this.frame.getInsets();
+        }
+        return new Insets(0, 0, 0, 0);
     }
     
+    public Point getFrameLocation() {
+        if (this.frame != null) {
+            return this.frame.getLocationOnScreen();
+        }
+        return new Point(0, 0);
+    }
+
     public void setContainingFrame(JFrame frame) {
         this.frame = frame;
     }
