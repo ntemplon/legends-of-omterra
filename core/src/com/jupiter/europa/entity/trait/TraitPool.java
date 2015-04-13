@@ -57,7 +57,6 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
     private final List<T> selected;
     private int capacity;
 
-//    private final Set<TraitPoolListener<T>> listeners = new LinkedHashSet<>();
     private final Event<TraitPoolEvent<T>> selection = new Event<>();
 
     private boolean autoQualify = false;
