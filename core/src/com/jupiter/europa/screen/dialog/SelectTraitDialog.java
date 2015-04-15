@@ -49,6 +49,7 @@ public class SelectTraitDialog<T extends Trait> extends ObservableDialog {
     public SelectTraitDialog(String title, Skin skin, TraitPool<T> pool) {
         super(title, skin);
         this.pool = pool;
+        this.initComponent();
     }
     
     public SelectTraitDialog(String title, Skin skin, String styleName, TraitPool<T> pool) {
@@ -59,6 +60,12 @@ public class SelectTraitDialog<T extends Trait> extends ObservableDialog {
     public SelectTraitDialog(String title, WindowStyle style, TraitPool<T> pool) {
         super(title, style);
         this.pool = pool;
+    }
+    
+    
+    // Private Methods
+    private void initComponent() {
+        
     }
     
 }
