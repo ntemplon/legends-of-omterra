@@ -27,11 +27,11 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 /**
  *
@@ -121,7 +121,7 @@ public class AttributeSet implements Serializable {
     
     
     // Fields
-    private final Map<Attributes, Integer> attributes = new TreeMap<>();
+    private final Map<Attributes, Integer> attributes = new EnumMap<>(Attributes.class);
 
     
     // Properties

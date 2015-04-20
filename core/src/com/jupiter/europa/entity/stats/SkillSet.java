@@ -27,9 +27,9 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  *
@@ -98,7 +98,7 @@ public class SkillSet implements Serializable {
 
 
     // Fields
-    private final Map<Skills, Integer> skills = new TreeMap<>();
+    private final Map<Skills, Integer> skills = new EnumMap<>(Skills.class);
 
 
     // Properties
