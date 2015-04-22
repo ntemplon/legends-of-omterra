@@ -168,8 +168,14 @@ public class CreateCharacterDialog extends ObservableDialog {
 
     private void onSelectSkillsHide(DialogEventArgs args) {
         if (this.selectSkills.getExitState() == DialogExitStates.NEXT) {
-            this.exitState = CreateCharacterExitStates.OK;
-            this.concludeDialog();
+            // Debug Code
+            SelectTraitDialog featDialog = new SelectTraitDialog("Select Feats", this.skin,
+                    Mappers.characterClass.get(this.getCreatedEntity()).getCharacterClass().getFeatPool());
+            this.showDialog(featDialog);
+
+            // Actual Code
+//            this.exitState = CreateCharacterExitStates.OK;
+//            this.concludeDialog();
         }
         else {
             this.showDialog(this.selectRaceClass);
@@ -316,7 +322,7 @@ public class CreateCharacterDialog extends ObservableDialog {
 
             this.nextButton = new EuropaButton("Next", skin.get(TextButton.TextButtonStyle.class));
             this.nextButton.addClickListener(this::onRaceClassNextButton);
-            
+
             this.attributeSelector = new AttributeSelector(50, skin.get(MultipleNumberSelectorStyle.class), 2);
 
             this.nameTable = new Table();
@@ -388,7 +394,7 @@ public class CreateCharacterDialog extends ObservableDialog {
         }
 
     }
-    
+
 
     private static class SelectSkillsDialog extends ObservableDialog {
 

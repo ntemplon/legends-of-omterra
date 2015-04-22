@@ -24,9 +24,13 @@
 package com.jupiter.europa.screen.dialog;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.jupiter.europa.entity.trait.Trait;
 import com.jupiter.europa.entity.trait.TraitPool;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
+import com.jupiter.europa.scene2d.ui.TraitPoolSelector;
+import com.jupiter.europa.scene2d.ui.TraitPoolSelector.TraitPoolSelectorStyle;
+import com.jupiter.europa.screen.MainMenuScreen;
 
 /**
  *
@@ -36,7 +40,12 @@ import com.jupiter.europa.scene2d.ui.ObservableDialog;
 public class SelectTraitDialog<T extends Trait> extends ObservableDialog {
     
     // Fields
+    private final String title;
     private final TraitPool<T> pool;
+    private final TraitPoolSelectorStyle selectorStyle;
+    
+    private Table mainTable;
+    private TraitPoolSelector<T> selector;
     
     
     // Properties
@@ -47,25 +56,32 @@ public class SelectTraitDialog<T extends Trait> extends ObservableDialog {
     
     // Initialization
     public SelectTraitDialog(String title, Skin skin, TraitPool<T> pool) {
-        super(title, skin);
-        this.pool = pool;
-        this.initComponent();
+        this(title, skin.get(WindowStyle.class), skin.get(TraitPoolSelectorStyle.class), pool);
     }
     
     public SelectTraitDialog(String title, Skin skin, String styleName, TraitPool<T> pool) {
-        super(title, skin, styleName);
-        this.pool = pool;
+        this(title, skin.get(styleName, WindowStyle.class), skin.get(styleName, TraitPoolSelectorStyle.class), pool);
     }
     
-    public SelectTraitDialog(String title, WindowStyle style, TraitPool<T> pool) {
-        super(title, style);
+    public SelectTraitDialog(String title, WindowStyle style, TraitPoolSelectorStyle selectorStyle, TraitPool<T> pool) {
+        super("", style);
+        this.title = title;
         this.pool = pool;
+        this.selectorStyle = selectorStyle;
+        this.initComponent();
     }
     
     
     // Private Methods
     private void initComponent() {
+        this.mainTable = new Table();
         
+        this.selector = new TraitPoolSelector<>(this.selectorStyle, this.pool);
+        
+        this.mainTable.add(this.selector).center().expandX().fillX();
+        this.mainTable.row();
+        
+        this.getContentTable().add(this.mainTable).expand().fillY().width(MainMenuScreen.DIALOG_WIDTH);
     }
     
 }

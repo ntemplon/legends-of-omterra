@@ -69,6 +69,7 @@ import com.jupiter.europa.scene2d.ui.MultipleNumberSelector.MultipleNumberSelect
 import com.jupiter.europa.scene2d.ui.NumberSelector.NumberSelectorStyle;
 import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEventArgs;
 import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEvents;
+import com.jupiter.europa.scene2d.ui.TraitPoolSelector.TraitPoolSelectorStyle;
 import com.jupiter.europa.screen.dialog.CreateCharacterDialog;
 import com.jupiter.europa.screen.dialog.CreateCharacterDialog.CreateCharacterExitStates;
 import com.jupiter.europa.screen.dialog.CreditsDialog;
@@ -384,6 +385,15 @@ public class MainMenuScreen implements Screen, InputProcessor {
         attrStyle.numberSelectorStyle = numberStyle;
         attrStyle.spacing = COMPONENT_SPACING;
         skin.add(DEFAULT_KEY, attrStyle);
+        
+        // TraitPoolSelectorStyle
+        TraitPoolSelectorStyle tpsStyle = new TraitPoolSelectorStyle();
+        tpsStyle.add = numberIncreaseDrawable;
+        tpsStyle.remove = numberDecreaseDrawable;
+        tpsStyle.spacing = MainMenuScreen.COMPONENT_SPACING;
+        tpsStyle.labelStyle = infoStyle;
+        tpsStyle.scrollPaneStyle = scrollPaneStyle;
+        skin.add(DEFAULT_KEY, tpsStyle);
 
         mainMenuSkin = skin;
     }
