@@ -171,6 +171,7 @@ public class CreateCharacterDialog extends ObservableDialog {
             // Debug Code
             SelectTraitDialog featDialog = new SelectTraitDialog("Select Feats", this.skin,
                     Mappers.characterClass.get(this.getCreatedEntity()).getCharacterClass().getFeatPool());
+            featDialog.setDialogBackground(this.skin.get(MainMenuScreen.DIALOG_BACKGROUND_KEY, SpriteDrawable.class));
             this.showDialog(featDialog);
 
             // Actual Code

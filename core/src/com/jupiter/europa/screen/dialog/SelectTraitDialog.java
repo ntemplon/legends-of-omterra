@@ -25,12 +25,14 @@ package com.jupiter.europa.screen.dialog;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.jupiter.europa.entity.trait.Trait;
 import com.jupiter.europa.entity.trait.TraitPool;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.scene2d.ui.TraitPoolSelector;
 import com.jupiter.europa.scene2d.ui.TraitPoolSelector.TraitPoolSelectorStyle;
 import com.jupiter.europa.screen.MainMenuScreen;
+import com.jupiter.europa.screen.MainMenuScreen.DialogExitStates;
 
 /**
  *
@@ -47,10 +49,26 @@ public class SelectTraitDialog<T extends Trait> extends ObservableDialog {
     private Table mainTable;
     private TraitPoolSelector<T> selector;
     
+    private Drawable dialogBackground;
+    private DialogExitStates exitState;
+    
     
     // Properties
     public final TraitPool<T> getPool() {
         return this.pool;
+    }
+    
+    public final Drawable getDialogBackground() {
+        return this.dialogBackground;
+    }
+    
+    public final void setDialogBackground(Drawable drawable) {
+        this.dialogBackground = drawable;
+        this.mainTable.background(this.dialogBackground);
+    }
+    
+    public DialogExitStates getExitState() {
+        return this.exitState;
     }
     
     
