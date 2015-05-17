@@ -5,38 +5,38 @@
  */
 package com.jupiter.europa.scene2d.ui;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.SnapshotArray;
 import com.jupiter.europa.entity.trait.Trait;
 import com.jupiter.europa.entity.trait.TraitPool;
 import com.jupiter.europa.screen.MainMenuScreen;
 import com.jupiter.ganymede.event.Event;
 import com.jupiter.ganymede.event.Listener;
-import java.util.HashMap;
-import java.util.Map;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- *
- * @author Nathan Templon
  * @param <T>
+ * @author Nathan Templon
  */
 public class TraitPoolSelector<T extends Trait> extends Table {
 
     // Fields
     private final Event<TraitSelectorEventArgs<T>> traitClicked = new Event<>();
-    private final Map<T, SourceTrait<T>> sourceMap = new HashMap<>();
-    private final Map<T, SelectedTrait<T>> selectedMap = new HashMap<>();
+    private final Map<T, SourceTrait<T>> sourceMap = new TreeMap<>((first, second) -> {
+        return first.getName().compareTo(second.getName());
+    });
+    private final Map<T, SelectedTrait<T>> selectedMap = new TreeMap<>((first, second) -> {
+        return first.getName().compareTo(second.getName());
+    });
 
     private final Drawable add;
     private final Drawable remove;
@@ -47,8 +47,31 @@ public class TraitPoolSelector<T extends Trait> extends Table {
 
     private ScrollPane sourcePane;
     private ScrollPane selectedPane;
-    private Table sourceTable;
-    private Table selectedTable;
+    private VerticalGroup sourceTable;
+    private VerticalGroup selectedTable;
+    private Label sourceLabel;
+    private Label selectedLabel;
+
+    private String sourceTitle = "Available";
+    private String selectedTitle = "Selected";
+
+
+    // Properties
+    public String getSourceTitle() {
+        return sourceTitle;
+    }
+
+    public void setSourceTitle(String value) {
+        this.sourceTitle = value;
+    }
+
+    public String getSelectedTitle() {
+        return this.selectedTitle;
+    }
+
+    public void setSelectedTitle(String value) {
+        this.selectedTitle = value;
+    }
 
 
     // Initialization
@@ -71,13 +94,16 @@ public class TraitPoolSelector<T extends Trait> extends Table {
         this(skin.get(styleName, TraitPoolSelectorStyle.class), pool);
     }
 
-
     // Public Methods
     /**
      * Applies the changes selected by the user to the provided trait pool.
      */
     public void applyChanges() {
-
+        Arrays.asList(this.selectedTable.getChildren().toArray()).stream()
+                .filter(actor -> actor instanceof SelectedTrait)
+                .map(actor -> (SelectedTrait<T>) actor)
+                .filter(SelectedTrait<T>::isEnabled)
+                .forEach(wrapper -> this.pool.select(wrapper.getTrait()));
     }
 
     public boolean addTraitClickListener(Listener<TraitSelectorEventArgs<T>> listener) {
@@ -87,7 +113,7 @@ public class TraitPoolSelector<T extends Trait> extends Table {
     public boolean removeTraitClickListener(Listener<TraitSelectorEventArgs<T>> listener) {
         return this.traitClicked.removeListener(listener);
     }
-    
+
     @Override
     public void setSize(float width, float height) {
         super.setSize(width, height);
@@ -98,36 +124,50 @@ public class TraitPoolSelector<T extends Trait> extends Table {
 
     // Private Methods
     private void initComponent() {
-        this.sourceTable = new Table();
-        this.sourceMap.putAll(this.pool.getQualified().stream()
+        // Configure and add Labels
+        this.sourceLabel = new Label(this.getSourceTitle(), this.labelStyle);
+        this.selectedLabel = new Label(this.getSelectedTitle(), this.labelStyle);
+
+        this.add(this.sourceLabel).center().space(this.spacing);
+        this.add(this.selectedLabel).center().space(this.spacing);
+        this.row();
+
+        // Configure and add Tables
+        this.sourceTable = new VerticalGroup();
+        this.sourceTable.space(this.spacing);
+        this.sourceTable.right();
+        this.sourceTable.fill();
+        this.sourceMap.putAll(this.pool.getSources().stream()
                 .collect(Collectors.toMap(
-                                (T sourceItem) -> sourceItem,
-                                (T sourceItem) -> new SourceTrait<>(sourceItem)
-                        )));
+                        (T sourceItem) -> sourceItem,
+                        SourceTrait<T>::new
+                )));
         this.sourceMap.keySet().stream()
-                .map((T item) -> this.sourceMap.get(item))
+                .map(this.sourceMap::get)
                 .forEach((SourceTrait<T> entry) -> {
                     entry.addAdditionClickListener(this::onAddTraitClick);
                     entry.addClickListener(this::onTraitInfoClick);
-                    this.sourceTable.add(entry).right().space(this.spacing).fillX();
-                    this.sourceTable.row();
+                    entry.setEnabled(this.pool.getQualified().contains(entry.trait));
+                    this.sourceTable.addActor(entry);
                 });
         this.sourcePane = new ScrollPane(this.sourceTable, this.scrollPaneStyle);
 
-        this.selectedTable = new Table();
+        this.selectedTable = new VerticalGroup();
+        this.selectedTable.space(this.spacing);
+        this.selectedTable.left();
+        this.selectedTable.fill();
         this.selectedMap.putAll(this.pool.getSelections().stream()
                 .collect(Collectors.toMap(
-                                (T selectedItem) -> selectedItem,
-                                (T selectedItem) -> new SelectedTrait<>(selectedItem)
-                        )));
+                        (T selectedItem) -> selectedItem,
+                        (T selectedItem) -> new SelectedTrait<>(selectedItem)
+                )));
         this.selectedMap.keySet().stream()
-                .map((T item) -> this.selectedMap.get(item))
+                .map(this.selectedMap::get)
                 .forEach((SelectedTrait<T> entry) -> {
                     entry.addRemovalClickListener(this::onRemoveTraitClick);
                     entry.addClickListener(this::onTraitInfoClick);
                     entry.setEnabled(false);
-                    this.selectedTable.add(entry).left().space(MainMenuScreen.COMPONENT_SPACING).fillX();
-                    this.selectedTable.row();
+                    this.selectedTable.addActor(entry);
                 });
         this.selectedPane = new ScrollPane(this.selectedTable, this.scrollPaneStyle);
 
@@ -138,57 +178,45 @@ public class TraitPoolSelector<T extends Trait> extends Table {
     private void onAddTraitClick(TraitSelectorEventArgs<T> args) {
         SourceTrait<T> source = this.sourceMap.get(args.trait);
         this.sourceMap.remove(args.trait);
-        
+
         // Remove it from the table
-        Array<Cell> cells = this.sourceTable.getCells();
-        boolean removed = false;
-        for (int i = 0; i < cells.size; i++) {
-            Cell cell = cells.get(i);
-            if (removed) {
-                cells.set(i - 1, cell);
-            }
-            else if (cell.getActor().equals(source)) {
-                removed = true;
-                cell.clearActor();
-            }
-        }
-        cells.removeIndex(cells.size - 1);
+        this.sourceTable.removeActor(source);
 
         // Add it to the other table
         SelectedTrait<T> selected = new SelectedTrait<>(args.trait);
         selected.addRemovalClickListener(this::onRemoveTraitClick);
         selected.addClickListener(this::onTraitInfoClick);
         this.selectedMap.put(args.trait, selected);
-        this.selectedTable.add(selected).left().space(MainMenuScreen.COMPONENT_SPACING).fillX();
-        this.selectedTable.row();
+
+        // Move it to the correct position
+        this.selectedTable.addActor(selected);
     }
 
     private void onRemoveTraitClick(TraitSelectorEventArgs<T> args) {
         SelectedTrait<T> selected = this.selectedMap.get(args.trait);
         this.selectedMap.remove(args.trait);
-        
+
         // Remove it from the table
-        Array<Cell> cells = this.selectedTable.getCells();
-        boolean removed = false;
-        for (int i = 0; i < cells.size; i++) {
-            Cell cell = cells.get(i);
-            if (removed) {
-                cells.set(i - 1, cell);
-            }
-            else if (cell.getActor().equals(selected)) {
-                removed = true;
-                cell.clearActor();
-            }
-        }
-        cells.removeIndex(cells.size - 1);
+        this.selectedTable.removeActor(selected);
 
         // Add it to the source table
         SourceTrait<T> source = new SourceTrait<>(args.trait);
         source.addAdditionClickListener(this::onAddTraitClick);
         source.addClickListener(this::onTraitInfoClick);
         this.sourceMap.put(args.trait, source);
-        this.sourceTable.add(source).right().space(MainMenuScreen.COMPONENT_SPACING).fillX();
-        this.sourceTable.row();
+
+        // Move it to the correct position
+        int index = Collections.binarySearch(Arrays.asList(this.sourceTable.getChildren().toArray()), source, (Actor first, Actor second) -> {
+            if (first instanceof Traitable && second instanceof Traitable) {
+                Traitable tFirst = (Traitable) first;
+                Traitable tSecond = (Traitable) second;
+                return tFirst.getTrait().getName().compareTo(tSecond.getTrait().getName());
+            }
+            else {
+                return 0;
+            }
+        });
+        this.sourceTable.addActorAt(Math.abs(index) - 1, source);
     }
 
     private void onTraitInfoClick(TraitSelectorEventArgs<T> args) {
@@ -211,10 +239,13 @@ public class TraitPoolSelector<T extends Trait> extends Table {
         public TraitPoolSelectorStyle() {
 
         }
-
     }
 
-    class SourceTrait<T extends Trait> extends Table {
+    interface Traitable<T extends Trait> {
+        T getTrait();
+    }
+
+    class SourceTrait<T extends Trait> extends Table implements Traitable<T> {
 
         // Fields
         private final Event<TraitSelectorEventArgs<T>> addClicked = new Event<>();
@@ -229,7 +260,8 @@ public class TraitPoolSelector<T extends Trait> extends Table {
 
 
         // Properties
-        T getTraitName() {
+        @Override
+        public T getTrait() {
             return this.trait;
         }
 
@@ -291,10 +323,9 @@ public class TraitPoolSelector<T extends Trait> extends Table {
                 }
             });
         }
-
     }
 
-    class SelectedTrait<T extends Trait> extends Table {
+    class SelectedTrait<T extends Trait> extends Table implements Traitable<T> {
 
         // Fields
         private final Event<TraitSelectorEventArgs<T>> removedClicked = new Event<>();
@@ -309,7 +340,8 @@ public class TraitPoolSelector<T extends Trait> extends Table {
 
 
         // Properties
-        T getTraitName() {
+        @Override
+        public T getTrait() {
             return this.trait;
         }
 
@@ -362,6 +394,7 @@ public class TraitPoolSelector<T extends Trait> extends Table {
             this.add(this.removeButton).left().space(MainMenuScreen.COMPONENT_SPACING);
 
             this.nameLabel = new Label(this.trait.getName(), TraitPoolSelector.this.labelStyle);
+            this.nameLabel.setAlignment(Align.right);
             this.add(this.nameLabel).right().space(MainMenuScreen.COMPONENT_SPACING).fillX().expandX();
 
             this.addListener(new ClickListener() {
@@ -370,8 +403,8 @@ public class TraitPoolSelector<T extends Trait> extends Table {
                     SelectedTrait.this.clicked.dispatch(new TraitSelectorEventArgs<>(SelectedTrait.this.trait));
                 }
             });
-        }
 
+        }
     }
 
     public static class TraitSelectorEventArgs<T extends Trait> {
@@ -384,7 +417,5 @@ public class TraitPoolSelector<T extends Trait> extends Table {
         private TraitSelectorEventArgs(T trait) {
             this.trait = trait;
         }
-
     }
-
 }

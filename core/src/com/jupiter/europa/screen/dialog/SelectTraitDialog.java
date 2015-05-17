@@ -23,11 +23,14 @@
  */
 package com.jupiter.europa.screen.dialog;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.jupiter.europa.entity.trait.Trait;
 import com.jupiter.europa.entity.trait.TraitPool;
+import com.jupiter.europa.scene2d.ui.EuropaButton;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.scene2d.ui.TraitPoolSelector;
 import com.jupiter.europa.scene2d.ui.TraitPoolSelector.TraitPoolSelectorStyle;
@@ -43,11 +46,16 @@ public class SelectTraitDialog<T extends Trait> extends ObservableDialog {
     
     // Fields
     private final String title;
+    private final Skin skin;
     private final TraitPool<T> pool;
     private final TraitPoolSelectorStyle selectorStyle;
     
     private Table mainTable;
+    private Label titleLabel;
     private TraitPoolSelector<T> selector;
+    private Table buttonTable;
+    private EuropaButton nextButton;
+    private EuropaButton backButton;
     
     private Drawable dialogBackground;
     private DialogExitStates exitState;
@@ -74,32 +82,74 @@ public class SelectTraitDialog<T extends Trait> extends ObservableDialog {
     
     // Initialization
     public SelectTraitDialog(String title, Skin skin, TraitPool<T> pool) {
-        this(title, skin.get(WindowStyle.class), skin.get(TraitPoolSelectorStyle.class), pool);
+        super("", skin.get(WindowStyle.class));
+
+        this.title = title;
+        this.pool = pool;
+        this.selectorStyle = skin.get(TraitPoolSelectorStyle.class);
+        this.skin = skin;
+
+        this.initComponent();
     }
     
     public SelectTraitDialog(String title, Skin skin, String styleName, TraitPool<T> pool) {
-        this(title, skin.get(styleName, WindowStyle.class), skin.get(styleName, TraitPoolSelectorStyle.class), pool);
-    }
-    
-    public SelectTraitDialog(String title, WindowStyle style, TraitPoolSelectorStyle selectorStyle, TraitPool<T> pool) {
-        super("", style);
+        super("", skin.get(styleName, WindowStyle.class));
+
         this.title = title;
         this.pool = pool;
-        this.selectorStyle = selectorStyle;
+        this.selectorStyle = skin.get(styleName, TraitPoolSelectorStyle.class);
+        this.skin = skin;
+
         this.initComponent();
+    }
+
+
+    // Public Methods
+    public void applyChanges() {
+        this.selector.applyChanges();
     }
     
     
     // Private Methods
     private void initComponent() {
         this.mainTable = new Table();
-        
+
+        // Title
+        this.titleLabel = new Label(this.title, this.skin.get(Label.LabelStyle.class));
+
+        this.mainTable.add(this.titleLabel).expandX().center().top();
+        this.mainTable.row();
+
+        // Selector
         this.selector = new TraitPoolSelector<>(this.selectorStyle, this.pool);
         
-        this.mainTable.add(this.selector).center().expandX().fillX();
+        this.mainTable.add(this.selector).center().top().expand().fillX();
         this.mainTable.row();
-        
+
+        // Buttons
+        this.buttonTable = new Table();
+        this.nextButton = new EuropaButton("Next", this.skin.get(TextButton.TextButtonStyle.class));
+        this.nextButton.addClickListener(this::onNextButtonClick);
+        this.backButton = new EuropaButton("Back", this.skin.get(TextButton.TextButtonStyle.class));
+        this.backButton.addClickListener(this::onBackButtonClick);
+
+        this.buttonTable.add(this.backButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right().expandX();
+        this.buttonTable.add(this.nextButton).space(MainMenuScreen.COMPONENT_SPACING).width(MainMenuScreen.DIALOG_BUTTON_WIDTH).right();
+
+        this.mainTable.pad(MainMenuScreen.TABLE_PADDING);
+        this.mainTable.add(this.buttonTable).space(MainMenuScreen.COMPONENT_SPACING).expandX().fillX();
+
         this.getContentTable().add(this.mainTable).expand().fillY().width(MainMenuScreen.DIALOG_WIDTH);
+    }
+
+    private void onNextButtonClick(EuropaButton.ClickEvent event) {
+        this.exitState = DialogExitStates.NEXT;
+        this.hide();
+    }
+
+    private void onBackButtonClick(EuropaButton.ClickEvent even) {
+        this.exitState = DialogExitStates.BACK;
+        this.hide();
     }
     
 }

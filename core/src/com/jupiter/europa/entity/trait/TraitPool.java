@@ -27,6 +27,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
+import com.jupiter.europa.EuropaGame;
 import com.jupiter.ganymede.event.Event;
 import com.jupiter.ganymede.event.Listener;
 import java.util.ArrayList;
@@ -64,7 +65,6 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
     private boolean autoQualify = false;
     private boolean sorted = true;
     private Comparator<T> sourceComparator;
-    private Comparator<T> selectedComparator;
 
 
     // Properties
@@ -124,17 +124,14 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
         this.sourceComparator = comparator;
     }
 
-    public Comparator<T> getSelectedComparator() {
-        return this.selectedComparator;
-    }
-
-    public void setSelectedComparator(Comparator<T> comparator) {
-        this.selectedComparator = comparator;
-    }
-
 
     // Initialization
     public TraitPool() {
+        this.sorted = true;
+        this.setSourceComparator((first, second) ->
+            first.getName().compareTo(second.getName())
+        );
+
         this.capacity = 0;
     }
 
@@ -176,7 +173,7 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
             this.selected.add(trait);
 
             // Dispatch Message
-            this.selection.dispatch(new TraitPoolEvent(this, trait));
+            this.selection.dispatch(new TraitPoolEvent<>(this, trait));
 
             if (this.autoQualify) {
                 this.reassesQualifications();
@@ -218,10 +215,6 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
                 Collections.sort(this.source, this.getSourceComparator());
                 Collections.sort(this.qualified, this.getSourceComparator());
             }
-            
-            if (this.getSelectedComparator() != null) {
-                Collections.sort(this.selected, this.getSelectedComparator());
-            }
         }
     }
 
@@ -256,7 +249,7 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
                         try {
                             Class<?> type = Class.forName(typeName);
                             if (Trait.class.isAssignableFrom(type)) {
-                                this.selected.add((T) json.fromJson(type, value.get(ITEM_DATA_KEY).toString()));
+                                this.selected.add((T) json.fromJson(type, value.get(ITEM_DATA_KEY).prettyPrint(EuropaGame.PRINT_SETTINGS)));
                             }
                         }
                         catch (ClassNotFoundException ex) {

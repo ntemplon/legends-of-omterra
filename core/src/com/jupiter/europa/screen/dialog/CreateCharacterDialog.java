@@ -51,6 +51,7 @@ import com.jupiter.europa.entity.stats.SkillSet;
 import com.jupiter.europa.entity.stats.SkillSet.Skills;
 import com.jupiter.europa.entity.stats.characterclass.CharacterClass;
 import com.jupiter.europa.entity.stats.race.Race;
+import com.jupiter.europa.entity.trait.feat.Feat;
 import com.jupiter.europa.io.FileLocations;
 import com.jupiter.europa.scene2d.ui.AttributeSelector;
 import com.jupiter.europa.scene2d.ui.EuropaButton;
@@ -60,11 +61,8 @@ import com.jupiter.europa.scene2d.ui.MultipleNumberSelector.MultipleNumberSelect
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.screen.MainMenuScreen;
 import com.jupiter.europa.screen.MainMenuScreen.DialogExitStates;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -94,6 +92,7 @@ public class CreateCharacterDialog extends ObservableDialog {
     // Fields
     private final SelectRaceClassAttributesDialog selectRaceClass;
     private SelectSkillsDialog selectSkills;
+    private SelectTraitDialog<Feat> selectFeats;
     private final Skin skin = getSkin();
 
     private CreateCharacterExitStates exitState = CreateCharacterExitStates.CANCELED;
@@ -110,6 +109,16 @@ public class CreateCharacterDialog extends ObservableDialog {
 
     public final EuropaEntity getCreatedEntity() {
         return this.createdEntity;
+    }
+
+    public final Collection<ObservableDialog> getDialogs() {
+        Set<ObservableDialog> dialogs = new HashSet<>(3);
+        dialogs.add(this.selectRaceClass);
+        dialogs.add(this.selectSkills);
+        dialogs.add(this.selectFeats);
+        return dialogs.stream()
+                .filter((dialog) -> dialog != null)
+                .collect(Collectors.toSet());
     }
 
 
@@ -132,10 +141,7 @@ public class CreateCharacterDialog extends ObservableDialog {
     @Override
     public void setSize(float width, float height) {
         super.setSize(width, height);
-        this.selectRaceClass.setSize(width, height);
-        if (this.selectSkills != null) {
-            this.selectSkills.setSize(width, height);
-        }
+        this.getDialogs().stream().forEach((dialog) -> dialog.setSize(width, height));
 
         this.width = width;
         this.height = height;
@@ -169,10 +175,11 @@ public class CreateCharacterDialog extends ObservableDialog {
     private void onSelectSkillsHide(DialogEventArgs args) {
         if (this.selectSkills.getExitState() == DialogExitStates.NEXT) {
             // Debug Code
-            SelectTraitDialog featDialog = new SelectTraitDialog("Select Feats", this.skin,
+            this.selectFeats = new SelectTraitDialog<>("Select Feats", this.skin,
                     Mappers.characterClass.get(this.getCreatedEntity()).getCharacterClass().getFeatPool());
-            featDialog.setDialogBackground(this.skin.get(MainMenuScreen.DIALOG_BACKGROUND_KEY, SpriteDrawable.class));
-            this.showDialog(featDialog);
+            selectFeats.setDialogBackground(this.skin.get(MainMenuScreen.DIALOG_BACKGROUND_KEY, SpriteDrawable.class));
+            this.selectFeats.addDialogListener(this::onSelectFeatsHide, DialogEvents.HIDDEN);
+            this.showDialog(selectFeats);
 
             // Actual Code
 //            this.exitState = CreateCharacterExitStates.OK;
@@ -180,6 +187,17 @@ public class CreateCharacterDialog extends ObservableDialog {
         }
         else {
             this.showDialog(this.selectRaceClass);
+        }
+    }
+
+    private void onSelectFeatsHide(DialogEventArgs args) {
+        if (this.selectFeats.getExitState() == DialogExitStates.NEXT) {
+            this.selectFeats.applyChanges();
+            this.exitState = CreateCharacterExitStates.OK;
+            this.concludeDialog();
+        }
+        else {
+            this.showDialog(this.selectSkills);
         }
     }
 
@@ -461,7 +479,7 @@ public class CreateCharacterDialog extends ObservableDialog {
             this.mainTable = new Table();
 
             // Create Attribute Selector
-            List<String> skillNames = this.selectableSkills.stream().map((Skills skill) -> skill.getDisplayName()).collect(Collectors.toList());
+            List<String> skillNames = this.selectableSkills.stream().map(Skills::getDisplayName).collect(Collectors.toList());
             this.skillSelector = new MultipleNumberSelector(this.skillPointsAvailable, this.skin.get(MultipleNumberSelectorStyle.class), Collections
                     .unmodifiableList(skillNames), 2);
             this.skillSelector.setUseMaximumNumber(true);

@@ -148,7 +148,7 @@ public abstract class CharacterClass implements Serializable, Initializable {
 
 
     // Fields
-    private final Event<LevelUpArgs> levelUp = new Event();
+    private final Event<LevelUpArgs> levelUp = new Event<>();
 
     private int level;
     private long ownerId = -1;
@@ -196,14 +196,14 @@ public abstract class CharacterClass implements Serializable, Initializable {
             pool.reassesQualifications();
         });
 
-        if (Families.raced.matches(owner)) {
-            Race race = Mappers.race.get(owner).getRace();
-            if (race != null) {
-                if (this.featPool != null) {
-                    this.featPool.increaseCapacity(race.getNumberOfFeatsAtFirstLevel());
-                }
-            }
-        }
+//        if (Families.raced.matches(owner)) {
+//            Race race = Mappers.race.get(owner).getRace();
+//            if (race != null) {
+//                if (this.featPool != null) {
+//                    this.featPool.increaseCapacity(race.getNumberOfFeatsAtFirstLevel());
+//                }
+//            }
+//        }
     }
 
     public FeatPool getFeatPool() {
@@ -316,6 +316,7 @@ public abstract class CharacterClass implements Serializable, Initializable {
             }
             this.featPool = json.fromJson(FeatPool.class, jsonData.get(FEAT_POOL_KEY).prettyPrint(EuropaGame.PRINT_SETTINGS));
             this.featPool.addSelectionListener(this::onFeatSelection);
+            this.abilityPools.add(this.featPool);
         }
 
         if (jsonData.has(AVAILABLE_SKILL_POINTS_KEY)) {

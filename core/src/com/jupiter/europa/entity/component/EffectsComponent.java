@@ -27,6 +27,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
+import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.entity.effects.Effect;
 import com.jupiter.europa.entity.trait.Trait;
 import java.util.ArrayList;
@@ -72,13 +73,13 @@ public class EffectsComponent extends Component implements Serializable {
                         try {
                             Class<?> type = Class.forName(typeName);
                             if (Effect.class.isAssignableFrom(type)) {
-                                this.effects.add((Effect) json.fromJson(type, value.get(EFFECT_DATA_KEY).toString()));
+                                // is inlcuding the "effect-data:" -> is that breaking it?
+                                this.effects.add((Effect) json.fromJson(type, value.get(EFFECT_DATA_KEY).prettyPrint(EuropaGame.PRINT_SETTINGS)));
                             }
                         }
                         catch (ClassNotFoundException ex) {
 
                         }
-
                     }
                 });
             }
