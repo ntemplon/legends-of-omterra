@@ -32,7 +32,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Disposable;
 import com.jupiter.europa.screen.overlay.Overlay;
+import com.jupiter.ganymede.event.Listener;
+import com.jupiter.ganymede.property.Property;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -47,8 +51,8 @@ public abstract class OverlayableScreen implements Screen, InputProcessor {
     private final Set<Overlay> overlays = new LinkedHashSet<>();
     private final InputMultiplexer multiplexer = new InputMultiplexer();
     private final Batch overlayBatch = new SpriteBatch();
-    
-    private Color tint = Color.WHITE;
+
+    private final Property<Color> tint = new Property<>(Color.WHITE);
     
     
     // Properties
@@ -65,11 +69,11 @@ public abstract class OverlayableScreen implements Screen, InputProcessor {
     }
     
     public final Color getTint() {
-        return this.tint;
+        return this.tint.get();
     }
     
     public final void setTint(Color tint) {
-        this.tint = tint;
+        this.tint.set(tint);
     }
     
     protected final InputMultiplexer getMultiplexer() {
@@ -87,6 +91,19 @@ public abstract class OverlayableScreen implements Screen, InputProcessor {
     @Override
     public void show() {
         
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void dispose() {
+        this.getOverlays().stream()
+                .filter(overlay -> overlay instanceof Disposable)
+                .map(overlay -> (Disposable) overlay)
+                .forEach(Disposable::dispose);
     }
     
     @Override
@@ -120,6 +137,14 @@ public abstract class OverlayableScreen implements Screen, InputProcessor {
             overlay.removed();
         }
         return wasPresent;
+    }
+
+    public boolean addTintChangedListener(Listener<Property.PropertyChangedArgs<Color>> listener) {
+        return this.tint.addPropertyChangedListener(listener);
+    }
+
+    public boolean removeTintChangedListener(Listener<Property.PropertyChangedArgs<Color>> listener) {
+        return this.tint.removePropertyChangedListener(listener);
     }
     
     

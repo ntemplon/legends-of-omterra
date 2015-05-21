@@ -27,13 +27,15 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.jupiter.europa.io.FileLocations;
-import static com.jupiter.europa.screen.MainMenuScreen.MAIN_MENU_SKIN_DIRECTORY;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import static com.jupiter.europa.screen.MainMenuScreen.MAIN_MENU_SKIN_DIRECTORY;
 
 /**
  *
@@ -56,7 +58,7 @@ public class AtlasPacker implements Runnable {
     public void run() {
         Path configFile = FileLocations.SPRITES_DIRECTORY.resolve(CONFIGURATION_FILE);
         JsonReader reader = new JsonReader();
-        String contents = "";
+        String contents;
 
         try {
             contents = new String(Files.readAllBytes(configFile), StandardCharsets.UTF_8);

@@ -24,31 +24,50 @@
 package com.jupiter.europa.entity.component;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.entity.effects.Effect;
-import com.jupiter.europa.entity.trait.Trait;
+import com.jupiter.europa.entity.messaging.RequestEffectAddMessage;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- *
  * @author Nathan Templon
  */
-public class EffectsComponent extends Component implements Serializable {
+public class EffectsComponent extends Component implements Serializable, OwnedComponent {
 
     // Constants
     private static final String EFFECTS_KEY = "effects";
     private static final String EFFECT_CLASS_KEY = "effect-class";
     private static final String EFFECT_DATA_KEY = "effect-data";
-    
-    
+
+
     // Fields
     public final Collection<Effect> effects = new ArrayList<>();
-    
-    
+    private Collection<Effect> efQueue = new ArrayList<>();
+    private Entity owner;
+
+
+    // Properties Methods
+    @Override
+    public Entity getOwner() {
+        return this.owner;
+    }
+
+    @Override
+    public void setOwner(Entity entity) {
+        this.owner = entity;
+        this.efQueue.stream()
+                .map(effect -> new RequestEffectAddMessage(entity, effect))
+                .forEach(message -> EuropaGame.game.getMessageSystem().publish(message));
+        this.efQueue = null;
+    }
+
+
     // Serializable (Json) Implementation
     @Override
     public void write(Json json) {
@@ -73,11 +92,10 @@ public class EffectsComponent extends Component implements Serializable {
                         try {
                             Class<?> type = Class.forName(typeName);
                             if (Effect.class.isAssignableFrom(type)) {
-                                // is inlcuding the "effect-data:" -> is that breaking it?
-                                this.effects.add((Effect) json.fromJson(type, value.get(EFFECT_DATA_KEY).prettyPrint(EuropaGame.PRINT_SETTINGS)));
+                                Effect effect = (Effect) json.fromJson(type, value.get(EFFECT_DATA_KEY).prettyPrint(EuropaGame.PRINT_SETTINGS));
+                                this.efQueue.add(effect);
                             }
-                        }
-                        catch (ClassNotFoundException ex) {
+                        } catch (ClassNotFoundException ex) {
 
                         }
                     }
@@ -85,7 +103,4 @@ public class EffectsComponent extends Component implements Serializable {
             }
         }
     }
-    
-    
-    
 }

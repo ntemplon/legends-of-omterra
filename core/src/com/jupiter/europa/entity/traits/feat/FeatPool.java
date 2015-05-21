@@ -21,23 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jupiter.europa.entity.effects;
+package com.jupiter.europa.entity.traits.feat;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.utils.Json.Serializable;
+import com.jupiter.europa.entity.traits.TraitPool;
 
 /**
  *
  * @author Nathan Templon
  */
-public interface Effect extends Serializable {
-    
-    void onAdd(Entity entity);
+public class FeatPool extends TraitPool<Feat> {
 
-    void onRemove();
-    void update(float deltaT);
-    void onCombatTurnStart();
-    void onCombatTurnEnd();
-    void onOutOfCombatTurn();
+    // Constants
+    public static final String NAME = "Feats";
+
+
+    // Initialization
+    public FeatPool() {
+        super(NAME);
+        this.loadInitialSources();
+    }
+
+    public FeatPool(Entity entity) {
+        super(entity, NAME);
+        this.loadInitialSources();
+    }
+    
+    
+    // Private Methods
+    private void loadInitialSources() {
+        Feat.FEAT_TYPES.stream().forEach((Class<? extends Feat> type) -> {
+            try {
+                Feat instance = type.newInstance();
+                this.addSource(instance);
+            }
+            catch (IllegalAccessException | InstantiationException ex) {
+                
+            }
+        });
+    }
     
 }

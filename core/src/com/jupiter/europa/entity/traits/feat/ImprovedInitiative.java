@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jupiter.europa.entity.trait.feat;
+package com.jupiter.europa.entity.traits.feat;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Json;
@@ -29,8 +29,9 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.jupiter.europa.entity.effects.AttributeModifierEffect;
 import com.jupiter.europa.entity.effects.Effect;
 import com.jupiter.europa.entity.stats.AttributeSet;
-import com.jupiter.europa.entity.trait.Qualifications;
-import com.jupiter.europa.entity.trait.FeatNotPresentQualifications;
+import com.jupiter.europa.entity.traits.FeatNotPresentQualifier;
+import com.jupiter.europa.entity.traits.Qualifier;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,13 +42,13 @@ import java.util.Map;
 public class ImprovedInitiative implements Feat {
 
     // Fields
-    private final Qualifications qualifications = new FeatNotPresentQualifications(ImprovedInitiative.class);
+    private final Qualifier qualifier = new FeatNotPresentQualifier(ImprovedInitiative.class);
     private final Effect effect = new ImprovedInitiativeEffect();
     
     
     @Override
-    public Qualifications getQualifications() {
-        return this.qualifications;
+    public Qualifier getQualifier() {
+        return this.qualifier;
     }
     
     @Override

@@ -33,17 +33,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox.SelectBoxStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
@@ -55,12 +50,10 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.jupiter.europa.EuropaGame;
-import static com.jupiter.europa.audio.AudioService.TITLE_MUSIC;
 import com.jupiter.europa.entity.EuropaEntity;
 import com.jupiter.europa.entity.Party;
 import com.jupiter.europa.geometry.Size;
 import com.jupiter.europa.io.FileLocations;
-import static com.jupiter.europa.io.FileLocations.SKINS_DIRECTORY;
 import com.jupiter.europa.save.SaveGame;
 import com.jupiter.europa.scene2d.ui.EuropaButton;
 import com.jupiter.europa.scene2d.ui.EuropaButton.ClickEvent;
@@ -70,18 +63,18 @@ import com.jupiter.europa.scene2d.ui.NumberSelector.NumberSelectorStyle;
 import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEventArgs;
 import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEvents;
 import com.jupiter.europa.scene2d.ui.TraitPoolSelector.TraitPoolSelectorStyle;
-import com.jupiter.europa.screen.dialog.CreateCharacterDialog;
+import com.jupiter.europa.screen.dialog.*;
 import com.jupiter.europa.screen.dialog.CreateCharacterDialog.CreateCharacterExitStates;
-import com.jupiter.europa.screen.dialog.CreditsDialog;
-import com.jupiter.europa.screen.dialog.LoadGameDialog;
-import com.jupiter.europa.screen.dialog.NewGameDialog;
 import com.jupiter.europa.screen.dialog.NewGameDialog.NewGameExitStates;
-import com.jupiter.europa.screen.dialog.OptionsDialog;
 import com.jupiter.europa.world.World;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import static com.jupiter.europa.audio.AudioService.TITLE_MUSIC;
+import static com.jupiter.europa.io.FileLocations.SKINS_DIRECTORY;
 
 /**
  *
@@ -174,7 +167,7 @@ public class MainMenuScreen implements Screen, InputProcessor {
         skin.add(INFO_LABEL_FONT_KEY, EuropaGame.game.getAssetManager().get(FileLocations.FONTS_DIRECTORY.resolve(INFO_LABEL_FONT).toString()));
 
         // Set the background texture
-        Pixmap pixmap = new Pixmap(1, (int) 1, Pixmap.Format.RGB888);
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGB888);
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
         skin.add(SOLID_TEXTURE_KEY, new Texture(pixmap));
@@ -393,6 +386,8 @@ public class MainMenuScreen implements Screen, InputProcessor {
         tpsStyle.spacing = MainMenuScreen.COMPONENT_SPACING;
         tpsStyle.labelStyle = infoStyle;
         tpsStyle.scrollPaneStyle = scrollPaneStyle;
+        tpsStyle.background = skin.newDrawable(SOLID_TEXTURE_KEY, new Color(0.4f, 0.4f, 0.4f, 0.2f));
+        tpsStyle.selectedBackground = skin.newDrawable(SOLID_TEXTURE_KEY, SELECTION_COLOR);
         skin.add(DEFAULT_KEY, tpsStyle);
 
         mainMenuSkin = skin;

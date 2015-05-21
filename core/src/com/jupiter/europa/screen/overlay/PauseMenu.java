@@ -36,10 +36,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.io.FileLocations;
+import com.jupiter.europa.screen.OverlayableScreen;
+
 import static com.jupiter.europa.screen.MainMenuScreen.BUTTON_FONT;
 import static com.jupiter.europa.screen.MainMenuScreen.TITLE_FONT;
-import com.jupiter.europa.screen.OverlayableScreen;
-import java.io.File;
 
 /**
  *
@@ -49,6 +49,7 @@ public class PauseMenu extends Scene2DOverlay {
 
     // Constants
     private static final Color TRANSPARENT = new Color(1, 1, 1, 0);
+    private static final Color BACKGROUND_TINT = new Color(Color.LIGHT_GRAY);
 
     private static Skin pauseMenuSkin;
 
@@ -119,11 +120,15 @@ public class PauseMenu extends Scene2DOverlay {
         this.exitKey = key;
     }
 
+    @Override
+    public Color getBackgroundTint() {
+        return BACKGROUND_TINT;
+    }
+
 
     // Initialization
     public PauseMenu() {
         super(true);
-        this.setTint(Color.LIGHT_GRAY);
     }
 
 

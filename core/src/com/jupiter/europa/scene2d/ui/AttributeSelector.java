@@ -25,10 +25,11 @@ package com.jupiter.europa.scene2d.ui;
 
 import com.jupiter.europa.entity.stats.AttributeSet;
 import com.jupiter.europa.entity.stats.AttributeSet.Attributes;
+
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -38,17 +39,17 @@ import java.util.stream.Collectors;
 public class AttributeSelector extends MultipleNumberSelector {
 
     // Constants
-    private static final Set<String> attributeNamesInternal = new LinkedHashSet<>();
+    private static final List<String> attributeNamesInternal = new ArrayList<>(AttributeSet.PRIMARY_ATTRIBUTES.size());
 
     static {
         attributeNamesInternal.addAll(
                 AttributeSet.PRIMARY_ATTRIBUTES.stream()
                 .map((Attributes attr) -> attr.getDisplayName())
-                .collect(Collectors.toSet())
+                        .collect(Collectors.toList())
         );
     }
 
-    public static final Set<String> ATTRIBUTE_NAMES = Collections.unmodifiableSet(attributeNamesInternal);
+    public static final List<String> ATTRIBUTE_NAMES = Collections.unmodifiableList(attributeNamesInternal);
 
 
     // Properties

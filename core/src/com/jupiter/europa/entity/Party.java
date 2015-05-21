@@ -28,18 +28,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
 import com.jupiter.europa.EuropaGame;
-import com.jupiter.europa.entity.component.AttributesComponent;
-import com.jupiter.europa.entity.component.CharacterClassComponent;
-import com.jupiter.europa.entity.component.CollisionComponent;
-import com.jupiter.europa.entity.component.EffectsComponent;
-import com.jupiter.europa.entity.component.PositionComponent;
-import com.jupiter.europa.entity.component.RenderComponent;
-import com.jupiter.europa.entity.component.SizeComponent;
-import com.jupiter.europa.entity.component.MovementResourceComponent;
-import com.jupiter.europa.entity.component.NameComponent;
-import com.jupiter.europa.entity.component.RaceComponent;
-import com.jupiter.europa.entity.component.SkillsComponent;
-import com.jupiter.europa.entity.component.WalkComponent;
+import com.jupiter.europa.entity.component.*;
 import com.jupiter.europa.entity.stats.AttributeSet;
 import com.jupiter.europa.entity.stats.SkillSet;
 import com.jupiter.europa.entity.stats.SkillSet.Skills;
@@ -47,14 +36,10 @@ import com.jupiter.europa.entity.stats.characterclass.CharacterClass;
 import com.jupiter.europa.entity.stats.race.Race;
 import com.jupiter.europa.geometry.Size;
 import com.jupiter.europa.io.FileLocations;
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+
+import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  *
@@ -87,6 +72,7 @@ public class Party implements Serializable {
         entity.add(new WalkComponent());
         entity.add(new RenderComponent(new Sprite(Mappers.moveTexture.get(entity).getFrontStandTexture())));
         entity.add(new AttributesComponent(attributes));
+        entity.add(new ResourceComponent());
         
         // Skills
         Set<Skills> classSkills = new HashSet<>();

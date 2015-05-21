@@ -10,17 +10,19 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.utils.SnapshotArray;
-import com.jupiter.europa.entity.trait.Trait;
-import com.jupiter.europa.entity.trait.TraitPool;
+import com.badlogic.gdx.utils.Align;
+import com.jupiter.europa.entity.traits.Trait;
+import com.jupiter.europa.entity.traits.TraitPool;
 import com.jupiter.europa.screen.MainMenuScreen;
 import com.jupiter.ganymede.event.Event;
 import com.jupiter.ganymede.event.Listener;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -28,6 +30,10 @@ import java.util.stream.Collectors;
  * @author Nathan Templon
  */
 public class TraitPoolSelector<T extends Trait> extends Table {
+
+    // Constants
+    private static final String REMAINING_HEADER = "Selections Remaining: ";
+
 
     // Fields
     private final Event<TraitSelectorEventArgs<T>> traitClicked = new Event<>();
@@ -43,6 +49,9 @@ public class TraitPoolSelector<T extends Trait> extends Table {
     private final int spacing;
     private final LabelStyle labelStyle;
     private final ScrollPaneStyle scrollPaneStyle;
+    private final Drawable backImage;
+    private final Drawable selectedBackground;
+    private final Drawable unselectedBackground;
     private final TraitPool<T> pool;
 
     private ScrollPane sourcePane;
@@ -51,6 +60,7 @@ public class TraitPoolSelector<T extends Trait> extends Table {
     private VerticalGroup selectedTable;
     private Label sourceLabel;
     private Label selectedLabel;
+    private Label remainingLabel;
 
     private String sourceTitle = "Available";
     private String selectedTitle = "Selected";
@@ -81,6 +91,9 @@ public class TraitPoolSelector<T extends Trait> extends Table {
         this.spacing = style.spacing;
         this.labelStyle = style.labelStyle;
         this.scrollPaneStyle = style.scrollPaneStyle;
+        this.backImage = style.background;
+        this.selectedBackground = style.selectedBackground;
+        this.unselectedBackground = style.unselectedBackground;
         this.pool = pool;
 
         this.initComponent();
@@ -95,6 +108,7 @@ public class TraitPoolSelector<T extends Trait> extends Table {
     }
 
     // Public Methods
+
     /**
      * Applies the changes selected by the user to the provided trait pool.
      */
@@ -124,6 +138,13 @@ public class TraitPoolSelector<T extends Trait> extends Table {
 
     // Private Methods
     private void initComponent() {
+        this.background(this.backImage);
+
+        // Remaining Label
+        this.remainingLabel = new Label(REMAINING_HEADER + (this.pool.getCapacity() - this.pool.getNumberOfSelections()), this.labelStyle);
+        this.add(this.remainingLabel).center().colspan(2);
+        this.row();
+
         // Configure and add Labels
         this.sourceLabel = new Label(this.getSourceTitle(), this.labelStyle);
         this.selectedLabel = new Label(this.getSelectedTitle(), this.labelStyle);
@@ -171,8 +192,8 @@ public class TraitPoolSelector<T extends Trait> extends Table {
                 });
         this.selectedPane = new ScrollPane(this.selectedTable, this.scrollPaneStyle);
 
-        this.add(this.sourcePane).center().expand().fill().space(this.spacing).width(this.getWidth() / 2.0f);
-        this.add(this.selectedPane).center().expand().fill().space(this.spacing).width(this.getWidth() / 2.0f);
+        this.add(this.sourcePane).center().expand().fill().space(this.spacing).padRight(3 * this.spacing).width(this.getWidth() / 2.0f);
+        this.add(this.selectedPane).center().expand().fill().space(this.spacing).padLeft(3 * this.spacing).width(this.getWidth() / 2.0f);
     }
 
     private void onAddTraitClick(TraitSelectorEventArgs<T> args) {
@@ -190,6 +211,8 @@ public class TraitPoolSelector<T extends Trait> extends Table {
 
         // Move it to the correct position
         this.selectedTable.addActor(selected);
+
+        this.updateRemaining();
     }
 
     private void onRemoveTraitClick(TraitSelectorEventArgs<T> args) {
@@ -211,16 +234,37 @@ public class TraitPoolSelector<T extends Trait> extends Table {
                 Traitable tFirst = (Traitable) first;
                 Traitable tSecond = (Traitable) second;
                 return tFirst.getTrait().getName().compareTo(tSecond.getTrait().getName());
-            }
-            else {
+            } else {
                 return 0;
             }
         });
         this.sourceTable.addActorAt(Math.abs(index) - 1, source);
+
+        this.updateRemaining();
     }
 
     private void onTraitInfoClick(TraitSelectorEventArgs<T> args) {
+        Traitable trait = args.wrapper;
+        this.selectedMap.values().stream()
+                .filter(other -> other != trait)
+                .forEach(other -> other.setShaded(false));
+        this.sourceMap.values().stream()
+                .filter(other -> other != trait)
+                .forEach(other -> other.setShaded(false));
+        trait.setShaded(true);
+
         this.traitClicked.dispatch(args);
+    }
+
+    private void updateRemaining() {
+        int selectionsRemaining = this.pool.getCapacity() - this.selectedMap.keySet().size();
+        this.remainingLabel.setText(REMAINING_HEADER + selectionsRemaining);
+
+        if (selectionsRemaining <= 0) {
+            this.sourceMap.values().stream().forEach(trait -> trait.setEnabled(false));
+        } else {
+            this.sourceMap.values().stream().forEach(trait -> trait.setEnabled(true));
+        }
     }
 
 
@@ -233,6 +277,9 @@ public class TraitPoolSelector<T extends Trait> extends Table {
         public int spacing;
         public LabelStyle labelStyle;
         public ScrollPaneStyle scrollPaneStyle;
+        public Drawable background;
+        public Drawable selectedBackground;
+        public Drawable unselectedBackground;
 
 
         // Initialization
@@ -242,6 +289,10 @@ public class TraitPoolSelector<T extends Trait> extends Table {
     }
 
     interface Traitable<T extends Trait> {
+        boolean isShaded();
+
+        void setShaded(boolean value);
+
         T getTrait();
     }
 
@@ -257,9 +308,26 @@ public class TraitPoolSelector<T extends Trait> extends Table {
         private Button addButton;
 
         private boolean enabled = true;
+        private boolean shaded = false;
 
 
         // Properties
+        @Override
+        public boolean isShaded() {
+            return this.shaded;
+        }
+
+        @Override
+        public void setShaded(boolean value) {
+            boolean wasShaded = this.isShaded();
+            this.shaded = value;
+            if (this.shaded && !wasShaded) {
+                this.background(TraitPoolSelector.this.selectedBackground);
+            } else if (!this.shaded && wasShaded) {
+                this.background(TraitPoolSelector.this.unselectedBackground);
+            }
+        }
+
         @Override
         public T getTrait() {
             return this.trait;
@@ -310,7 +378,7 @@ public class TraitPoolSelector<T extends Trait> extends Table {
                 @Override
                 public void clicked(InputEvent e, float x, float y) {
                     if (SourceTrait.this.isEnabled()) {
-                        SourceTrait.this.addClicked.dispatch(new TraitSelectorEventArgs<>(SourceTrait.this.trait));
+                        SourceTrait.this.addClicked.dispatch(new TraitSelectorEventArgs<>(SourceTrait.this.trait, SourceTrait.this));
                     }
                 }
             });
@@ -319,7 +387,7 @@ public class TraitPoolSelector<T extends Trait> extends Table {
             this.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent e, float x, float y) {
-                    SourceTrait.this.clicked.dispatch(new TraitSelectorEventArgs<>(SourceTrait.this.trait));
+                    SourceTrait.this.clicked.dispatch(new TraitSelectorEventArgs<>(SourceTrait.this.trait, SourceTrait.this));
                 }
             });
         }
@@ -337,9 +405,26 @@ public class TraitPoolSelector<T extends Trait> extends Table {
         private Button removeButton;
 
         private boolean enabled = true;
+        private boolean shaded = false;
 
 
         // Properties
+        @Override
+        public boolean isShaded() {
+            return this.shaded;
+        }
+
+        @Override
+        public void setShaded(boolean value) {
+            boolean wasShaded = this.isShaded();
+            this.shaded = value;
+            if (this.shaded && !wasShaded) {
+                this.background(TraitPoolSelector.this.selectedBackground);
+            } else if (!this.shaded && wasShaded) {
+                this.background(TraitPoolSelector.this.unselectedBackground);
+            }
+        }
+
         @Override
         public T getTrait() {
             return this.trait;
@@ -387,7 +472,7 @@ public class TraitPoolSelector<T extends Trait> extends Table {
                 @Override
                 public void clicked(InputEvent e, float x, float y) {
                     if (SelectedTrait.this.isEnabled()) {
-                        SelectedTrait.this.removedClicked.dispatch(new TraitSelectorEventArgs<>(SelectedTrait.this.trait));
+                        SelectedTrait.this.removedClicked.dispatch(new TraitSelectorEventArgs<>(SelectedTrait.this.trait, SelectedTrait.this));
                     }
                 }
             });
@@ -400,10 +485,9 @@ public class TraitPoolSelector<T extends Trait> extends Table {
             this.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent e, float x, float y) {
-                    SelectedTrait.this.clicked.dispatch(new TraitSelectorEventArgs<>(SelectedTrait.this.trait));
+                    SelectedTrait.this.clicked.dispatch(new TraitSelectorEventArgs<>(SelectedTrait.this.trait, SelectedTrait.this));
                 }
             });
-
         }
     }
 
@@ -411,11 +495,13 @@ public class TraitPoolSelector<T extends Trait> extends Table {
 
         // Fields
         public final T trait;
+        private final Traitable wrapper;
 
 
         // Initialization
-        private TraitSelectorEventArgs(T trait) {
+        private TraitSelectorEventArgs(T trait, Traitable wrapper) {
             this.trait = trait;
+            this.wrapper = wrapper;
         }
     }
 }

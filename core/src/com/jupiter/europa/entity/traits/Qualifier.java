@@ -21,39 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jupiter.europa.entity.trait.feat;
+package com.jupiter.europa.entity.traits;
 
 import com.badlogic.ashley.core.Entity;
-import com.jupiter.europa.entity.trait.TraitPool;
 
 /**
  *
  * @author Nathan Templon
  */
-public class FeatPool extends TraitPool<Feat> {
+@FunctionalInterface
+public interface Qualifier {
     
-    // Initialization
-    public FeatPool() {
-        this.loadInitialSources();
-    }
-    
-    public FeatPool(Entity entity) {
-        super(entity);
-        this.loadInitialSources();
-    }
-    
-    
-    // Private Methods
-    private void loadInitialSources() {
-        Feat.FEAT_TYPES.stream().forEach((Class<? extends Feat> type) -> {
-            try {
-                Feat instance = type.newInstance();
-                this.addSource(instance);
-            }
-            catch (IllegalAccessException | InstantiationException ex) {
-                
-            }
-        });
-    }
+    boolean qualifies(Entity entity);
     
 }

@@ -92,11 +92,11 @@ public class ObservableDialog extends Dialog {
         boolean added = false;
         if (ArrayUtils.contains(events, DialogEvents.SHOWN)) {
             boolean addedThisTime = this.shown.addListener(listener);
-            added &= addedThisTime;
+            added = added || addedThisTime;
         }
         if (ArrayUtils.contains(events, DialogEvents.HIDDEN)) {
             boolean addedThisTime = this.hidden.addListener(listener);
-            added &= addedThisTime;
+            added = added || addedThisTime;
         }
         return added;
     }
@@ -109,11 +109,11 @@ public class ObservableDialog extends Dialog {
         boolean removed = false;
         if (ArrayUtils.contains(events, DialogEvents.SHOWN)) {
             boolean removedThisTime = this.shown.removeListener(listener);
-            removed &= removedThisTime;
+            removed = removed || removedThisTime;
         }
         if (ArrayUtils.contains(events, DialogEvents.HIDDEN)) {
             boolean removedThisTime = this.hidden.removeListener(listener);
-            removed &= removedThisTime;
+            removed = removed || removedThisTime;
         }
         return removed;
     }

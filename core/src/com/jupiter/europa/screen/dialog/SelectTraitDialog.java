@@ -23,13 +23,11 @@
  */
 package com.jupiter.europa.screen.dialog;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.jupiter.europa.entity.trait.Trait;
-import com.jupiter.europa.entity.trait.TraitPool;
+import com.badlogic.gdx.utils.Align;
+import com.jupiter.europa.entity.traits.Trait;
+import com.jupiter.europa.entity.traits.TraitPool;
 import com.jupiter.europa.scene2d.ui.EuropaButton;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.scene2d.ui.TraitPoolSelector;
@@ -38,48 +36,50 @@ import com.jupiter.europa.screen.MainMenuScreen;
 import com.jupiter.europa.screen.MainMenuScreen.DialogExitStates;
 
 /**
- *
- * @author Nathan Templon
  * @param <T>
+ * @author Nathan Templon
  */
 public class SelectTraitDialog<T extends Trait> extends ObservableDialog {
-    
+
     // Fields
     private final String title;
     private final Skin skin;
     private final TraitPool<T> pool;
     private final TraitPoolSelectorStyle selectorStyle;
-    
+
     private Table mainTable;
     private Label titleLabel;
     private TraitPoolSelector<T> selector;
+    private Label featNameLabel;
+    private Label featDescLabel;
+    private ScrollPane featDescPane;
     private Table buttonTable;
     private EuropaButton nextButton;
     private EuropaButton backButton;
-    
+
     private Drawable dialogBackground;
     private DialogExitStates exitState;
-    
-    
+
+
     // Properties
     public final TraitPool<T> getPool() {
         return this.pool;
     }
-    
+
     public final Drawable getDialogBackground() {
         return this.dialogBackground;
     }
-    
+
     public final void setDialogBackground(Drawable drawable) {
         this.dialogBackground = drawable;
         this.mainTable.background(this.dialogBackground);
     }
-    
+
     public DialogExitStates getExitState() {
         return this.exitState;
     }
-    
-    
+
+
     // Initialization
     public SelectTraitDialog(String title, Skin skin, TraitPool<T> pool) {
         super("", skin.get(WindowStyle.class));
@@ -91,25 +91,18 @@ public class SelectTraitDialog<T extends Trait> extends ObservableDialog {
 
         this.initComponent();
     }
-    
-    public SelectTraitDialog(String title, Skin skin, String styleName, TraitPool<T> pool) {
-        super("", skin.get(styleName, WindowStyle.class));
-
-        this.title = title;
-        this.pool = pool;
-        this.selectorStyle = skin.get(styleName, TraitPoolSelectorStyle.class);
-        this.skin = skin;
-
-        this.initComponent();
-    }
-
 
     // Public Methods
     public void applyChanges() {
         this.selector.applyChanges();
     }
-    
-    
+
+    @Override
+    public void setSize(float width, float height) {
+        super.setSize(width, height);
+    }
+
+
     // Private Methods
     private void initComponent() {
         this.mainTable = new Table();
@@ -122,8 +115,24 @@ public class SelectTraitDialog<T extends Trait> extends ObservableDialog {
 
         // Selector
         this.selector = new TraitPoolSelector<>(this.selectorStyle, this.pool);
-        
-        this.mainTable.add(this.selector).center().top().expand().fillX();
+        this.selector.addTraitClickListener(args -> {
+            this.featNameLabel.setText(args.trait.getName());
+            this.featDescLabel.setText(args.trait.getDescription());
+        });
+
+        this.mainTable.add(this.selector).center().top().expand().fill().space(MainMenuScreen.COMPONENT_SPACING);
+        this.mainTable.row();
+
+        // Feat Descriptions
+        this.featNameLabel = new Label("", this.skin.get(Label.LabelStyle.class));
+        this.featNameLabel.setAlignment(Align.top);
+        this.featDescLabel = new Label("", this.skin.get(MainMenuScreen.INFO_STYLE_KEY, Label.LabelStyle.class));
+        this.featDescLabel.setAlignment(Align.topLeft);
+        this.featDescPane = new ScrollPane(this.featDescLabel, this.skin.get(ScrollPane.ScrollPaneStyle.class));
+
+        this.mainTable.add(this.featNameLabel).center().expandX().fillX().top().space(MainMenuScreen.COMPONENT_SPACING);
+        this.mainTable.row();
+        this.mainTable.add(this.featDescPane).center().expandX().fillX().top().space(MainMenuScreen.COMPONENT_SPACING).height(300);
         this.mainTable.row();
 
         // Buttons
@@ -151,5 +160,4 @@ public class SelectTraitDialog<T extends Trait> extends ObservableDialog {
         this.exitState = DialogExitStates.BACK;
         this.hide();
     }
-    
 }

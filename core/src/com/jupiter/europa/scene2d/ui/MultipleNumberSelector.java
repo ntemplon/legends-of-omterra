@@ -28,11 +28,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.jupiter.europa.scene2d.ui.NumberSelector.NumberSelectorStyle;
 import com.jupiter.europa.scene2d.ui.NumberSelector.ValueChangedEventArgs;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+
+import java.util.*;
 
 /**
  *
@@ -52,7 +49,7 @@ public class MultipleNumberSelector extends Table {
     private final LabelStyle labelStyle;
     private final NumberSelectorStyle numberStyle;
     private final int spacing;
-    private final Collection<String> values;
+    private final List<String> values;
 
     private final Map<String, NumberSelector> selectors = new LinkedHashMap<>();
 
@@ -129,7 +126,7 @@ public class MultipleNumberSelector extends Table {
 
 
     // Initialization
-    public MultipleNumberSelector(int maxPoints, MultipleNumberSelectorStyle style, Collection<String> values, int numColumns) {
+    public MultipleNumberSelector(int maxPoints, MultipleNumberSelectorStyle style, List<String> values, int numColumns) {
         this.maxPoints = maxPoints;
         this.numColumns = numColumns;
 
@@ -148,7 +145,7 @@ public class MultipleNumberSelector extends Table {
         this.onValueChanged(null);
     }
 
-    public MultipleNumberSelector(int maxPoints, MultipleNumberSelectorStyle style, Collection<String> values) {
+    public MultipleNumberSelector(int maxPoints, MultipleNumberSelectorStyle style, List<String> values) {
         this(maxPoints, style, values, 1);
     }
 
@@ -164,8 +161,17 @@ public class MultipleNumberSelector extends Table {
         this.add(totalTable).colspan(2 * this.numColumns);
         this.row();
 
+        List<String> sorted = new ArrayList<>(this.values.size());
+        int index = this.values.size() / 2;
+        for (int i = 0; i <= index; i++) {
+            sorted.add(this.values.get(i));
+            if (i + index + 1 < this.values.size()) {
+                sorted.add(this.values.get(i + index + 1));
+            }
+        }
+
         int addedToRow = 0;
-        for (String value : this.values) {
+        for (String value : sorted) {
             Label label = new Label(value, this.labelStyle);
             NumberSelector selector = new NumberSelector(numberStyle);
             this.selectors.put(value, selector);

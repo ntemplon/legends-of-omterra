@@ -24,6 +24,7 @@
 package com.jupiter.europa.entity.stats.race;
 
 import com.jupiter.europa.entity.stats.SkillSet.Skills;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,18 +34,18 @@ import java.util.Set;
  * @author Nathan Templon
  */
 public interface Race {
-   
-    public enum PlayerRaces implements Race {
+
+    enum PlayerRaces implements Race {
         Human() {
             @Override
             public String getTextureString() { return "human"; }
-            
+
             @Override
             public int getNumberOfFeatsAtFirstLevel() {return 1;}
-            
+
             @Override
             public int getBonusSkillPoints() { return 5; }
-            
+
             @Override
             public Set<Skills> getClassSkills() {
                 return new HashSet<>(Arrays.asList(Skills.values()));
@@ -53,81 +54,80 @@ public interface Race {
         Elf() {
             @Override
             public String getTextureString() { return "elf"; }
-            
+
             @Override
             public int getStrengthBonus() { return -1; }
-            
+
             @Override
             public int getDexterityBonus() { return 1; }
-            
+
             @Override
             public int getWisdomBonus() { return 1; }
         },
         Dwarf() {
             @Override
             public String getTextureString() { return "dwarf"; }
-            
+
             @Override
             public int getStrengthBonus() { return 1; }
-            
+
             @Override
             public int getConstitutionBonus() { return 0; }
-            
+
             @Override
             public int getCharismaBonus() { return -1; }
         },
         Goblin() {
             @Override
             public String getTextureString() { return "goblin"; }
-            
+
             @Override
             public int getDexterityBonus() { return 1; }
-            
+
             @Override
             public int getCharismaBonus() { return 1; }
-            
+
             @Override
             public int getWisdomBonus() { return -1; }
         }
     }
-    
+
     // Public Methods
-    public String getTextureString();
-    
-    public default int getStrengthBonus() {
+    String getTextureString();
+
+    default int getStrengthBonus() {
         return 0;
     }
-    
-    public default int getConstitutionBonus() {
+
+    default int getConstitutionBonus() {
         return 0;
     }
-    
-    public default int getDexterityBonus() {
+
+    default int getDexterityBonus() {
         return 0;
     }
-    
-    public default int getIntelligenceBonus() {
+
+    default int getIntelligenceBonus() {
         return 0;
     }
-    
-    public default int getWisdomBonus() {
+
+    default int getWisdomBonus() {
         return 0;
     }
-    
-    public default int getCharismaBonus() {
+
+    default int getCharismaBonus() {
         return 0;
     }
-    
-    public default int getNumberOfFeatsAtFirstLevel() {
+
+    default int getNumberOfFeatsAtFirstLevel() {
         return 0;
     }
-    
-    public default int getBonusSkillPoints() {
+
+    default int getBonusSkillPoints() {
         return 0;
     }
-    
-    public default Set<Skills> getClassSkills() {
+
+    default Set<Skills> getClassSkills() {
         return new HashSet<>();
     }
-    
 }

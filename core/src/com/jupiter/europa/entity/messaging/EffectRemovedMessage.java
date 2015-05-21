@@ -21,40 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jupiter.europa.entity.trait;
+package com.jupiter.europa.entity.messaging;
 
 import com.badlogic.ashley.core.Entity;
-import com.jupiter.europa.entity.Families;
-import com.jupiter.europa.entity.Mappers;
-import com.jupiter.europa.entity.trait.feat.Feat;
-import com.jupiter.europa.entity.stats.characterclass.CharacterClass;
+import com.jupiter.europa.entity.effects.Effect;
 
 /**
- *
  * @author Nathan Templon
  */
-public class FeatPresentQualifications implements Qualifications {
-    
+public class EffectRemovedMessage extends StateChangeMessage {
+
     // Fields
-    private final Class<? extends Feat> type;
+    public final Entity entity;
+    public final Effect effect;
 
 
-    // Initialization
-    public FeatPresentQualifications(Class<? extends Feat> type) {
-        this.type = type;
+    public EffectRemovedMessage(Entity entity, Effect effect) {
+        this.entity = entity;
+        this.effect = effect;
     }
-
-
-    @Override
-    public boolean qualifies(Entity entity) {
-        if (Families.classed.matches(entity)) {
-            CharacterClass charClass = Mappers.characterClass.get(entity).getCharacterClass();
-            if (charClass != null) {
-                return !charClass.getFeatPool().getSelections().stream().noneMatch((Feat feat) ->
-                        (type.isAssignableFrom(feat.getClass())));
-            }
-        }
-        return false;
-    }
-    
 }

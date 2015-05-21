@@ -5,15 +5,8 @@
  */
 package com.jupiter.europa.screen.dialog;
 
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.scene2d.ui.EuropaButton;
@@ -21,6 +14,7 @@ import com.jupiter.europa.scene2d.ui.EuropaButton.ClickEvent;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.scene2d.ui.TabbedPane;
 import com.jupiter.europa.screen.MainMenuScreen;
+
 import static com.jupiter.europa.screen.MainMenuScreen.DEFAULT_KEY;
 import static com.jupiter.europa.screen.MainMenuScreen.TAB_STYLE_KEY;
 
@@ -43,7 +37,7 @@ public class OptionsDialog extends ObservableDialog {
 
 
     // Static Methods
-    private static Skin getSkin() {
+    private static Skin getDefaultSkin() {
         return MainMenuScreen.getMainMenuSkin();
     }
 
@@ -72,9 +66,9 @@ public class OptionsDialog extends ObservableDialog {
 
     // Initialization
     public OptionsDialog() {
-        super(DIALOG_NAME, getSkin().get(WindowStyle.class));
+        super(DIALOG_NAME, getDefaultSkin().get(WindowStyle.class));
 
-        this.skin = getSkin();
+        this.skin = getDefaultSkin();
 
         this.initComponent();
 

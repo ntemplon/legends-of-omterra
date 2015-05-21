@@ -23,27 +23,33 @@
  */
 package com.jupiter.europa.screen;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.FPSLogger;
-import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.utils.Disposable;
 import com.jupiter.europa.EuropaGame;
+import com.jupiter.europa.entity.EntityEventArgs;
+import com.jupiter.europa.entity.Families;
 import com.jupiter.europa.entity.Mappers;
 import com.jupiter.europa.entity.MovementSystem.MovementDirections;
 import com.jupiter.europa.entity.messaging.WalkRequestMessage;
+import com.jupiter.europa.geometry.Size;
 import com.jupiter.europa.screen.overlay.Overlay;
+import com.jupiter.europa.screen.overlay.PartyOverlay;
 import com.jupiter.europa.screen.overlay.PauseMenu;
 import com.jupiter.europa.world.Level;
-import java.awt.Insets;
-import java.awt.MouseInfo;
-import java.awt.Point;
+
+import java.awt.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 
 /**
  *
@@ -93,6 +99,7 @@ public class LevelScreen extends OverlayableScreen {
     
     private int width;
     private int height;
+    private PartyOverlay partyOverlay;
 
 
     // Properties
@@ -103,6 +110,14 @@ public class LevelScreen extends OverlayableScreen {
         this.camera.position.set(focusedSprite.getX() + focusedSprite.getWidth() / 2.0f, focusedSprite.getY() + focusedSprite.getHeight() / 2.0f, 0);
 
         this.mapRender = new LevelRenderer(this.level);
+
+        if (this.partyOverlay != null) {
+            this.removeOverlay(this.partyOverlay);
+        }
+
+        this.partyOverlay = new PartyOverlay(EuropaGame.game.getParty());
+        this.partyOverlay.addEntityClickListener(this::onSidebarEntityClicked);
+        this.addOverlay(this.partyOverlay);
     }
 
     public int getPauseKey() {
@@ -198,6 +213,10 @@ public class LevelScreen extends OverlayableScreen {
         if (this.mapRender != null) {
             this.mapRender.dispose();
         }
+        this.getOverlays().stream()
+                .filter(overlay -> overlay instanceof Disposable)
+                .map(overlay -> (Disposable) overlay)
+                .forEach(Disposable::dispose);
     }
 
 
@@ -252,6 +271,18 @@ public class LevelScreen extends OverlayableScreen {
         }
         
         this.camera.update();
+    }
+
+    private void onSidebarEntityClicked(EntityEventArgs args) {
+        this.centerOn(args.entity());
+    }
+
+    private void centerOn(Entity entity) {
+        if (Families.positionables.matches(entity)) {
+            Point position = Mappers.position.get(entity).getPixelPosition();
+            Size size = Mappers.size.get(entity).getSize();
+            this.camera.position.set(position.x + size.width / 2, position.y + size.height / 2, 0);
+        }
     }
 
 

@@ -23,17 +23,8 @@
  */
 package com.jupiter.europa.entity;
 
-import com.jupiter.europa.entity.component.CollisionComponent;
 import com.badlogic.ashley.core.Family;
-import com.jupiter.europa.entity.component.AttributesComponent;
-import com.jupiter.europa.entity.component.CharacterClassComponent;
-import com.jupiter.europa.entity.component.EffectsComponent;
-import com.jupiter.europa.entity.component.PositionComponent;
-import com.jupiter.europa.entity.component.RenderComponent;
-import com.jupiter.europa.entity.component.SizeComponent;
-import com.jupiter.europa.entity.component.MovementResourceComponent;
-import com.jupiter.europa.entity.component.RaceComponent;
-import com.jupiter.europa.entity.component.WalkComponent;
+import com.jupiter.europa.entity.component.*;
 
 /**
  *
@@ -49,6 +40,7 @@ public final class Families {
     public static final Family positionables = Family.all(PositionComponent.class, SizeComponent.class).get();
     public static final Family raced = Family.all(RaceComponent.class).get();
     public static final Family renderables = Family.all(RenderComponent.class).get();
+    public static final Family resourced = Family.all(ResourceComponent.class).get();
     public static final Family walkables = Family.all(PositionComponent.class, SizeComponent.class, WalkComponent.class,
             MovementResourceComponent.class).get();
     

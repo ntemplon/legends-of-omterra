@@ -21,26 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jupiter.europa.entity.trait;
+package com.jupiter.europa.entity.traits;
 
 import com.badlogic.ashley.core.Entity;
 import com.jupiter.europa.entity.Families;
 import com.jupiter.europa.entity.Mappers;
-import com.jupiter.europa.entity.trait.feat.Feat;
 import com.jupiter.europa.entity.stats.characterclass.CharacterClass;
+import com.jupiter.europa.entity.traits.feat.Feat;
 
 /**
  *
  * @author Nathan Templon
  */
-public class FeatNotPresentQualifications implements Qualifications {
-
+public class FeatPresentQualifier implements Qualifier {
+    
     // Fields
     private final Class<? extends Feat> type;
 
 
     // Initialization
-    public FeatNotPresentQualifications(Class<? extends Feat> type) {
+    public FeatPresentQualifier(Class<? extends Feat> type) {
         this.type = type;
     }
 
@@ -50,7 +50,7 @@ public class FeatNotPresentQualifications implements Qualifications {
         if (Families.classed.matches(entity)) {
             CharacterClass charClass = Mappers.characterClass.get(entity).getCharacterClass();
             if (charClass != null) {
-                return charClass.getFeatPool().getSelections().stream().noneMatch((Feat feat) ->
+                return !charClass.getFeatPool().getSelections().stream().noneMatch((Feat feat) ->
                         (type.isAssignableFrom(feat.getClass())));
             }
         }

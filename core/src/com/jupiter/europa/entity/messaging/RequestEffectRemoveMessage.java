@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Nathan Templon.
+ * Copyright 2015 Nathan Templon.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,19 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jupiter.europa.entity.trait.feat;
+package com.jupiter.europa.entity.messaging;
 
-import com.jupiter.europa.entity.trait.Trait;
-import java.util.Set;
-import org.reflections.Reflections;
+import com.badlogic.ashley.core.Entity;
+import com.jupiter.europa.entity.effects.Effect;
 
 /**
- *
  * @author Nathan Templon
  */
-public interface Feat extends Trait {
-    
-    // Constants
-    public static final Set<Class<? extends Feat>> FEAT_TYPES = new Reflections("com.jupiter.europa").getSubTypesOf(Feat.class);
-    
+public class RequestEffectRemoveMessage extends RequestMessage {
+
+    // Fields
+    public final Entity entity;
+    public final Effect effect;
+
+
+    // Initialization
+    public RequestEffectRemoveMessage(Entity entity, Effect effect) {
+        this.entity = entity;
+        this.effect = effect;
+    }
 }

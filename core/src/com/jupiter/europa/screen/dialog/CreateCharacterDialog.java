@@ -25,15 +25,8 @@ package com.jupiter.europa.screen.dialog;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -51,7 +44,9 @@ import com.jupiter.europa.entity.stats.SkillSet;
 import com.jupiter.europa.entity.stats.SkillSet.Skills;
 import com.jupiter.europa.entity.stats.characterclass.CharacterClass;
 import com.jupiter.europa.entity.stats.race.Race;
-import com.jupiter.europa.entity.trait.feat.Feat;
+import com.jupiter.europa.entity.traits.Trait;
+import com.jupiter.europa.entity.traits.TraitPool;
+import com.jupiter.europa.entity.traits.feat.Feat;
 import com.jupiter.europa.io.FileLocations;
 import com.jupiter.europa.scene2d.ui.AttributeSelector;
 import com.jupiter.europa.scene2d.ui.EuropaButton;
@@ -63,6 +58,7 @@ import com.jupiter.europa.screen.MainMenuScreen;
 import com.jupiter.europa.screen.MainMenuScreen.DialogExitStates;
 
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -84,7 +80,7 @@ public class CreateCharacterDialog extends ObservableDialog {
 
 
     // Static Methods
-    private static Skin getSkin() {
+    private static Skin getDefaultSkin() {
         return MainMenuScreen.getMainMenuSkin();
     }
 
@@ -93,7 +89,8 @@ public class CreateCharacterDialog extends ObservableDialog {
     private final SelectRaceClassAttributesDialog selectRaceClass;
     private SelectSkillsDialog selectSkills;
     private SelectTraitDialog<Feat> selectFeats;
-    private final Skin skin = getSkin();
+    private final Skin skin = getDefaultSkin();
+    private final List<TraitPool<? extends Trait>> otherPools = new ArrayList<>();
 
     private CreateCharacterExitStates exitState = CreateCharacterExitStates.CANCELED;
     private EuropaEntity createdEntity;
@@ -124,7 +121,7 @@ public class CreateCharacterDialog extends ObservableDialog {
 
     // Initialization
     public CreateCharacterDialog() {
-        super(DIALOG_NAME, getSkin().get(WindowStyle.class));
+        super(DIALOG_NAME, getDefaultSkin().get(WindowStyle.class));
 
         this.selectRaceClass = new SelectRaceClassAttributesDialog(skin);
         this.selectRaceClass.addDialogListener(this::onSelectRaceClassHide, DialogEvents.HIDDEN);
@@ -180,10 +177,6 @@ public class CreateCharacterDialog extends ObservableDialog {
             selectFeats.setDialogBackground(this.skin.get(MainMenuScreen.DIALOG_BACKGROUND_KEY, SpriteDrawable.class));
             this.selectFeats.addDialogListener(this::onSelectFeatsHide, DialogEvents.HIDDEN);
             this.showDialog(selectFeats);
-
-            // Actual Code
-//            this.exitState = CreateCharacterExitStates.OK;
-//            this.concludeDialog();
         }
         else {
             this.showDialog(this.selectRaceClass);
@@ -193,8 +186,38 @@ public class CreateCharacterDialog extends ObservableDialog {
     private void onSelectFeatsHide(DialogEventArgs args) {
         if (this.selectFeats.getExitState() == DialogExitStates.NEXT) {
             this.selectFeats.applyChanges();
-            this.exitState = CreateCharacterExitStates.OK;
-            this.concludeDialog();
+            CharacterClass charClass = Mappers.characterClass.get(this.getCreatedEntity()).getCharacterClass();
+
+            this.otherPools.clear();
+            this.otherPools.addAll(charClass.getAbilityPools().stream()
+                    .filter(pool -> pool != charClass.getFeatPool())
+                    .collect(Collectors.toList()));
+
+            List<SelectTraitDialog<? extends Trait>> dialogs = this.otherPools.stream()
+                    .map(pool -> new SelectTraitDialog<>("Select " + pool.getName(), this.skin, pool))
+                    .collect(Collectors.toList());
+
+            if (dialogs.size() > 0) {
+                dialogs.stream().forEach(dialog -> dialog.setDialogBackground(this.skin.get(MainMenuScreen.DIALOG_BACKGROUND_KEY, SpriteDrawable.class)));
+
+                for (int i = 0; i < dialogs.size(); i++) {
+                    ObservableDialog dialog = dialogs.get(i);
+                    if (i < dialogs.size() - 1) {
+                        final int index = i;
+                        dialog.addDialogListener(e -> {
+                            this.showDialog(dialogs.get(index + 1));
+                        }, DialogEvents.HIDDEN);
+                    } else {
+                        dialog.addDialogListener(e -> {
+                            this.exitState = CreateCharacterExitStates.OK;
+                            this.concludeDialog();
+                        }, DialogEvents.HIDDEN);
+                    }
+                }
+            } else {
+                this.exitState = CreateCharacterExitStates.OK;
+                this.concludeDialog();
+            }
         }
         else {
             this.showDialog(this.selectSkills);

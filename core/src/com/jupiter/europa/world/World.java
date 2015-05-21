@@ -29,7 +29,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.io.FileUtils;
-import java.io.File;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
@@ -76,20 +76,17 @@ public class World implements Disposable {
                     // Name
                     if (value.has(NAME_KEY)) {
                         world.name = value.getString(NAME_KEY);
-                    }
-                    else {
+                    } else {
                         world.name = DEFAULT_WORLD_NAME;
                     }
 
                     // Starting Level
                     if (value.has(STARTING_LEVEL_KEY)) {
                         world.startingLevelName = value.getString(STARTING_LEVEL_KEY);
-                    }
-                    else {
+                    } else {
                         world.startingLevelName = DEFAULT_STARTING_LEVEL;
                     }
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     // Set default properties
                     world.name = DEFAULT_WORLD_NAME;
                     world.startingLevelName = DEFAULT_STARTING_LEVEL;
@@ -104,8 +101,7 @@ public class World implements Disposable {
                             world.addLevel(new Level(name, map, world));
                         }
                     });
-                }
-                catch (IOException ex) {
+                } catch (IOException ex) {
 
                 }
             }
@@ -163,11 +159,8 @@ public class World implements Disposable {
     @Override
     public void dispose() {
         // Free all native resources
-        if (this.levels != null) {
-            this.levels.keySet().stream().forEach((String key) -> {
-                this.levels.get(key).dispose();
-            });
-        }
+        this.levels.keySet().stream().forEach((String key) -> {
+            this.levels.get(key).dispose();
+        });
     }
-
 }

@@ -26,6 +26,7 @@ package com.jupiter.europa.entity.effects;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,9 +65,9 @@ public class MultiEffect implements Effect {
     }
 
     @Override
-    public void onRemove(Entity entity) {
+    public void onRemove() {
         for (Effect effect : this.effects) {
-            effect.onRemove(entity);
+            effect.onRemove();
         }
     }
 

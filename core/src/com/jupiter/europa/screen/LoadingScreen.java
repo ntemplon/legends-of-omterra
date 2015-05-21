@@ -25,17 +25,19 @@ package com.jupiter.europa.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.io.EmergenceAssetManager;
 import com.jupiter.europa.threading.NotifyingThread;
 import com.jupiter.europa.threading.NotifyingThread.ThreadCompleteArgs;
+
 import java.text.DecimalFormat;
+
+import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 
 /**
  *
@@ -51,6 +53,7 @@ public class LoadingScreen implements Screen {
     private final OrthographicCamera camera; // The camera for viewing the map
     private final EuropaGame game; // The game that we will wait to load data
     private final EmergenceAssetManager assetManager; // The asset manager who we will wait to load all assets
+    private final GlyphLayout layout = new GlyphLayout();
     
     private long loadTime; // The time at which we started loading assets
     private boolean startedDataLoadingThread = false; // Whether or not the data loading thread has started yet
@@ -97,11 +100,10 @@ public class LoadingScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         
         batch.begin();
-        
-        this.font.setScale(1f);
+
         String message = "Loading: " + this.format.format(progress * 100) + "%";
-        TextBounds bounds = this.font.getBounds(message);
-        this.font.draw(batch, message, -1 * (bounds.width) / (2.0f * this.font.getScaleX()), (bounds.height / (2.0f * this.font.getScaleY())));
+        this.layout.setText(this.font, message);
+        this.font.draw(batch, message, -1 * (this.layout.width) / (2.0f * this.font.getScaleX()), (this.layout.height / (2.0f * this.font.getScaleY())));
         
         batch.end();
     }

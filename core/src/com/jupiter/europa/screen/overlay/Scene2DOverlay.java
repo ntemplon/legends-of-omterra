@@ -24,6 +24,7 @@
 package com.jupiter.europa.screen.overlay;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.jupiter.europa.EuropaGame;
@@ -65,6 +66,10 @@ public class Scene2DOverlay implements Overlay {
     public final Stage getStage() {
         return this.stage;
     }
+
+    public Color getBackgroundTint() {
+        return Color.WHITE;
+    }
     
     
     // Initialization
@@ -75,22 +80,20 @@ public class Scene2DOverlay implements Overlay {
     public Scene2DOverlay(boolean blocking) {
         this.blocking = blocking;
     }
-    
-    
+
+
+    // Public Methods
     @Override
     public void added(OverlayableScreen screen) {
         this.screen = screen;
-        if (this.getTint() != null) {
-            this.screen.setTint(this.getTint());
+        if (this.getBackgroundTint() != null) {
+            this.screen.setTint(this.getBackgroundTint());
         }
         
         this.stage = new Stage(new ScreenViewport());
         
         if (this.isBlocking()) {
             EuropaGame.game.suspend();
-        }
-        if (this.getTint() != null) {
-            
         }
     }
 
@@ -99,14 +102,23 @@ public class Scene2DOverlay implements Overlay {
         if (this.isBlocking() && EuropaGame.game.isSuspended()) {
             EuropaGame.game.wake();
         }
-        
-        if (this.getTint() != null) {
+
+        if (this.getBackgroundTint() != null) {
             this.screen.setTint(Color.WHITE);
         }
     }
 
     @Override
     public void render() {
+        if (this.getTint() != null) {
+            this.getStage().getBatch().setColor(this.getTint());
+            this.getStage().getActors().iterator().forEachRemaining(actor -> {
+                actor.setColor(this.getTint());
+                if (actor instanceof Group) {
+                    this.shadeChildren((Group) actor, this.getTint());
+                }
+            });
+        }
         this.stage.act();
         this.stage.draw();
     }
@@ -179,6 +191,17 @@ public class Scene2DOverlay implements Overlay {
             return this.stage.scrolled(amount) || this.blocking;
         }
         return this.blocking;
+    }
+
+
+    // Private Methods
+    private void shadeChildren(Group group, Color color) {
+        group.getChildren().iterator().forEachRemaining(actor -> {
+            actor.setColor(color);
+            if (actor instanceof Group) {
+                this.shadeChildren((Group) actor, color);
+            }
+        });
     }
     
 }

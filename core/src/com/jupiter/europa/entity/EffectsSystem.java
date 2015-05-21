@@ -24,41 +24,46 @@
 package com.jupiter.europa.entity;
 
 import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.systems.IteratingSystem;
 import com.jupiter.europa.EuropaGame;
-import com.jupiter.europa.entity.messaging.EffectAddedMessage;
-import com.jupiter.europa.entity.messaging.Message;
-import com.jupiter.europa.entity.messaging.MessageSystem;
-import com.jupiter.europa.entity.messaging.RequestEffectAddMessage;
-import com.jupiter.europa.entity.messaging.SelfSubscribingListener;
+import com.jupiter.europa.entity.component.EffectsComponent;
+import com.jupiter.europa.entity.messaging.*;
 import com.jupiter.ganymede.event.Listener;
 
 /**
- *
  * @author Nathan Templon
  */
-public class EffectsSystem extends EntitySystem implements Listener<Message>, SelfSubscribingListener {
+public class EffectsSystem extends IteratingSystem implements Listener<Message>, SelfSubscribingListener {
 
     // Initialization
     public EffectsSystem() {
-
+        super(Families.affectables);
     }
 
 
     // Public Methods
     @Override
+    public void processEntity(Entity entity, float deltaT) {
+        Mappers.effects.get(entity).effects.stream()
+                .forEach(effect -> effect.update(deltaT));
+    }
+
+    @Override
     public void handle(Message message) {
         if (message instanceof RequestEffectAddMessage) {
-            this.onEffectAddedRequest((RequestEffectAddMessage)message);
+            this.onEffectAddedRequest((RequestEffectAddMessage) message);
+        } else if (message instanceof RequestEffectRemoveMessage) {
+
         }
     }
 
     @Override
     public void subscribe(Engine engine, MessageSystem system) {
-        system.subscribe(this, RequestEffectAddMessage.class);
+        system.subscribe(this, RequestEffectAddMessage.class, RequestEffectRemoveMessage.class);
     }
-    
-    
+
+
     // Private Methods
     private void onEffectAddedRequest(RequestEffectAddMessage message) {
         if (Families.affectables.matches(message.entity)) {
@@ -68,4 +73,14 @@ public class EffectsSystem extends EntitySystem implements Listener<Message>, Se
         }
     }
 
+    private void onEffectRemoveRequest(RequestEffectRemoveMessage message) {
+        if (Families.affectables.matches(message.entity)) {
+            EffectsComponent component = Mappers.effects.get(message.entity);
+            if (component.effects.contains(message.effect)) {
+                component.effects.remove(message.effect);
+                message.effect.onRemove();
+                EuropaGame.game.getMessageSystem().publish(new EffectRemovedMessage(message.entity, message.effect));
+            }
+        }
+    }
 }

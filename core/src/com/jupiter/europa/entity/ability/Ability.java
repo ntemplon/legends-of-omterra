@@ -28,5 +28,7 @@ package com.jupiter.europa.entity.ability;
  * @author Nathan Templon
  */
 public interface Ability {
-    
+    Cost getCost();
+
+    Action getAction();
 }

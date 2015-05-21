@@ -7,23 +7,17 @@ package com.jupiter.europa.screen.dialog;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.scene2d.ui.EuropaButton;
 import com.jupiter.europa.scene2d.ui.EuropaButton.ClickEvent;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.screen.MainMenuScreen;
-import static com.jupiter.europa.screen.MainMenuScreen.DEFAULT_KEY;
-import static com.jupiter.europa.screen.MainMenuScreen.INFO_STYLE_KEY;
-import static com.jupiter.europa.screen.MainMenuScreen.LIST_BACKGROUND_KEY;
+
+import static com.jupiter.europa.screen.MainMenuScreen.*;
 
 /**
  *
@@ -44,13 +38,13 @@ public class LoadGameDialog extends ObservableDialog {
 
 
     // Static Methods
-    private static Skin getSkin() {
+    private static Skin getDefaultSkin() {
         return MainMenuScreen.getMainMenuSkin();
     }
 
 
     // Fields
-    private final Skin skin = getSkin();
+    private final Skin skin = getDefaultSkin();
 
     private Table mainTable;
     private Label loadGameLabel;
@@ -82,7 +76,7 @@ public class LoadGameDialog extends ObservableDialog {
 
     // Initialization
     public LoadGameDialog() {
-        super(DIALOG_NAME, getSkin());
+        super(DIALOG_NAME, getDefaultSkin());
 
         this.initComponents();
     }

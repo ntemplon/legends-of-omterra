@@ -28,27 +28,23 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
 import com.jupiter.europa.EuropaGame;
-import com.jupiter.europa.entity.Families;
 import com.jupiter.europa.entity.Mappers;
 import com.jupiter.europa.entity.component.AttributesComponent;
 import com.jupiter.europa.entity.messaging.RequestEffectAddMessage;
 import com.jupiter.europa.entity.stats.AttributeSet;
 import com.jupiter.europa.entity.stats.SkillSet.Skills;
-import com.jupiter.europa.entity.trait.TraitPool;
-import com.jupiter.europa.entity.trait.feat.FeatPool;
 import com.jupiter.europa.entity.stats.race.Race;
-import com.jupiter.europa.entity.trait.Trait;
-import com.jupiter.europa.entity.trait.TraitPool.TraitPoolEvent;
-import com.jupiter.europa.entity.trait.feat.Feat;
+import com.jupiter.europa.entity.traits.Trait;
+import com.jupiter.europa.entity.traits.TraitPool;
+import com.jupiter.europa.entity.traits.TraitPool.TraitPoolEvent;
+import com.jupiter.europa.entity.traits.feat.Feat;
+import com.jupiter.europa.entity.traits.feat.FeatPool;
 import com.jupiter.europa.util.Initializable;
 import com.jupiter.ganymede.event.Event;
 import com.jupiter.ganymede.event.Listener;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
 import org.reflections.Reflections;
+
+import java.util.*;
 
 /**
  *

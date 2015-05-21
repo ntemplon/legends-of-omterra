@@ -23,19 +23,8 @@
  */
 package com.jupiter.europa.entity;
 
-import com.jupiter.europa.entity.component.CollisionComponent;
 import com.badlogic.ashley.core.ComponentMapper;
-import com.jupiter.europa.entity.component.AttributesComponent;
-import com.jupiter.europa.entity.component.CharacterClassComponent;
-import com.jupiter.europa.entity.component.EffectsComponent;
-import com.jupiter.europa.entity.component.PositionComponent;
-import com.jupiter.europa.entity.component.RenderComponent;
-import com.jupiter.europa.entity.component.SizeComponent;
-import com.jupiter.europa.entity.component.MovementResourceComponent;
-import com.jupiter.europa.entity.component.NameComponent;
-import com.jupiter.europa.entity.component.RaceComponent;
-import com.jupiter.europa.entity.component.SkillsComponent;
-import com.jupiter.europa.entity.component.WalkComponent;
+import com.jupiter.europa.entity.component.*;
 
 /**
  *
@@ -53,6 +42,7 @@ public final class Mappers {
     public static final ComponentMapper<PositionComponent> position = ComponentMapper.getFor(PositionComponent.class);
     public static final ComponentMapper<RaceComponent> race = ComponentMapper.getFor(RaceComponent.class);
     public static final ComponentMapper<RenderComponent> render = ComponentMapper.getFor(RenderComponent.class);
+    public static final ComponentMapper<ResourceComponent> resources = ComponentMapper.getFor(ResourceComponent.class);
     public static final ComponentMapper<SizeComponent> size = ComponentMapper.getFor(SizeComponent.class);
     public static final ComponentMapper<SkillsComponent> skills = ComponentMapper.getFor(SkillsComponent.class);
     public static final ComponentMapper<WalkComponent> walk = ComponentMapper.getFor(WalkComponent.class);

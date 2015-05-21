@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2015 Nathan Templon.
+ * Copyright 2014 Nathan Templon.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,17 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jupiter.europa.entity.trait;
+package com.jupiter.europa.entity.traits;
 
-import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.utils.Json.Serializable;
+import com.jupiter.europa.entity.effects.Effect;
 
 /**
  *
  * @author Nathan Templon
  */
-@FunctionalInterface
-public interface Qualifications {
+public interface Trait extends Serializable, Comparable<Trait> {
     
-    boolean qualifies(Entity entity);
+    // Properties
+    Qualifier getQualifier();
+    Sprite getIcon();
+    String getName();
+    String getDescription();
+    Effect getEffect();
+    
+    // Comparable
+    @Override
+    default int compareTo(Trait other) {
+        return this.getName().compareTo(other.getName());
+    }
     
 }

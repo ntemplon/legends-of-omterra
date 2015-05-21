@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jupiter.europa.entity.trait.feat;
+package com.jupiter.europa.entity.traits.feat;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -31,12 +31,11 @@ import com.jupiter.europa.entity.Families;
 import com.jupiter.europa.entity.Mappers;
 import com.jupiter.europa.entity.effects.Effect;
 import com.jupiter.europa.entity.effects.VariableAttributeModifierEffect;
-import com.jupiter.europa.entity.stats.AttributeSet;
 import com.jupiter.europa.entity.stats.AttributeSet.Attributes;
 import com.jupiter.europa.entity.stats.characterclass.CharacterClass;
-import com.jupiter.europa.entity.stats.characterclass.CharacterClass.LevelUpArgs;
-import com.jupiter.europa.entity.trait.Qualifications;
-import com.jupiter.europa.entity.trait.FeatNotPresentQualifications;
+import com.jupiter.europa.entity.traits.FeatNotPresentQualifier;
+import com.jupiter.europa.entity.traits.Qualifier;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,14 +46,14 @@ import java.util.Map;
 public class WeaponFocus implements Feat {
 
     // Fields
-    private final Qualifications qualifications = new FeatNotPresentQualifications(WeaponFocus.class);
+    private final Qualifier qualifier = new FeatNotPresentQualifier(WeaponFocus.class);
     private final Effect effect = new WeaponFocusEffect();
     
     
     // Properties
     @Override
-    public Qualifications getQualifications() {
-        return this.qualifications;
+    public Qualifier getQualifier() {
+        return this.qualifier;
     }
     
     @Override

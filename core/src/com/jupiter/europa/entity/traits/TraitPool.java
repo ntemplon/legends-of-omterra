@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jupiter.europa.entity.trait;
+package com.jupiter.europa.entity.traits;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Json;
@@ -30,6 +30,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.ganymede.event.Event;
 import com.jupiter.ganymede.event.Listener;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -58,6 +59,7 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
     private final List<T> sourceAccess = Collections.unmodifiableList(this.source);
     private final List<T> qualifiedAccess = Collections.unmodifiableList(this.qualified);
     private final List<T> selectedAccess = Collections.unmodifiableList(this.selected);
+    private final String name;
     private int capacity;
 
     private final Event<TraitPoolEvent<T>> selection = new Event<>();
@@ -124,9 +126,14 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
         this.sourceComparator = comparator;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
 
     // Initialization
-    public TraitPool() {
+    public TraitPool(String name) {
+        this.name = name;
         this.sorted = true;
         this.setSourceComparator((first, second) ->
             first.getName().compareTo(second.getName())
@@ -135,8 +142,8 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
         this.capacity = 0;
     }
 
-    public TraitPool(Entity owner) {
-        this();
+    public TraitPool(Entity owner, String name) {
+        this(name);
         this.owner = owner;
     }
 
@@ -162,7 +169,7 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
     public void reassesQualifications() {
         this.qualified.clear();
         this.source.stream().forEach((T instance) -> {
-            if (instance.getQualifications().qualifies(this.owner)) {
+            if (instance.getQualifier().qualifies(this.owner)) {
                 this.qualified.add(instance);
             }
         });
@@ -196,7 +203,7 @@ public abstract class TraitPool<T extends Trait> implements Serializable {
     // Private Methods
     private void addSourceInternal(T source, boolean resort) {
         this.source.add(source);
-        if (this.autoQualify && source.getQualifications().qualifies(this.owner)) {
+        if (this.autoQualify && source.getQualifier().qualifies(this.owner)) {
             this.qualified.add(source);
         }
 

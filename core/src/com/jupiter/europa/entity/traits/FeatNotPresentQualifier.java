@@ -21,23 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jupiter.europa.entity.effects;
+package com.jupiter.europa.entity.traits;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.utils.Json.Serializable;
+import com.jupiter.europa.entity.Families;
+import com.jupiter.europa.entity.Mappers;
+import com.jupiter.europa.entity.stats.characterclass.CharacterClass;
+import com.jupiter.europa.entity.traits.feat.Feat;
 
 /**
  *
  * @author Nathan Templon
  */
-public interface Effect extends Serializable {
-    
-    void onAdd(Entity entity);
+public class FeatNotPresentQualifier implements Qualifier {
 
-    void onRemove();
-    void update(float deltaT);
-    void onCombatTurnStart();
-    void onCombatTurnEnd();
-    void onOutOfCombatTurn();
+    // Fields
+    private final Class<? extends Feat> type;
+
+
+    // Initialization
+    public FeatNotPresentQualifier(Class<? extends Feat> type) {
+        this.type = type;
+    }
+
+
+    @Override
+    public boolean qualifies(Entity entity) {
+        if (Families.classed.matches(entity)) {
+            CharacterClass charClass = Mappers.characterClass.get(entity).getCharacterClass();
+            if (charClass != null) {
+                return charClass.getFeatPool().getSelections().stream().noneMatch((Feat feat) ->
+                        (type.isAssignableFrom(feat.getClass())));
+            }
+        }
+        return false;
+    }
     
 }

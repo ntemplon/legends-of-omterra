@@ -21,29 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.jupiter.europa.entity.trait;
+package com.jupiter.europa.entity.traits.feat;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.utils.Json.Serializable;
-import com.jupiter.europa.entity.effects.Effect;
+import com.jupiter.europa.entity.traits.Trait;
+import org.reflections.Reflections;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  *
  * @author Nathan Templon
  */
-public interface Trait extends Serializable, Comparable<Trait> {
+public interface Feat extends Trait {
     
-    // Properties
-    Qualifications getQualifications();
-    Sprite getIcon();
-    String getName();
-    String getDescription();
-    Effect getEffect();
-    
-    // Comparable
-    @Override
-    default int compareTo(Trait other) {
-        return this.getName().compareTo(other.getName());
-    }
+    // Constants
+    Set<Class<? extends Feat>> FEAT_TYPES = Collections.unmodifiableSet(new Reflections("com.jupiter.europa").getSubTypesOf(Feat.class));
     
 }

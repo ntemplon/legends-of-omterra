@@ -28,6 +28,7 @@ import com.jupiter.europa.entity.Families;
 import com.jupiter.europa.entity.Mappers;
 import com.jupiter.europa.entity.stats.AttributeSet;
 import com.jupiter.europa.entity.stats.AttributeSet.Attributes;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,7 +69,7 @@ public abstract class VariableAttributeModifierEffect extends AttributeModifierE
     }
     
     @Override
-    public void onRemove(Entity entity) {
+    public void onRemove() {
         this.attached = null;
     }
     

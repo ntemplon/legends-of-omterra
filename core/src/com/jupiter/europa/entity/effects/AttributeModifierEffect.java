@@ -30,7 +30,7 @@ import com.jupiter.europa.entity.Families;
 import com.jupiter.europa.entity.Mappers;
 import com.jupiter.europa.entity.stats.AttributeSet;
 import com.jupiter.europa.entity.stats.AttributeSet.Attributes;
-import java.util.HashMap;
+
 import java.util.Map;
 
 /**
@@ -38,6 +38,9 @@ import java.util.Map;
  * @author Nathan Templon
  */
 public abstract class AttributeModifierEffect implements Effect {
+
+    // Fields
+    private Entity entity;
     
     
     // Properties
@@ -48,6 +51,7 @@ public abstract class AttributeModifierEffect implements Effect {
     @Override
     public void onAdd(Entity entity) {
         if (Families.attributed.matches(entity)) {
+            this.entity = entity;
             AttributeSet attributes = Mappers.attributes.get(entity).getCurrentAttributes();
             
             Map<Attributes, Integer> modifiers = this.getModifiers();
@@ -58,9 +62,9 @@ public abstract class AttributeModifierEffect implements Effect {
     }
 
     @Override
-    public void onRemove(Entity entity) {
-        if (Families.attributed.matches(entity)) {
-            AttributeSet attributes = Mappers.attributes.get(entity).getCurrentAttributes();
+    public void onRemove() {
+        if (this.entity != null && Families.attributed.matches(this.entity)) {
+            AttributeSet attributes = Mappers.attributes.get(this.entity).getCurrentAttributes();
             
             Map<Attributes, Integer> modifiers = this.getModifiers();
             modifiers.keySet().stream().forEach((Attributes attribute) -> {

@@ -52,7 +52,7 @@ public final class FileLocations {
     public static final Path AUDIO_DIRECTORY = ASSET_DIRECTORY.resolve("audio");
 
     private static final Path USER_HOME = Paths.get(System.getProperty("user.home"));
-    private static final Path LOCAL_DATA_DIRECTORY = USER_HOME.resolve(".europa");
+    private static final Path LOCAL_DATA_DIRECTORY = USER_HOME.resolve(".omterra");
     public static final Path SAVE_DIRECTORY = LOCAL_DATA_DIRECTORY.resolve("saves");
     public static final Path CONFIGURATION_DIRECTORY = LOCAL_DATA_DIRECTORY.resolve("config");
 

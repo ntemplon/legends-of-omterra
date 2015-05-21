@@ -5,17 +5,14 @@
  */
 package com.jupiter.europa.screen.dialog;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.scene2d.ui.EuropaButton;
 import com.jupiter.europa.scene2d.ui.EuropaButton.ClickEvent;
 import com.jupiter.europa.scene2d.ui.ObservableDialog;
 import com.jupiter.europa.screen.MainMenuScreen;
+
 import static com.jupiter.europa.screen.MainMenuScreen.DEFAULT_KEY;
 import static com.jupiter.europa.screen.MainMenuScreen.INFO_STYLE_KEY;
 
@@ -30,13 +27,13 @@ public class CreditsDialog extends ObservableDialog {
     
     
     // Static Methods
-    private static Skin getSkin() {
+    private static Skin getDefaultSkin() {
         return MainMenuScreen.getMainMenuSkin();
     }
     
     
     // Fields
-    private final Skin skin = getSkin();
+    private final Skin skin = getDefaultSkin();
     
     private Table mainTable;
     private Table wrapperTable;
@@ -47,7 +44,7 @@ public class CreditsDialog extends ObservableDialog {
     
     // Initialization
     public CreditsDialog() {
-        super(DIALOG_NAME, getSkin().get(WindowStyle.class));
+        super(DIALOG_NAME, getDefaultSkin().get(WindowStyle.class));
         
         this.initComponents();
     }
