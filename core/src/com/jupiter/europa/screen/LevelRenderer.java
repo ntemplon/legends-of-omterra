@@ -98,9 +98,9 @@ public class LevelRenderer extends OrthogonalTiledMapRenderer {
         // Public Methods
         public void render(Batch batch) {
             // Draw all renderable components, in z order (because the set is sorted)
-            this.layer.getEntities().stream().filter((Entity entity) -> {
-                return Families.renderables.matches(entity);
-            }).forEach((Entity entity) -> {
+            this.layer.getEntities().stream().filter((Entity entity) ->
+                            Families.renderables.matches(entity)
+            ).forEach((Entity entity) -> {
                 Sprite sprite = Mappers.render.get(entity).getSprite();
                 sprite.setColor(batch.getColor()); // Required to draw in color (sprites ignore batch color)
                 sprite.draw(batch);

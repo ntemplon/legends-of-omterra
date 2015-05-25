@@ -26,9 +26,19 @@ class ResourceBar(val entity: Entity, val resource: Resources) extends Actor wit
       val resComp = Mappers.resources.get(entity);
       val curVal = resComp.getCurrent(this.resource);
       val max = resComp.getMax(this.resource);
-      val fraction = curVal.toDouble / max.toDouble;
+      val fraction = if (max > 0) {
+        curVal.toDouble / max.toDouble;
+      }
+      else {
+        0;
+      }
 
-      val split: Float = Math.max(Math.min((fraction * this.getWidth()).round, this.getWidth()), 1);
+      val split: Float = if (curVal > 0) {
+        Math.max(Math.min((fraction * this.getWidth()).round, this.getWidth()), 1);
+      }
+      else {
+        0;
+      };
 
       val resCol = this.resource.getDrawColor();
       val drawColor = new Color(resCol.r, resCol.g, resCol.b, resCol.a * parentAlpha);

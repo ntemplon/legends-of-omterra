@@ -37,7 +37,7 @@ import java.nio.file.Paths;
 public final class FileLocations {
 
     // Constants
-    public static final Path ASSET_DIRECTORY = Paths.get("./data");
+    public static final Path ASSET_DIRECTORY = getRootDirectory().resolve("data");// Paths.get("./data");
 
     public static final Path WORLD_DIRECTORY = ASSET_DIRECTORY.resolve("worlds");
 
@@ -56,8 +56,26 @@ public final class FileLocations {
     public static final Path SAVE_DIRECTORY = LOCAL_DATA_DIRECTORY.resolve("saves");
     public static final Path CONFIGURATION_DIRECTORY = LOCAL_DATA_DIRECTORY.resolve("config");
 
+    public static final String CHARACTER_SPRITES = SPRITES_DIRECTORY.resolve("CharacterSprites.atlas").toString();
+    public static final String HUD_ATLAS = SPRITES_DIRECTORY.resolve("Hud.atlas").toString();
+    public static final String ICON_ATLAS = SPRITES_DIRECTORY.resolve("Icons.atlas").toString();
+
 
     // Static Initialization
+    private static Path getRootDirectory() {
+        try {
+            Path jar = Paths.get(FileLocations.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            Path folder = jar.getParent();
+            String folderString = folder.toString();
+            if (folderString.endsWith("libs/") || folderString.endsWith("libs")) {
+                folder = Paths.get(folderString.substring(0, folderString.indexOf("legends-of-omterra") + 18)).resolve("core");
+            }
+            return folder;
+        } catch (Exception ex) {
+            return Paths.get(".");
+        }
+    }
+
     static {
         Field[] fields = FileLocations.class.getDeclaredFields();
         for (Field field : fields) {

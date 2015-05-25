@@ -33,6 +33,7 @@ import com.jupiter.europa.entity.component.*;
 public final class Families {
     
     // Constants
+    public static final Family abilitied = Family.all(AbilityComponent.class).get();
     public static final Family attributed = Family.all(AttributesComponent.class).get();
     public static final Family classed = Family.all(CharacterClassComponent.class).get();
     public static final Family collidables = Family.all(CollisionComponent.class).get();

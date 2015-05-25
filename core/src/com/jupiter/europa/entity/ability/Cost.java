@@ -5,12 +5,44 @@ import com.jupiter.europa.entity.Families;
 import com.jupiter.europa.entity.Mappers;
 import com.jupiter.europa.entity.component.ResourceComponent;
 
+import java.util.Collections;
+import java.util.EnumMap;
 import java.util.Map;
 
 /**
  * Created by nathan on 5/20/15.
  */
 public abstract class Cost {
+
+    // Constants
+    public static final Cost NONE = new Cost("No Cost") {
+
+        private final Map<ResourceComponent.Resources, Integer> costs = new EnumMap<>(ResourceComponent.Resources.class);
+
+        {
+            for (ResourceComponent.Resources resource : ResourceComponent.Resources.values()) {
+                costs.put(resource, 0);
+            }
+        }
+
+        private final Map<ResourceComponent.Resources, Integer> costsView = Collections.unmodifiableMap(this.costs);
+
+        @Override
+        public Map<ResourceComponent.Resources, Integer> getSpecificCosts(Entity entity) {
+            return this.costsView;
+        }
+
+        @Override
+        public boolean canPay(Entity entity) {
+            return true;
+        }
+
+        @Override
+        public void exact(Entity entity) {
+
+        }
+    };
+
 
     // Static Methods
     public static Cost constant(ResourceComponent.Resources resource, int cost) {

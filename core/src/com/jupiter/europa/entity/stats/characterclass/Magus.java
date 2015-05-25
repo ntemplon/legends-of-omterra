@@ -27,16 +27,62 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.jupiter.europa.entity.stats.SkillSet;
 import com.jupiter.europa.entity.stats.SkillSet.Skills;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Set;
-import java.util.TreeSet;
+
+import java.util.*;
 
 /**
  *
  * @author Nathan Templon
  */
 public class Magus extends CharacterClass {
+
+    // Constants
+    private static final Map<Integer, Map<Integer, Integer>> SPELL_PROGRESSION = Collections.unmodifiableMap(getSpellProgression());
+
+
+    // Static Methods
+    private static Map<Integer, Map<Integer, Integer>> getSpellProgression() {
+        int[][] spells = {
+                {2, 0, 0, 0, 0, 0, 0, 0, 0},
+                {3, 0, 0, 0, 0, 0, 0, 0, 0},
+                {3, 1, 0, 0, 0, 0, 0, 0, 0},
+                {3, 2, 0, 0, 0, 0, 0, 0, 0},
+                {4, 2, 1, 0, 0, 0, 0, 0, 0},
+                {4, 3, 2, 0, 0, 0, 0, 0, 0},
+                {4, 3, 2, 1, 0, 0, 0, 0, 0},
+                {4, 3, 3, 2, 0, 0, 0, 0, 0},
+                {4, 4, 3, 2, 1, 0, 0, 0, 0},
+                {4, 4, 3, 3, 2, 0, 0, 0, 0},
+                {4, 4, 4, 3, 2, 1, 0, 0, 0},
+                {4, 4, 4, 3, 3, 2, 0, 0, 0},
+                {4, 4, 4, 4, 3, 2, 1, 0, 0},
+                {4, 4, 4, 4, 3, 3, 2, 0, 0},
+                {4, 4, 4, 4, 4, 3, 2, 1, 0},
+                {4, 4, 4, 4, 4, 3, 3, 2, 0},
+                {4, 4, 4, 4, 4, 4, 3, 2, 1},
+                {4, 4, 4, 4, 4, 4, 3, 3, 2},
+                {4, 4, 4, 4, 4, 4, 4, 3, 3},
+                {4, 4, 4, 4, 4, 4, 4, 4, 4}
+        };
+
+        Map<Integer, Map<Integer, Integer>> progression = new HashMap<>();
+        int characterLevel = 0;
+        for (int[] levelProgression : spells) {
+            Map<Integer, Integer> levelMap = new HashMap<>();
+            int spellLevel = 1;
+            for (int spellCount : levelProgression) {
+                levelMap.put(spellLevel, spellCount);
+                spellLevel++;
+            }
+
+            progression.put(characterLevel, levelMap);
+
+            characterLevel++;
+        }
+
+        return progression;
+    }
+
 
     // Fields
     private final Set<SkillSet.Skills> classSkills = new TreeSet<>(Arrays.asList(new SkillSet.Skills[] {

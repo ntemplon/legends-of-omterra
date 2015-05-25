@@ -29,6 +29,8 @@ import com.badlogic.gdx.utils.Json.Serializable;
 import com.badlogic.gdx.utils.JsonValue;
 import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.entity.component.*;
+import com.jupiter.europa.entity.effects.BasicAbilitiesEffect;
+import com.jupiter.europa.entity.messaging.RequestEffectAddMessage;
 import com.jupiter.europa.entity.stats.AttributeSet;
 import com.jupiter.europa.entity.stats.SkillSet;
 import com.jupiter.europa.entity.stats.SkillSet.Skills;
@@ -58,13 +60,18 @@ public class Party implements Serializable {
         EuropaEntity entity = new EuropaEntity();
 
         entity.add(new NameComponent(name));
-        entity.add(new EffectsComponent());
+
+        // Effects
+        EffectsComponent effectsComponent = new EffectsComponent();
+        entity.add(effectsComponent);
+        EuropaGame.game.getMessageSystem().publish(new RequestEffectAddMessage(entity, new BasicAbilitiesEffect()));
+
         entity.add(new RaceComponent(race));
 
         CharacterClassComponent classComponent = new CharacterClassComponent(charClass, entity);
         String textureSetName = race.getTextureString() + "-" + classComponent.getCharacterClass().getTextureSetName();
 
-        entity.add(new MovementResourceComponent(FileLocations.SPRITES_DIRECTORY.resolve("CharacterSprites.atlas").toString(), textureSetName));
+        entity.add(new MovementResourceComponent(FileLocations.CHARACTER_SPRITES, textureSetName));
         entity.add(new PositionComponent(null, new Point(19, 25), 0));
         entity.add(new SizeComponent(new Size(1, 1)));
         entity.add(new CollisionComponent(Mappers.position.get(entity).getTilePosition(), Mappers.size.get(
@@ -81,6 +88,11 @@ public class Party implements Serializable {
         List<Skills> sorted = new ArrayList<>(classSkills);
         Collections.sort(sorted);
         entity.add(new SkillsComponent(new SkillSet(), sorted));
+
+        // Abilities
+        // TODO: Remove Debug Code
+        AbilityComponent abilities = new AbilityComponent();
+        entity.add(abilities);
         
         entity.add(classComponent);
 

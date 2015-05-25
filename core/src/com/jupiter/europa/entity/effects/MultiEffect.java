@@ -28,6 +28,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -44,11 +45,22 @@ public class MultiEffect implements Effect {
 
     // Fields
     private Effect[] effects;
+    private Entity entity;
+
+
+    // Properties
+    public List<Effect> getEffects() {
+        return Arrays.asList(this.effects);
+    }
+
+    public Entity getEntity() {
+        return this.entity;
+    }
 
 
     // Initialization
     public MultiEffect() {
-
+        this.effects = new Effect[0];
     }
 
     public MultiEffect(Effect... effects) {
@@ -59,42 +71,38 @@ public class MultiEffect implements Effect {
     // Public Methods
     @Override
     public void onAdd(Entity entity) {
-        for (Effect effect : this.effects) {
+        this.entity = entity;
+        for (Effect effect : this.getEffects()) {
             effect.onAdd(entity);
         }
     }
 
     @Override
     public void onRemove() {
-        for (Effect effect : this.effects) {
-            effect.onRemove();
-        }
+        this.entity = null;
+        this.getEffects().forEach(Effect::onRemove);
     }
 
     @Override
     public void update(float deltaT) {
-        for (Effect effect : this.effects) {
+        for (Effect effect : this.getEffects()) {
             effect.update(deltaT);
         }
     }
 
     @Override
     public void onCombatTurnStart() {
-        for (Effect effect : this.effects) {
-            effect.onCombatTurnStart();
-        }
+        this.getEffects().forEach(Effect::onCombatTurnStart);
     }
 
     @Override
     public void onCombatTurnEnd() {
-        for (Effect effect : this.effects) {
-            effect.onCombatTurnEnd();
-        }
+        this.getEffects().forEach(Effect::onCombatTurnEnd);
     }
 
     @Override
     public void onOutOfCombatTurn() {
-        for (Effect effect : this.effects) {
+        for (Effect effect : this.getEffects()) {
             effect.onOutOfCombatTurn();
         }
     }
@@ -103,14 +111,16 @@ public class MultiEffect implements Effect {
     // Serializable (Json) Implementation
     @Override
     public void write(Json json) {
-        json.writeArrayStart(EFFECTS_KEY);
-        for (Effect effect : this.effects) {
-            json.writeObjectStart();
-            json.writeValue(EFFECT_CLASS_KEY, effect.getClass().getName());
-            json.writeValue(EFFECT_DATA_KEY, effect, effect.getClass());
-            json.writeObjectEnd();
+        if (this.effects != null) {
+            json.writeArrayStart(EFFECTS_KEY);
+            for (Effect effect : this.effects) {
+                json.writeObjectStart();
+                json.writeValue(EFFECT_CLASS_KEY, effect.getClass().getName());
+                json.writeValue(EFFECT_DATA_KEY, effect, effect.getClass());
+                json.writeObjectEnd();
+            }
+            json.writeArrayEnd();
         }
-        json.writeArrayEnd();
     }
 
     @Override

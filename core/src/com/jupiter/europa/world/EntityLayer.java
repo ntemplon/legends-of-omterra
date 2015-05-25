@@ -26,16 +26,19 @@ package com.jupiter.europa.world;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.gdx.maps.MapLayer;
+import com.jupiter.europa.EuropaGame;
 import com.jupiter.europa.entity.Families;
 import com.jupiter.europa.entity.Mappers;
 import com.jupiter.europa.entity.PositionedEntity;
+import com.jupiter.europa.entity.component.PositionComponent;
+import com.jupiter.europa.entity.component.SizeComponent;
+import com.jupiter.europa.entity.messaging.Message;
+import com.jupiter.europa.entity.messaging.PositionChangedMessage;
 import com.jupiter.europa.geometry.Size;
 import com.jupiter.europa.util.Quadtree;
-import java.awt.Rectangle;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+
+import java.awt.*;
+import java.util.*;
 
 /**
  *
@@ -62,6 +65,8 @@ public class EntityLayer implements Comparator<Entity> {
         this.entities = new TreeSet<>(this);
         this.listeners = new HashSet<>();
         this.level = level;
+
+        EuropaGame.game.getMessageSystem().subscribe(this::onEntityPositionChanged, PositionChangedMessage.class);
     }
 
     public EntityLayer(MapLayer layer, Size size, Level level) {
@@ -83,13 +88,14 @@ public class EntityLayer implements Comparator<Entity> {
         this.entities.add(entity);
 
         if (Families.positionables.matches(entity)) {
-            Mappers.position.get(entity).setLevel(this.level);
+            PositionComponent component = Mappers.position.get(entity);
+            component.setLevel(this.level);
         }
-        // Commented out until it can listen for changes to the collision (position and size)
-//        if (Families.collidables.matches(entity)) {
-//            Rectangle bounds = Mappers.collision.get(entity).getBounds();
-//            this.positionalLookup.insert(new PositionedEntity(entity, bounds));
-//        }
+
+        if (Families.collidables.matches(entity)) {
+            Rectangle bounds = Mappers.collision.get(entity).getBounds();
+            this.positionalLookup.insert(new PositionedEntity(entity, bounds));
+        }
         // Dispatch the event
         this.listeners.stream().forEach((EntityListener listener) -> {
             listener.entityAdded(entity);
@@ -99,12 +105,26 @@ public class EntityLayer implements Comparator<Entity> {
     public void removeEntity(Entity entity) {
         boolean removed = this.entities.remove(entity);
 
+        if (Families.collidables.matches(entity)) {
+            Rectangle bounds = Mappers.collision.get(entity).getBounds();
+            this.positionalLookup.remove(new PositionedEntity(entity, bounds));
+        }
+
         if (removed) {
             // Dispatch the event
             this.listeners.stream().forEach((EntityListener listener) -> {
                 listener.entityRemoved(entity);
             });
         }
+    }
+
+    public Entity entityAt(Point location) {
+        Collection<PositionedEntity> entities = this.positionalLookup.retrieve(new Rectangle(location.x, location.y, 1, 1));
+        Optional<Entity> entity = entities.stream()
+                .map(pos -> pos.getEntity())
+                .findAny();
+
+        return entity.isPresent() ? entity.get() : null;
     }
 
 
@@ -128,6 +148,25 @@ public class EntityLayer implements Comparator<Entity> {
     // Private Methods
     private void addEntitiesFrom(MapLayer layer) {
 
+    }
+
+    private void onEntityPositionChanged(Message message) {
+        if (message instanceof PositionChangedMessage) {
+            PositionChangedMessage positionChangedMessage = (PositionChangedMessage) message;
+            PositionComponent position = Mappers.position.get(positionChangedMessage.entity);
+            SizeComponent size = Mappers.size.get(positionChangedMessage.entity);
+            if (position.getLevel().equals(this.level)) {
+                PositionedEntity oldPos = new PositionedEntity(positionChangedMessage.entity, new Rectangle(
+                        positionChangedMessage.oldLocation.x, positionChangedMessage.oldLocation.y, size.getSize().width, size.getSize().height
+                ));
+                PositionedEntity newPos = new PositionedEntity(positionChangedMessage.entity, new Rectangle(
+                        positionChangedMessage.newLocation.x, positionChangedMessage.newLocation.y, size.getSize().width, size.getSize().height
+                ));
+
+                this.positionalLookup.remove(oldPos);
+                this.positionalLookup.insert(newPos);
+            }
+        }
     }
 
 }

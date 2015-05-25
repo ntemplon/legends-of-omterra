@@ -33,6 +33,7 @@ import com.jupiter.europa.entity.component.*;
 public final class Mappers {
     
     // Constants
+    public static final ComponentMapper<AbilityComponent> abilities = ComponentMapper.getFor(AbilityComponent.class);
     public static final ComponentMapper<AttributesComponent> attributes = ComponentMapper.getFor(AttributesComponent.class);
     public static final ComponentMapper<CharacterClassComponent> characterClass = ComponentMapper.getFor(CharacterClassComponent.class);
     public static final ComponentMapper<CollisionComponent> collision = ComponentMapper.getFor(CollisionComponent.class);

@@ -30,8 +30,8 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.jupiter.europa.entity.messaging.PositionChangedMessage;
 import com.jupiter.europa.geometry.Size;
 import com.jupiter.europa.util.RectangularBoundedObject;
-import java.awt.Point;
-import java.awt.Rectangle;
+
+import java.awt.*;
 
 /**
  *
@@ -97,7 +97,7 @@ public class CollisionComponent extends Component implements RectangularBoundedO
 
     // Private Methods
     private void handlePositionChanged(PositionChangedMessage message) {
-        this.setLocation(message.location);
+        this.setLocation(message.oldLocation);
     }
 
 }

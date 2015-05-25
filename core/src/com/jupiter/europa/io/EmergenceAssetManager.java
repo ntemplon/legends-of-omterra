@@ -31,6 +31,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.jupiter.europa.util.ArrayUtils;
+
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -42,7 +43,12 @@ import java.nio.file.Path;
  */
 public class EmergenceAssetManager extends AssetManager {
 
+    // TODO: Handle Relative Paths Automatically
+
     // Constants
+    public final String ICON_ATLAS_NAME = "Icons.atlas";
+    public final String HUD_ATLAS_NAME = "Hud.atlas";
+
     public final String[] ATLAS_EXTENSIONS = new String[]{"atlas", "ATLAS"};
     public final String[] MAP_EXTENSIONS = new String[]{"tmx", "TMX"};
     public final String[] FONT_EXTENSIONS = new String[]{"fnt", "FNT"};

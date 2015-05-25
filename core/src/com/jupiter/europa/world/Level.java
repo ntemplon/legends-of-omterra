@@ -32,7 +32,8 @@ import com.badlogic.gdx.utils.Disposable;
 import com.jupiter.europa.audio.AudioService;
 import com.jupiter.europa.geometry.Size;
 import com.jupiter.europa.util.Quadtree;
-import java.awt.Rectangle;
+
+import java.awt.*;
 
 /**
  * A class representing an individual level (map) in Legends of Omterra
@@ -54,8 +55,6 @@ public class Level implements Disposable {
     public static final String HEIGHT_KEY = "height";
     public static final String MAP_WIDTH_KEY = WIDTH_KEY;
     public static final String MAP_HEIGHT_KEY = HEIGHT_KEY;
-    public static final String X_KEY = "x";
-    public static final String Y_KEY = "y";
     
     public static final String MUSIC_PROPERTY = "music";
     
@@ -168,13 +167,7 @@ public class Level implements Disposable {
 
 
     // Initialization
-    public Level() {
-        
-    }
-
     public Level(String name, TiledMap map, World world) {
-        this();
-
         this.name = name;
         this.setMap(map);
         this.world = world;

@@ -23,12 +23,23 @@
  */
 package com.jupiter.europa.entity.ability;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.jupiter.ganymede.util.Categorized;
+
 /**
  *
  * @author Nathan Templon
  */
-public interface Ability {
+public interface Ability extends Categorized<AbilityCategory>, Comparable<Ability> {
+    String getName();
     Cost getCost();
-
     Action getAction();
+
+    AbilityCategory getCategory();
+
+    TextureRegion getIcon();
+
+    default int compareTo(Ability other) {
+        return this.getName().compareTo(other.getName());
+    }
 }

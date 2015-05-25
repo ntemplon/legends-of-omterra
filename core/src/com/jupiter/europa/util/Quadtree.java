@@ -23,7 +23,7 @@
  */
 package com.jupiter.europa.util;
 
-import java.awt.Rectangle;
+import java.awt.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -139,7 +139,9 @@ public class Quadtree<T extends RectangularBoundedObject> {
         }
         
         for(Quadtree<T> child : this.children) {
-            child.remove(obj);
+            if (child != null) {
+                child.remove(obj);
+            }
         }
         
         // If this takes our total count to below the maximum, we can collapse the child quadtrees

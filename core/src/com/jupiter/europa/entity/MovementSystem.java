@@ -28,22 +28,17 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.jupiter.europa.EuropaGame;
+import com.jupiter.europa.entity.component.MovementResourceComponent;
 import com.jupiter.europa.entity.component.PositionComponent;
 import com.jupiter.europa.entity.component.RenderComponent;
-import com.jupiter.europa.entity.component.MovementResourceComponent;
 import com.jupiter.europa.entity.component.WalkComponent;
 import com.jupiter.europa.entity.component.WalkComponent.WalkStates;
-import com.jupiter.europa.entity.messaging.Message;
-import com.jupiter.europa.entity.messaging.MessageSystem;
-import com.jupiter.europa.entity.messaging.WalkRequestMessage;
-import com.jupiter.europa.entity.messaging.OffsetUpdatedMessage;
-import com.jupiter.europa.entity.messaging.PositionChangedMessage;
-import com.jupiter.europa.entity.messaging.SelfSubscribingListener;
+import com.jupiter.europa.entity.messaging.*;
 import com.jupiter.europa.geometry.Size;
 import com.jupiter.europa.world.Level;
 import com.jupiter.ganymede.event.Listener;
-import java.awt.Point;
-import java.awt.Rectangle;
+
+import java.awt.*;
 
 /**
  *
@@ -140,8 +135,9 @@ public class MovementSystem extends IteratingSystem implements Listener<Message>
     // Private Methods
     private void moveEntityTo(Entity entity, Point location) {
         PositionComponent position = Mappers.position.get(entity);
+        Point oldLocation = position.getTilePosition();
         position.setTilePosition(location);
-        EuropaGame.game.getMessageSystem().publish(new PositionChangedMessage(entity, location));
+        EuropaGame.game.getMessageSystem().publish(new PositionChangedMessage(entity, oldLocation, location));
     }
 
     private void handleWalkRequest(WalkRequestMessage message) {

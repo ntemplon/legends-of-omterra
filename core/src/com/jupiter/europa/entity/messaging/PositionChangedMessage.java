@@ -6,7 +6,8 @@
 package com.jupiter.europa.entity.messaging;
 
 import com.badlogic.ashley.core.Entity;
-import java.awt.Point;
+
+import java.awt.*;
 
 /**
  *
@@ -15,14 +16,16 @@ import java.awt.Point;
 public class PositionChangedMessage extends StateChangeMessage {
     
     // Fields
-    public final Point location;
+    public final Point oldLocation;
+    public final Point newLocation;
     public final Entity entity;
     
     
     // Initialization
-    public PositionChangedMessage(Entity entity, Point location) {
+    public PositionChangedMessage(Entity entity, Point oldLocation, Point newLocation) {
         this.entity = entity;
-        this.location = location;
+        this.oldLocation = oldLocation;
+        this.newLocation = newLocation;
     }
     
 }

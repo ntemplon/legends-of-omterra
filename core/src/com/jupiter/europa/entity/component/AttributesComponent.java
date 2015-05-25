@@ -38,7 +38,6 @@ public class AttributesComponent extends Component implements Serializable {
 
     // Constants
     private static final String BASE_ATTRIBUTES_KEY = "base-attributes";
-    private static final String CURRENT_ATTRIBUTES_KEY = "current-attributes";
     
     
     // Fields
@@ -72,16 +71,12 @@ public class AttributesComponent extends Component implements Serializable {
     @Override
     public void write(Json json) {
         json.writeValue(BASE_ATTRIBUTES_KEY, this.baseAttributes, AttributeSet.class);
-        json.writeValue(CURRENT_ATTRIBUTES_KEY, this.currentAttributes, AttributeSet.class);
     }
 
     @Override
     public void read(Json json, JsonValue jsonData) {
         if (jsonData.has(BASE_ATTRIBUTES_KEY)) {
             this.baseAttributes = json.fromJson(AttributeSet.class, jsonData.get(BASE_ATTRIBUTES_KEY).prettyPrint(EuropaGame.PRINT_SETTINGS));
-        }
-        if (jsonData.has(CURRENT_ATTRIBUTES_KEY)) {
-            this.currentAttributes = json.fromJson(AttributeSet.class, jsonData.get(CURRENT_ATTRIBUTES_KEY).prettyPrint(EuropaGame.PRINT_SETTINGS));
         }
     }
     

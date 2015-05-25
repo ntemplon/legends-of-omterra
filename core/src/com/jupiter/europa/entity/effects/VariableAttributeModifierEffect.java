@@ -38,6 +38,8 @@ import java.util.Map;
  */
 public abstract class VariableAttributeModifierEffect extends AttributeModifierEffect {
 
+    // TODO: Finish Implementation
+
     // Fields
     private final Map<Attributes, Integer> modifiers = new HashMap<>();
     private Entity attached = null;

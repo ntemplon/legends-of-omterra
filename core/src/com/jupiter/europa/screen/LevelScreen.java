@@ -25,6 +25,7 @@ package com.jupiter.europa.screen;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -36,11 +37,9 @@ import com.jupiter.europa.entity.EntityEventArgs;
 import com.jupiter.europa.entity.Families;
 import com.jupiter.europa.entity.Mappers;
 import com.jupiter.europa.entity.MovementSystem.MovementDirections;
+import com.jupiter.europa.entity.ability.BasicAbilityCategories;
 import com.jupiter.europa.entity.messaging.WalkRequestMessage;
-import com.jupiter.europa.geometry.Size;
-import com.jupiter.europa.screen.overlay.Overlay;
-import com.jupiter.europa.screen.overlay.PartyOverlay;
-import com.jupiter.europa.screen.overlay.PauseMenu;
+import com.jupiter.europa.screen.overlay.*;
 import com.jupiter.europa.world.Level;
 
 import java.awt.*;
@@ -48,6 +47,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 
@@ -138,7 +138,7 @@ public class LevelScreen extends OverlayableScreen {
         super();
 
         this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        this.getMultiplexer().addProcessor(new LevelInputProcesser());
+        this.getMultiplexer().addProcessor(0, new LevelInputProcessor());
     }
 
 
@@ -154,7 +154,7 @@ public class LevelScreen extends OverlayableScreen {
         this.updateCamera();
 
         if (this.mapRender != null) {
-            this.mapRender.setView(camera);
+            this.mapRender.setView(this.camera);
             this.mapRender.getBatch().setColor((this.getTint()));
             this.mapRender.render();
         }
@@ -278,16 +278,39 @@ public class LevelScreen extends OverlayableScreen {
     }
 
     private void centerOn(Entity entity) {
-        if (Families.positionables.matches(entity)) {
-            Point position = Mappers.position.get(entity).getPixelPosition();
-            Size size = Mappers.size.get(entity).getSize();
-            this.camera.position.set(position.x + size.width / 2, position.y + size.height / 2, 0);
+        if (Families.renderables.matches(entity)) {
+            Sprite focusedSprite = Mappers.render.get(entity).getSprite();
+            this.camera.position.set(focusedSprite.getX() + focusedSprite.getWidth() / 2.0f, focusedSprite.getY() + focusedSprite.getHeight() / 2.0f, 0);
+        }
+    }
+
+    private Point screenToTile(int screenX, int screenY) {
+        // Camera position is center screen
+        float xOff = (screenX / EuropaGame.SCALE) - (this.camera.viewportWidth / 2);
+        float yOff = -1 * ((screenY / EuropaGame.SCALE) - (this.camera.viewportHeight / 2));
+
+        float x = (this.camera.position.x + xOff) / this.level.getTileWidth();
+        float y = (this.camera.position.y + yOff) / this.level.getTileWidth();
+        return new Point((int) Math.floor(x), (int) Math.floor(y));
+    }
+
+    private void onEntityClick(Entity entity) {
+        if (Families.renderables.matches(entity) && Families.abilitied.matches(entity)) {
+            Sprite focusedSprite = Mappers.render.get(entity).getSprite();
+            CircleMenu popup = new CircleMenu(new Point(
+                    Math.round((focusedSprite.getX() + focusedSprite.getWidth() / 2.0f - this.camera.position.x) / EuropaGame.SCALE + this.camera.viewportWidth / 2.0f),
+                    Math.round((focusedSprite.getY() + focusedSprite.getHeight() / 2.0f - this.camera.position.y) / EuropaGame.SCALE + this.camera.viewportHeight / 2.0f)),
+                    Mappers.abilities.get(entity).getAbilities(BasicAbilityCategories.ALL_ABILITIES).stream()
+                            .map(ability -> new CircleMenuItem(ability.getIcon(), ability.getName(), () -> System.out.println(ability.getName())))
+                            .collect(Collectors.toList())
+            );
+            this.addOverlay(popup);
         }
     }
 
 
     // Inner Classes
-    private class LevelInputProcesser implements InputProcessor {
+    private class LevelInputProcessor implements InputProcessor {
 
         @Override
         public boolean keyDown(int i) {
@@ -314,8 +337,19 @@ public class LevelScreen extends OverlayableScreen {
         }
 
         @Override
-        public boolean touchDown(int i, int i1, int i2, int i3) {
-            return false;
+        public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+            if (button != Input.Buttons.LEFT) {
+                return false;
+            }
+
+            Entity entity = LevelScreen.this.level.getEntityLayer().entityAt(LevelScreen.this.screenToTile(screenX, screenY));
+
+            if (entity == null) {
+                return false;
+            }
+
+            LevelScreen.this.onEntityClick(entity);
+            return true;
         }
 
         @Override

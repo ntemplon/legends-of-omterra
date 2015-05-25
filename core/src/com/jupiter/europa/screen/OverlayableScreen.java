@@ -126,7 +126,7 @@ public abstract class OverlayableScreen implements Screen, InputProcessor {
     
     public void addOverlay(Overlay overlay) {
         this.overlays.add(overlay);
-        this.multiplexer.addProcessor(overlay);
+        this.multiplexer.addProcessor(0, overlay);
         overlay.added(this);
     }
     

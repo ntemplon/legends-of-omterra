@@ -49,6 +49,7 @@ public class AttributeSet implements Serializable {
         ATTACK_BONUS,
         ARMOR_CLASS,
         INITIATIVE,
+        MOVEMENT_SPEED,
         SPELL_POWER,
         SPELL_RESISTANCE,
         SPELL_PENETRATION;
