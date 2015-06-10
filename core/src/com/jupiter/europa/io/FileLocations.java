@@ -41,6 +41,7 @@ public final class FileLocations {
 
     public static final Path WORLD_DIRECTORY = ASSET_DIRECTORY.resolve("worlds");
 
+    public static final Path AI_DIRECTORY = ASSET_DIRECTORY.resolve("ai");
     public static final Path UI_DIRECTORY = ASSET_DIRECTORY.resolve("ui");
     public static final Path FONTS_DIRECTORY = UI_DIRECTORY.resolve("fonts");
     public static final Path SKINS_DIRECTORY = UI_DIRECTORY.resolve("skins");
@@ -66,12 +67,17 @@ public final class FileLocations {
         try {
             Path jar = Paths.get(FileLocations.class.getProtectionDomain().getCodeSource().getLocation().toURI());
             Path folder = jar.getParent();
-            String folderString = folder.toString();
-            if (folderString.endsWith("libs/") || folderString.endsWith("libs")) {
-                folder = Paths.get(folderString.substring(0, folderString.indexOf("legends-of-omterra") + 18)).resolve("core");
+
+            // If the folder contains a "data" subdirectory, then we are good.  Else, we need to find it.
+            Path dataPath = folder.resolve("data");
+            if (!Files.exists(dataPath)) {
+                String folderString = folder.toString();
+                folder = Paths.get(folderString.substring(0, folderString.indexOf("core") + 4));
             }
+
             return folder;
         } catch (Exception ex) {
+            System.out.println("Exception: " + ex.getClass().getCanonicalName());
             return Paths.get(".");
         }
     }

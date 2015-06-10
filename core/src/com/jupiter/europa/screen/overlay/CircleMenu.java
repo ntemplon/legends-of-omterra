@@ -117,7 +117,7 @@ public class CircleMenu extends Scene2DOverlay {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     if (button == Input.Buttons.LEFT) {
-                        CircleMenuEntry.this.item.action().run();
+                        CircleMenuEntry.this.item.getAction().run();
                         return true;
                     } else {
                         return false;
@@ -131,7 +131,7 @@ public class CircleMenu extends Scene2DOverlay {
         @Override
         public void draw(Batch batch, float parentAlpha) {
             batch.draw(back, this.getX(), this.getY());
-            batch.draw(this.item.icon(), this.getX(), this.getY());
+            batch.draw(this.item.getIcon(), this.getX(), this.getY());
         }
     }
 }

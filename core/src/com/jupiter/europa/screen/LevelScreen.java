@@ -274,7 +274,7 @@ public class LevelScreen extends OverlayableScreen {
     }
 
     private void onSidebarEntityClicked(EntityEventArgs args) {
-        this.centerOn(args.entity());
+        this.centerOn(args.getEntity());
     }
 
     private void centerOn(Entity entity) {

@@ -32,7 +32,7 @@ import com.jupiter.europa.entity.stats.AttributeSet;
 import com.jupiter.europa.entity.traits.FeatNotPresentQualifier;
 import com.jupiter.europa.entity.traits.Qualifier;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 /**
@@ -86,7 +86,7 @@ public class ImprovedInitiative implements Feat {
     private static class ImprovedInitiativeEffect extends AttributeModifierEffect {
         
         // Fields
-        private final Map<AttributeSet.Attributes, Integer> modifiers = new HashMap<>();
+        private final Map<AttributeSet.Attributes, Integer> modifiers = new EnumMap<>(AttributeSet.Attributes.class);
         
         
         // Properties

@@ -27,7 +27,6 @@ import com.badlogic.ashley.core.Entity;
 import com.jupiter.europa.entity.traits.TraitPool;
 
 /**
- *
  * @author Nathan Templon
  */
 public class FeatPool extends TraitPool<Feat> {
@@ -46,19 +45,17 @@ public class FeatPool extends TraitPool<Feat> {
         super(entity, NAME);
         this.loadInitialSources();
     }
-    
-    
+
+
     // Private Methods
     private void loadInitialSources() {
         Feat.FEAT_TYPES.stream().forEach((Class<? extends Feat> type) -> {
             try {
                 Feat instance = type.newInstance();
                 this.addSource(instance);
-            }
-            catch (IllegalAccessException | InstantiationException ex) {
-                
+            } catch (IllegalAccessException | InstantiationException ex) {
+
             }
         });
     }
-    
 }

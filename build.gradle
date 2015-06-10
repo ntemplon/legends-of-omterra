@@ -1,8 +1,13 @@
+allprojects {
+
+}
+
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:0.12.213"
     }
 }
 
@@ -17,7 +22,8 @@ allprojects {
         ashleyVersion = '1.5.0'
         aiVersion = '1.5.0'
         reflectionsVersion = '0.9.9'
-        scalaVersion = '2.11.6'
+        kotlinVersion = '0.12.213'
+        // Note: kotlin version must be updated manually in buildscript -> dependencies
     }
 
     repositories {
@@ -30,8 +36,7 @@ allprojects {
 
 project(":desktop") {
     apply plugin: "java"
-    apply plugin: "scala"
-
+    apply plugin: "kotlin"
 
     dependencies {
         compile project(":core")
@@ -42,18 +47,17 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
         compile "org.reflections:reflections:$reflectionsVersion"
-        compile "org.scala-lang:scala-library:$scalaVersion"
+        compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
         compile fileTree(dir: '../libs', include: ['*.jar'])
     }
 }
 
 project(":core") {
-    apply plugin: "scala"
     apply plugin: "java"
-
+    apply plugin: "kotlin"
 
     dependencies {
-        compile "org.scala-lang:scala-library:$scalaVersion"
+        compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"

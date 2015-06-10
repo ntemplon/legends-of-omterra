@@ -4,15 +4,15 @@ archivesBaseName = 'Omterra'
 version = '0.1.2'
 
 sourceCompatibility = 1.8
-sourceSets.main.java.srcDirs = []
-sourceSets.main.scala.srcDirs = ["src/"]
+sourceSets.main.java.srcDirs = ["src/"]
+sourceSets.main.kotlin.srcDirs = ["src/"]
 
 project.ext.mainClassName = "com.jupiter.europa.desktop.DesktopLauncher"
 project.ext.assetsDir = new File("../core");
 
 task run(dependsOn: classes, type: JavaExec) {
     main = project.mainClassName
-    classpath = sourceSets.main.runtimeClasspath
+    classpath += sourceSets.main.runtimeClasspath
     standardInput = System.in
     workingDir = project.assetsDir
     jvmArgs = ['-Xms128m', '-Xmx1024m']
