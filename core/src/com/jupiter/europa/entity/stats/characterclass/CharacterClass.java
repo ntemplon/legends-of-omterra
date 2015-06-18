@@ -246,6 +246,10 @@ public abstract class CharacterClass implements Serializable, Initializable {
         }
     }
 
+    public void onFirstCreation() {
+
+    }
+
 
     // Abstract Methods
     public abstract String getTextureSetName();

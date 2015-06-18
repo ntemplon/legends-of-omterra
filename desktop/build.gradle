@@ -4,7 +4,7 @@ archivesBaseName = 'Omterra'
 version = '0.1.2'
 
 sourceCompatibility = 1.8
-sourceSets.main.java.srcDirs = ["src/"]
+sourceSets.main.java.srcDirs = []
 sourceSets.main.kotlin.srcDirs = ["src/"]
 
 project.ext.mainClassName = "com.jupiter.europa.desktop.DesktopLauncher"

@@ -44,7 +44,7 @@ class ResourceBar(val entity: Entity, val resource: ResourceComponent.Resources)
                 0f;
             };
 
-            val resCol = this.resource.getDrawColor();
+            val resCol = this.resource.drawColor;
             val drawColor = Color(resCol.r, resCol.g, resCol.b, resCol.a * parentAlpha);
             val backDrawColor = Color(ResourceBar.backColor.r, ResourceBar.backColor.g, ResourceBar.backColor.b, ResourceBar.backColor.a * parentAlpha);
 

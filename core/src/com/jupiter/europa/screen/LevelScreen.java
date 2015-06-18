@@ -227,12 +227,12 @@ public class LevelScreen extends OverlayableScreen {
         for(int key : this.keysDown) {
             if (MOVEMENT_MAP.containsKey(key)) {
                 MovementDirections direction = MOVEMENT_MAP.get(key);
-                deltaX += direction.deltaX;
-                deltaY += direction.deltaY;
+                deltaX += direction.getDeltaX();
+                deltaY += direction.getDeltaY();
             }
         }
-        
-        MovementDirections totalDirection = MovementDirections.getSingleStepDirectionFor(deltaX, deltaY);
+
+        MovementDirections totalDirection = MovementDirections.Companion.getSingleStepDirectionFor(deltaX, deltaY);
         if (totalDirection != null) {
             EuropaGame.game.getMessageSystem().publish(new WalkRequestMessage(this.level.getControlledEntity(), totalDirection));
         }

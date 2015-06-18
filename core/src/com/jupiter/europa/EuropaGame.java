@@ -26,11 +26,7 @@ package com.jupiter.europa;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.ai.fsm.StackStateMachine;
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
@@ -41,16 +37,12 @@ import com.badlogic.gdx.utils.JsonValue.PrettyPrintSettings;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.jupiter.europa.audio.AudioService;
 import com.jupiter.europa.audio.LocalAudioService;
-import com.jupiter.europa.entity.CollisionSystem;
-import com.jupiter.europa.entity.EffectsSystem;
-import com.jupiter.europa.entity.MovementSystem;
-import com.jupiter.europa.entity.Party;
-import com.jupiter.europa.entity.RenderingMaintenenceSystem;
+import com.jupiter.europa.entity.*;
 import com.jupiter.europa.entity.messaging.MessageSystem;
 import com.jupiter.europa.entity.messaging.SelfSubscribingListener;
 import com.jupiter.europa.entity.messaging.SimpleMessageSystem;
-import com.jupiter.europa.io.FileLocations;
 import com.jupiter.europa.io.EmergenceAssetManager;
+import com.jupiter.europa.io.FileLocations;
 import com.jupiter.europa.io.FileUtils;
 import com.jupiter.europa.save.SaveGame;
 import com.jupiter.europa.screen.LevelScreen;
@@ -62,20 +54,16 @@ import com.jupiter.europa.util.Initializable;
 import com.jupiter.europa.world.Level;
 import com.jupiter.europa.world.World;
 import com.jupiter.ganymede.property.Property.PropertyChangedArgs;
-import java.awt.Insets;
-import java.awt.Point;
+
+import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import javax.swing.JFrame;
+import java.util.*;
 
 public class EuropaGame extends Game implements InputProcessor {
 
@@ -257,7 +245,7 @@ public class EuropaGame extends Game implements InputProcessor {
     private final MovementSystem movementSystem = new MovementSystem();
     private final CollisionSystem collisionSystem = new CollisionSystem();
     private final EffectsSystem effectsSystem = new EffectsSystem();
-    private final RenderingMaintenenceSystem renderingSystem = new RenderingMaintenenceSystem();
+    private final RenderingMaintenanceSystem renderingSystem = new RenderingMaintenanceSystem();
 
     private boolean suspended;
 

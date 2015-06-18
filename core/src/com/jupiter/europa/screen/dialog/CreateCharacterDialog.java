@@ -249,7 +249,7 @@ public class CreateCharacterDialog extends ObservableDialog {
     }
 
     private void createEntity() {
-        this.createdEntity = Party.createPlayer(this.selectRaceClass.getCharacterName(), CharacterClass.CLASS_LOOKUP
+        this.createdEntity = Party.Companion.createPlayer(this.selectRaceClass.getCharacterName(), CharacterClass.CLASS_LOOKUP
                 .get(this.selectRaceClass.getSelectedClass()), this.selectRaceClass.getSelectedRace(), this.selectRaceClass.getAttributes());
     }
 

@@ -135,10 +135,10 @@ public class EntityLayer implements Comparator<Entity> {
         int secondZ = 0;
 
         if (Families.positionables.matches(first)) {
-            firstZ = Mappers.position.get(first).getZOrder();
+            firstZ = Mappers.position.get(first).getzOrder();
         }
         if (Families.positionables.matches(second)) {
-            secondZ = Mappers.position.get(second).getZOrder();
+            secondZ = Mappers.position.get(second).getzOrder();
         }
 
         return secondZ - firstZ;

@@ -26,6 +26,7 @@ package com.jupiter.europa.entity.stats.characterclass;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.jupiter.europa.entity.stats.SkillSet.Skills;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
@@ -101,6 +102,10 @@ public class Champion extends CharacterClass {
     @Override
     public void initialize() {
         super.initialize();
+    }
+
+    @Override
+    public void onFirstCreation() {
         this.getFeatPool().increaseCapacity(1);
     }
 
