@@ -9,7 +9,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  *
@@ -20,7 +19,9 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
  */
+
 package com.jupiter.europa.entity
 
 import com.badlogic.ashley.core.Engine
@@ -59,7 +60,7 @@ public class EffectsSystem : IteratingSystem(Families.affectables), Listener<Mes
         if (Families.affectables.matches(message.entity)) {
             Mappers.effects.get(message.entity).effects.add(message.effect)
             message.effect.onAdd(message.entity)
-            EuropaGame.game.getMessageSystem().publish(EffectAddedMessage(message.entity, message.effect))
+            EuropaGame.game.messageSystem.publish(EffectAddedMessage(message.entity, message.effect))
         }
     }
 
@@ -69,8 +70,8 @@ public class EffectsSystem : IteratingSystem(Families.affectables), Listener<Mes
             if (component.effects.contains(message.effect)) {
                 component.effects.remove(message.effect)
                 message.effect.onRemove()
-                EuropaGame.game.getMessageSystem().publish(EffectRemovedMessage(message.entity, message.effect))
+                EuropaGame.game.messageSystem.publish(EffectRemovedMessage(message.entity, message.effect))
             }
         }
     }
-}// Initialization
+}

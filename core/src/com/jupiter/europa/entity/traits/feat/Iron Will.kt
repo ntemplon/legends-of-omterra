@@ -1,69 +1,60 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2015 Nathan Templon.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ */
+
 package com.jupiter.europa.entity.traits.feat
 
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.JsonValue
 import com.jupiter.europa.entity.effects.AttributeModifierEffect
-import com.jupiter.europa.entity.effects.Effect
 import com.jupiter.europa.entity.stats.AttributeSet
 import com.jupiter.europa.entity.traits.FeatNotPresentQualifier
-import com.jupiter.europa.entity.traits.Qualifier
 
 /**
  * Created by nathan on 6/8/15.
  */
 public class IronWill : Feat {
 
-    // Properties
-    private val qualifier = FeatNotPresentQualifier(javaClass<IronWill>())
-    private val effect = IronWillEffect()
-
-    private var sprite: Sprite? = null
-
-
     // Feat Implementation
-    override fun getQualifier(): Qualifier? {
-        return this.qualifier
-    }
-
-    override fun getIcon(): Sprite? {
-        return this.sprite
-    }
-
-    override fun getName(): String? {
-        return "Iron Will"
-    }
-
-    override fun getDescription(): String? {
-        return "You gain +10 Will."
-    }
-
-    override fun getEffect(): Effect? {
-        return this.effect
-    }
+    override val qualifier = FeatNotPresentQualifier(javaClass<IronWill>())
+    override val effect = IronWillEffect()
+    override val icon = Sprite()
+    override val name = "Iron Will"
+    override val description = "You gain +10 Will."
 
 
     // Serializable Implementation
-    override fun write(json: Json?) {
+    override fun write(json: Json) {
 
     }
 
-    override fun read(json: Json?, jsonData: JsonValue?) {
+    override fun read(json: Json, jsonData: JsonValue) {
 
     }
 
     private class IronWillEffect() : AttributeModifierEffect() {
-
-        private val modifiers = java.util.EnumMap<AttributeSet.Attributes, Int>(javaClass<AttributeSet.Attributes>())
-
-        init {
-            this.modifiers.put(AttributeSet.Attributes.WILL, 10)
-        }
-
-        override fun getModifiers(): MutableMap<AttributeSet.Attributes, Int>? {
-            return this.modifiers
-        }
-
+        override val modifiers = mapOf(Pair(AttributeSet.Attributes.WILL, 10))
     }
 
 }

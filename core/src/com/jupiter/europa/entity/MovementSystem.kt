@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Nathan Templon.
+ * Copyright 2015 Nathan Templon.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -9,7 +9,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  *
@@ -20,7 +19,9 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
  */
+
 package com.jupiter.europa.entity
 
 import com.badlogic.ashley.core.Engine
@@ -86,7 +87,10 @@ public class MovementSystem : IteratingSystem(Families.positionables, EuropaGame
     // Protected Methods
     override fun processEntity(entity: Entity, deltaT: Float) {
         if (Families.walkables.matches(entity)) {
-            this.updateWalkSprite(entity, deltaT)
+            val walk = Mappers.walk[entity]
+            if (walk.getState() != WalkStates.STANDING) {
+                this.updateWalkSprite(entity, deltaT)
+            }
         }
     }
 
@@ -96,7 +100,7 @@ public class MovementSystem : IteratingSystem(Families.positionables, EuropaGame
         val position = Mappers.position.get(entity)
         val oldLocation = position.tilePosition
         position.tilePosition = location
-        EuropaGame.game.getMessageSystem().publish(PositionChangedMessage(entity, oldLocation, location))
+        EuropaGame.game.messageSystem.publish(PositionChangedMessage(entity, oldLocation, location))
     }
 
     private fun handleWalkRequest(message: WalkRequestMessage) {
@@ -128,10 +132,10 @@ public class MovementSystem : IteratingSystem(Families.positionables, EuropaGame
 
     private fun updateWalkPosition(entity: Entity, walk: WalkComponent) {
         val percentComplete = walk.getCompletionPercentage()
-        val xOff = (EuropaGame.game.getCurrentLevel().getTileWidth().toFloat() * percentComplete * walk.walkDirection.deltaX.toFloat()).toInt()
-        val yOff = (EuropaGame.game.getCurrentLevel().getTileHeight().toFloat() * percentComplete * walk.walkDirection.deltaY.toFloat()).toInt()
+        val xOff = (EuropaGame.game.currentLevel!!.tileWidth.toFloat() * percentComplete * walk.walkDirection.deltaX.toFloat()).toInt()
+        val yOff = (EuropaGame.game.currentLevel!!.tileHeight.toFloat() * percentComplete * walk.walkDirection.deltaY.toFloat()).toInt()
         Mappers.render.get(entity).offset = Point(xOff, yOff)
-        EuropaGame.game.getMessageSystem().publish(OffsetUpdatedMessage(entity))
+        EuropaGame.game.messageSystem.publish(OffsetUpdatedMessage(entity))
     }
 
     private fun updateWalkSprite(entity: Entity, deltaT: Float) {
@@ -150,6 +154,7 @@ public class MovementSystem : IteratingSystem(Families.positionables, EuropaGame
                 sprite.setRegion(textures.standingTextureFor(walk.walkDirection))
                 this.moveEntityTo(entity, walk.walkTarget)
                 Mappers.position.get(entity).facingDirection = walk.walkDirection
+                EuropaGame.game.messageSystem.publish(MovementCompleteMessage(entity, walk.walkDirection))
             }
             WalkComponent.WalkStates.STANDING -> {
             }
@@ -171,4 +176,4 @@ public class MovementSystem : IteratingSystem(Families.positionables, EuropaGame
         private val SECOND_WALK_SPRITE_BREAKPOINT = 0.7f
     }
 
-}// Initialization
+}

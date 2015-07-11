@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Nathan Templon.
+ * Copyright 2015 Nathan Templon.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -9,7 +9,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  *
@@ -20,7 +19,9 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
  */
+
 package com.jupiter.europa.entity.component
 
 import com.badlogic.ashley.core.Component
@@ -30,8 +31,6 @@ import com.badlogic.gdx.utils.JsonValue
 import com.jupiter.europa.EuropaGame
 import com.jupiter.europa.entity.MovementSystem.MovementDirections
 import com.jupiter.europa.world.Level
-import com.jupiter.europa.world.Level.DEFAULT_TILE_HEIGHT
-import com.jupiter.europa.world.Level.DEFAULT_TILE_WIDTH
 import com.jupiter.europa.world.World
 import java.awt.Point
 
@@ -48,9 +47,9 @@ public class PositionComponent @jvmOverloads constructor(level: Level? = null, p
             this.$tilePosition = value
 
             if (this.level != null) {
-                this.pixelPosition = Point(this.tilePosition.x * this.level!!.getTileWidth(), this.tilePosition.y * this.level!!.getTileHeight())
+                this.pixelPosition = Point(this.tilePosition.x * this.level!!.tileWidth, this.tilePosition.y * this.level!!.tileHeight)
             } else {
-                this.pixelPosition = Point(this.tilePosition.x * DEFAULT_TILE_WIDTH, this.tilePosition.y * DEFAULT_TILE_HEIGHT)
+                this.pixelPosition = Point(this.tilePosition.x * Level.DEFAULT_TILE_WIDTH, this.tilePosition.y * Level.DEFAULT_TILE_HEIGHT)
             }
         }
     public var pixelPosition: Point = Point()
@@ -61,7 +60,7 @@ public class PositionComponent @jvmOverloads constructor(level: Level? = null, p
         set(value) {
             this.$level = value
             if (this.level != null) {
-                this.world = this.level!!.getWorld()
+                this.world = this.level!!.world
             }
         }
     public var zOrder: Int = 0
@@ -76,8 +75,8 @@ public class PositionComponent @jvmOverloads constructor(level: Level? = null, p
 
     // JsonSerializable implementation
     override fun write(json: Json) {
-        json.writeValue(WORLD_KEY, this.world?.getName() ?: "")
-        json.writeValue(LEVEL_KEY, this.level?.getName() ?: "")
+        json.writeValue(WORLD_KEY, this.world?.name ?: "")
+        json.writeValue(LEVEL_KEY, this.level?.name ?: "")
         json.writeValue(TILE_POSITION_X_KEY, this.tilePosition.x)
         json.writeValue(TILE_POSITION_Y_KEY, this.tilePosition.y)
         json.writeValue(Z_ORDER_KEY, this.zOrder)

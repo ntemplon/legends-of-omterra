@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2014 Nathan Templon.
+ * Copyright 2015 Nathan Templon.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -9,7 +9,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  *
@@ -20,7 +19,9 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
  */
+
 package com.jupiter.europa.entity
 
 import com.badlogic.gdx.graphics.g2d.Sprite
@@ -114,12 +115,12 @@ public class Party : Serializable {
             // Effects
             val effectsComponent = EffectsComponent()
             entity.add(effectsComponent)
-            EuropaGame.game.getMessageSystem().publish(RequestEffectAddMessage(entity, BasicAbilitiesEffect()))
+            EuropaGame.game.messageSystem.publish(RequestEffectAddMessage(entity, BasicAbilitiesEffect()))
 
             entity.add(RaceComponent(race))
 
             val classComponent = CharacterClassComponent(charClass, entity)
-            val textureSetName = race.getTextureString() + "-" + classComponent.characterClass.getTextureSetName()
+            val textureSetName = race.textureString + "-" + classComponent.characterClass.textureSetName
 
             entity.add(MovementResourceComponent(FileLocations.CHARACTER_SPRITES, textureSetName))
             entity.add(PositionComponent(null, Point(19, 25), 0))
@@ -132,8 +133,8 @@ public class Party : Serializable {
 
             // Skills
             val classSkills = HashSet<Skills>()
-            classSkills.addAll(classComponent.characterClass.getClassSkills())
-            classSkills.addAll(race.getClassSkills())
+            classSkills.addAll(classComponent.characterClass.classSkills)
+            classSkills.addAll(race.classSkills)
             val sorted = ArrayList(classSkills)
             Collections.sort(sorted)
             entity.add(SkillsComponent(SkillSet(), sorted))
