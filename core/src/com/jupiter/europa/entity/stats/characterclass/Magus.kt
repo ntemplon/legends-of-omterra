@@ -26,6 +26,8 @@ package com.jupiter.europa.entity.stats.characterclass
 
 import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.JsonValue
+import com.jupiter.europa.entity.component.ResourceComponent
+import com.jupiter.europa.entity.stats.AttributeSet
 import com.jupiter.europa.entity.stats.SkillSet.Skills
 import java.util.Collections
 import java.util.HashMap
@@ -51,6 +53,14 @@ public class Magus : CharacterClass() {
         get() = CharacterClass.poorSave(this.level)
     override val will: Int
         get() = CharacterClass.goodSave(this.level)
+    override val stamina: Int
+        get() = ResourceComponent.MINIMAL_STAMINA[this.level] ?: 0
+    override val mana: Int
+        get() = ResourceComponent.HIGH_MANA[this.level] ?: 0
+    override val aether: Int
+        get() = ResourceComponent.MINIMAL_AETHER[this.level] ?: 0
+    override val aetherAttribute = AttributeSet.Attributes.WISDOM
+    override val manaAttribute = AttributeSet.Attributes.INTELLIGENCE
     override val textureSetName: String = "magus"
 
 

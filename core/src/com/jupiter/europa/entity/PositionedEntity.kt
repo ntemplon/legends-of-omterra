@@ -34,15 +34,14 @@ import java.awt.Rectangle
  * A wrapper class encapsulating an entity, its size, and its position
  * @author Nathan Templon
  */
-data public class PositionedEntity
-private constructor(public val entity: Entity, private val container: RectangularBoundedObject) : RectangularBoundedObject by container {
+data public class PositionedEntity private constructor(public val entity: Entity, private val container: RectangularBoundedObject) : RectangularBoundedObject by container {
 
     // Initialization
     public constructor(entity: Entity, bounds: Rectangle) : this(entity, RectContainer(bounds))
 
     public constructor(entity: Entity, position: Point, size: Size) : this(entity, Rectangle(position.x, position.y, size.width, size.height))
 
-    private class RectContainer(private val internalBounds: Rectangle) : RectangularBoundedObject {
+    private data class RectContainer(private val internalBounds: Rectangle) : RectangularBoundedObject {
         override fun getBounds(): Rectangle {
             return this.internalBounds
         }

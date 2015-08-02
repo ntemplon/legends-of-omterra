@@ -120,6 +120,7 @@ public class Party : Serializable {
             entity.add(RaceComponent(race))
 
             val classComponent = CharacterClassComponent(charClass, entity)
+            classComponent.characterClass.featPool.increaseCapacity(race.firstLevelFeats) // First level bonus feats
             val textureSetName = race.textureString + "-" + classComponent.characterClass.textureSetName
 
             entity.add(MovementResourceComponent(FileLocations.CHARACTER_SPRITES, textureSetName))
@@ -128,8 +129,9 @@ public class Party : Serializable {
             entity.add(CollisionComponent(Mappers.position.get(entity).tilePosition, Mappers.size.get(entity).size))
             entity.add(WalkComponent())
             entity.add(RenderComponent(Sprite(Mappers.moveTexture.get(entity).frontStandTexture)))
-            entity.add(AttributesComponent(attributes))
-            entity.add(ResourceComponent())
+            entity.add(AttributesComponent(attributes).applyRace(race))
+            val res = ResourceComponent()
+            entity.add(res)
 
             // Skills
             val classSkills = HashSet<Skills>()
@@ -140,7 +142,6 @@ public class Party : Serializable {
             entity.add(SkillsComponent(SkillSet(), sorted))
 
             // Abilities
-            // TODO: Remove Debug Code
             val abilities = AbilityComponent()
             entity.add(abilities)
 
@@ -150,9 +151,10 @@ public class Party : Serializable {
 
             // Final Initialization
             classComponent.characterClass.onFirstCreation()
+            res.onCreateNew()
 
             return entity
         }
     }
 
-}// Initialization
+}

@@ -491,5 +491,4 @@ public class CreateCharacterDialog : ObservableDialog(CreateCharacterDialog.DIAL
         }
     }
 
-}// Properties
-// Initialization
+}

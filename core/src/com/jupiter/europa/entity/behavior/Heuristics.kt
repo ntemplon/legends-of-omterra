@@ -22,11 +22,24 @@
  *
  */
 
-package com.jupiter.europa.screen.overlay
+package com.jupiter.europa.entity.behavior
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.ai.pfa.Heuristic
+import com.jupiter.europa.world.Level
 
 /**
- * Created by nathan on 6/7/15.
+ * Created by nathan on 7/25/15.
  */
-data class CircleMenuItem(val icon: TextureRegion, val text: String, val action: Runnable)
+public object Heuristics {
+
+    public val CITY_BLOCK: Heuristic<Level.LevelSquare> = Heuristic { node1, node2 ->
+        (Math.abs(node1.x - node2.x) + Math.abs(node1.y - node2.y)).toFloat()
+    }
+
+    public val PYTHAGOREAN: Heuristic<Level.LevelSquare> = Heuristic { node1, node2 ->
+        val xDiff = Math.abs(node1.x - node2.x)
+        val yDiff = Math.abs(node1.y - node2.y)
+        Math.sqrt((xDiff * xDiff + yDiff * yDiff).toDouble()).toFloat()
+    }
+
+}

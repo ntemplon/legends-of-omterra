@@ -26,9 +26,7 @@ package com.jupiter.europa.screen
 
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
 import com.badlogic.gdx.Input.Keys
-import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.graphics.FPSLogger
 import com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT
 import com.badlogic.gdx.graphics.OrthographicCamera
@@ -39,9 +37,9 @@ import com.jupiter.europa.entity.Families
 import com.jupiter.europa.entity.Mappers
 import com.jupiter.europa.entity.MovementSystem.MovementDirections
 import com.jupiter.europa.entity.ability.BasicAbilityCategories
+import com.jupiter.europa.entity.ability.TargetSelectionManager
 import com.jupiter.europa.entity.messaging.WalkRequestMessage
 import com.jupiter.europa.screen.overlay.CircleMenu
-import com.jupiter.europa.screen.overlay.CircleMenuItem
 import com.jupiter.europa.screen.overlay.PartyOverlay
 import com.jupiter.europa.screen.overlay.PauseMenu
 import com.jupiter.europa.world.Level
@@ -55,14 +53,12 @@ import java.util.HashSet
 
  * @author Nathan Templon
  */
-public class LevelScreen : OverlayableScreen() {
+public class LevelScreen(public val level: Level) : OverlayableScreen() {
 
-
-    // Fields
+    // Properties
     private val camera: OrthographicCamera // The camera for viewing the map
-    private var level: Level? = null // The current level being rendered
     private var mapRender: LevelRenderer? = null  // The map renderer for the current map
-    private val keysDown = HashSet<Int>()
+    private val processor = LevelInputProcessor(this)
 
     public var pauseKey: Int = Keys.ESCAPE
     private var pauseMenu: PauseMenu? = null
@@ -73,12 +69,28 @@ public class LevelScreen : OverlayableScreen() {
     private var height: Int = 0
     private var partyOverlay: PartyOverlay? = null
 
+    public val mouseLookSensitivity: Int = 5
+    public val mousePosition: Point
+        get() {
+            val mouseLoc = MouseInfo.getPointerInfo().getLocation()
+            val frameLoc = EuropaGame.game.getFrameLocation()
+            val insets = EuropaGame.game.getContainingInsets()
 
-    // Properties
-    public fun setLevel(level: Level) {
-        this.level = level
+            val mouseX = mouseLoc.x - frameLoc.x - insets.left
+            val mouseY = mouseLoc.y - frameLoc.y - insets.top
 
-        val focusedSprite = Mappers.render.get(this.level!!.controlledEntity).sprite
+            return Point(mouseX, mouseY)
+        }
+
+
+    // Initialization
+    init {
+        this.processor.addEntityListener { entity -> this.onEntityClick(entity) }
+
+        this.camera = OrthographicCamera(Gdx.graphics.getWidth().toFloat(), Gdx.graphics.getHeight().toFloat())
+        this.multiplexer.addProcessor(0, this.processor)
+
+        val focusedSprite = Mappers.render.get(this.level.controlledEntity).sprite
         this.camera.position.set(focusedSprite.getX() + focusedSprite.getWidth() / 2.0f, focusedSprite.getY() + focusedSprite.getHeight() / 2.0f, 0f)
 
         this.mapRender = LevelRenderer(level)
@@ -92,15 +104,34 @@ public class LevelScreen : OverlayableScreen() {
         this.addOverlay(this.partyOverlay!!)
     }
 
-    public fun getMouseLookSensitivity(): Int {
-        return 5
+
+    // Public Methods
+    public fun tileUnder(screenLocation: Point): Point = this.tileUnder(screenLocation.x, screenLocation.y)
+
+    public fun tileUnder(screenX: Int, screenY: Int): Point {
+        // Camera position is center screen
+        val xOff = (screenX / EuropaGame.SCALE) - (this.camera.viewportWidth / 2)
+        val yOff = -1 * ((screenY / EuropaGame.SCALE) - (this.camera.viewportHeight / 2))
+
+        val x = (this.camera.position.x + xOff) / this.level.tileWidth
+        val y = (this.camera.position.y + yOff) / this.level.tileWidth
+        return Point(Math.floor(x.toDouble()).toInt(), Math.floor(y.toDouble()).toInt())
     }
 
+    public fun tileToScreen(tileX: Int, tileY: Int): Point {
+        // Camera position is center screen
+        // First, get the absolute position of the tile's top-left corner in screen coordinates
+        val x = tileX * this.level.tileWidth
+        val y = tileY * this.level.tileHeight
 
-    init {
+        return Point(
+                x - this.camera.position.x.toInt() + (this.width / (2 * EuropaGame.SCALE)).toInt(),
+                y - this.camera.position.y.toInt() + (this.height / (2 * EuropaGame.SCALE)).toInt()
+        )
+    }
 
-        this.camera = OrthographicCamera(Gdx.graphics.getWidth().toFloat(), Gdx.graphics.getHeight().toFloat())
-        this.multiplexer.addProcessor(0, LevelInputProcessor(this))
+    public fun displayPauseMenu() {
+        this.addOverlay(this.pauseMenu ?: return)
     }
 
 
@@ -115,9 +146,9 @@ public class LevelScreen : OverlayableScreen() {
         this.updateCamera()
 
         if (this.mapRender != null) {
-            this.mapRender!!.setView(this.camera)
-            this.mapRender!!.getBatch().setColor((this.getTint()))
-            this.mapRender!!.render()
+            this.mapRender?.setView(this.camera)
+            this.mapRender?.getBatch()?.setColor((this.getTint()))
+            this.mapRender?.render()
         }
 
         this.renderOverlays()
@@ -148,11 +179,12 @@ public class LevelScreen : OverlayableScreen() {
         this.pauseMenu = PauseMenu()
         this.pauseMenu!!.exitKey = this.pauseKey
 
-        EuropaGame.game.audioService!!.playMusic(this.level!!.musicType)
+        EuropaGame.game.audioService!!.playMusic(this.level.musicType)
     }
 
     override fun hide() {
         EuropaGame.game.audioService!!.stop()
+        this.processor.close()
     }
 
     override fun pause() {
@@ -173,10 +205,33 @@ public class LevelScreen : OverlayableScreen() {
 
 
     // Private Methods
+    private fun onEntityClick(entity: Entity) {
+        if (Families.renderables.matches(entity) && Families.abilitied.matches(entity)) {
+            val focusedSprite = Mappers.render.get(entity).sprite
+            val popup = CircleMenu(
+                    Point(Math.round((focusedSprite.getX() + focusedSprite.getWidth() / 2.0f - this.camera.position.x) / EuropaGame.SCALE + this.camera.viewportWidth / 2.0f),
+                            Math.round((focusedSprite.getY() + focusedSprite.getHeight() / 2.0f - this.camera.position.y) / EuropaGame.SCALE + this.camera.viewportHeight / 2.0f)),
+                    Mappers.abilities[entity].getAbilities(BasicAbilityCategories.ALL_ABILITIES)
+                            .map { ability ->
+                                CircleMenu.CircleMenuItem(ability.icon, ability.name, {
+                                    TargetSelectionManager(ability.action, {
+                                        filter: (Level, Point) -> Boolean, select: (Point) -> Unit ->
+                                        this.processor.beginSelection(filter, select)
+                                    }).beginSelection()
+                                })
+                            }.toList())
+            popup.addCloseNoSelectionListener { this.processor.controlPlayer() }
+            this.addOverlay(popup)
+            this.processor.enterMenuState()
+        }
+    }
+
     private fun updateInput() {
+        this.processor.update()
+
         var deltaX = 0
         var deltaY = 0
-        for (key in this.keysDown) {
+        for (key in this.processor.keysDown) {
             if (MOVEMENT_MAP.containsKey(key)) {
                 val direction = MOVEMENT_MAP.get(key) ?: MovementDirections.UP
                 deltaX += direction.deltaX
@@ -185,8 +240,9 @@ public class LevelScreen : OverlayableScreen() {
         }
 
         val totalDirection = MovementDirections.getSingleStepDirectionFor(deltaX, deltaY)
-        if (totalDirection != null) {
-            EuropaGame.game.messageSystem.publish(WalkRequestMessage(this.level!!.controlledEntity!!, totalDirection))
+        val entity = this.level.controlledEntity
+        if (totalDirection != null && entity != null) {
+            EuropaGame.game.messageSystem.publish(WalkRequestMessage(entity, totalDirection))
         }
     }
 
@@ -195,28 +251,25 @@ public class LevelScreen : OverlayableScreen() {
             return
         }
 
-        val mouseLoc = MouseInfo.getPointerInfo().getLocation()
-        val frameLoc = EuropaGame.game.getFrameLocation()
-        val insets = EuropaGame.game.getContainingInsets()
-
-        val mouseX = mouseLoc.x - frameLoc.x - insets.left
-        val mouseY = mouseLoc.y - frameLoc.y - insets.top
+        val mouseLoc = this.mousePosition
+        val mouseX = mouseLoc.x
+        val mouseY = mouseLoc.y
 
         if (mouseX <= 0) {
             // MouseX = 0 -> We should move left
-            val newX = Math.max(0, this.camera.position.x.toInt() - this.getMouseLookSensitivity())
+            val newX = Math.max(0, this.camera.position.x.toInt() - this.mouseLookSensitivity)
             this.camera.position.set(newX.toFloat(), this.camera.position.y, 0f)
         } else if (mouseX >= this.width - 1) {
             // MouseX = width -> We should move right
-            val newX = Math.min(this.level!!.pixelWidth, this.camera.position.x.toInt() + this.getMouseLookSensitivity())
+            val newX = Math.min(this.level.pixelWidth, this.camera.position.x.toInt() + this.mouseLookSensitivity)
             this.camera.position.set(newX.toFloat(), this.camera.position.y, 0f)
         }
 
         if (mouseY >= this.height - 1) {
-            val newY = Math.max(0, this.camera.position.y.toInt() - this.getMouseLookSensitivity())
+            val newY = Math.max(0, this.camera.position.y.toInt() - this.mouseLookSensitivity)
             this.camera.position.set(this.camera.position.x, newY.toFloat(), 0f)
         } else if (mouseY <= 0) {
-            val newY = Math.min(this.level!!.pixelHeight, this.camera.position.y.toInt() + this.getMouseLookSensitivity())
+            val newY = Math.min(this.level.pixelHeight, this.camera.position.y.toInt() + this.mouseLookSensitivity)
             this.camera.position.set(this.camera.position.x, newY.toFloat(), 0f)
         }
 
@@ -234,82 +287,6 @@ public class LevelScreen : OverlayableScreen() {
         }
     }
 
-    private fun screenToTile(screenX: Int, screenY: Int): Point {
-        // Camera position is center screen
-        val xOff = (screenX / EuropaGame.SCALE) - (this.camera.viewportWidth / 2)
-        val yOff = -1 * ((screenY / EuropaGame.SCALE) - (this.camera.viewportHeight / 2))
-
-        val x = (this.camera.position.x + xOff) / this.level!!.tileWidth
-        val y = (this.camera.position.y + yOff) / this.level!!.tileWidth
-        return Point(Math.floor(x.toDouble()).toInt(), Math.floor(y.toDouble()).toInt())
-    }
-
-    private fun onEntityClick(entity: Entity) {
-        if (Families.renderables.matches(entity) && Families.abilitied.matches(entity)) {
-            val focusedSprite = Mappers.render.get(entity).sprite
-            val popup = CircleMenu(
-                    Point(Math.round((focusedSprite.getX() + focusedSprite.getWidth() / 2.0f - this.camera.position.x) / EuropaGame.SCALE + this.camera.viewportWidth / 2.0f),
-                            Math.round((focusedSprite.getY() + focusedSprite.getHeight() / 2.0f - this.camera.position.y) / EuropaGame.SCALE + this.camera.viewportHeight / 2.0f)),
-                    Mappers.abilities[entity].getAbilities(BasicAbilityCategories.ALL_ABILITIES)
-                            .map { ability ->
-                                CircleMenuItem(ability.icon, ability.name, Runnable { println(ability.name) })
-                            }.toList())
-            this.addOverlay(popup)
-        }
-    }
-
-
-    // Inner Classes
-    public class LevelInputProcessor(private val screen: LevelScreen) : InputProcessor {
-
-        override fun keyDown(i: Int): Boolean {
-            if (POLLED_INPUTS.contains(i)) {
-                this.screen.keysDown.add(i)
-                return true
-            } else if (i == screen.pauseKey) {
-                if (!EuropaGame.game.isSuspended()) {
-                    this.screen.addOverlay(this.screen.pauseMenu!!)
-                }
-            }
-            return false
-        }
-
-        override fun keyUp(i: Int): Boolean {
-            return this.screen.keysDown.remove(i)
-        }
-
-        override fun keyTyped(c: Char): Boolean {
-            return false
-        }
-
-        override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-            if (button != Input.Buttons.LEFT) {
-                return false
-            }
-
-            val entity = this.screen.level!!.entityLayer!!.entityAt(this.screen.screenToTile(screenX, screenY)) ?: return false
-
-            this.screen.onEntityClick(entity)
-            return true
-        }
-
-        override fun touchUp(i: Int, i1: Int, i2: Int, i3: Int): Boolean {
-            return false
-        }
-
-        override fun touchDragged(i: Int, i1: Int, i2: Int): Boolean {
-            return false
-        }
-
-        override fun mouseMoved(x: Int, y: Int): Boolean {
-            return false
-        }
-
-        override fun scrolled(i: Int): Boolean {
-            return false
-        }
-
-    }
 
     companion object {
 

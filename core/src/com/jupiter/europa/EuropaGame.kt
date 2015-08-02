@@ -61,8 +61,7 @@ import java.util.HashMap
 import java.util.TreeSet
 import javax.swing.JFrame
 
-public class EuropaGame// Initialization
-private constructor() : Game(), InputProcessor {
+public class EuropaGame private constructor() : Game(), InputProcessor {
 
 
     // Enumerations
@@ -119,17 +118,24 @@ private constructor() : Game(), InputProcessor {
         },
         LEVEL {
 
+            private var screen: LevelScreen? = null
+
             override fun enter(game: EuropaGame) {
-                game.levelScreen!!.setLevel(game.currentLevel!!)
-                game.setScreen(game.levelScreen)
-                game.addInputProcessor(game.levelScreen!!)
+                val screen = LevelScreen(game.currentLevel!!)
+                game.setScreen(screen)
+                game.addInputProcessor(screen)
+                this.screen = screen
             }
 
             override fun update(game: EuropaGame) {
             }
 
             override fun exit(game: EuropaGame) {
-                game.removeInputProcessor(game.levelScreen!!)
+                val screen = this.screen
+                if (screen != null) {
+                    game.removeInputProcessor(screen)
+                    screen.dispose()
+                }
             }
 
             override fun onMessage(game: EuropaGame, tlgrm: Telegram): Boolean {
@@ -137,22 +143,21 @@ private constructor() : Game(), InputProcessor {
             }
 
         },
-        PAUSED {
+        EXIT {
+            override fun enter(entity: EuropaGame?) {
 
-            override fun enter(e: EuropaGame) {
-                throw UnsupportedOperationException("Not supported yet.") //To change body of generated methods, choose Tools | Templates.
             }
 
-            override fun update(e: EuropaGame) {
-                throw UnsupportedOperationException("Not supported yet.") //To change body of generated methods, choose Tools | Templates.
+            override fun exit(entity: EuropaGame?) {
+
             }
 
-            override fun exit(e: EuropaGame) {
-                throw UnsupportedOperationException("Not supported yet.") //To change body of generated methods, choose Tools | Templates.
+            override fun onMessage(entity: EuropaGame?, telegram: Telegram?): Boolean {
+                return false
             }
 
-            override fun onMessage(e: EuropaGame, tlgrm: Telegram): Boolean {
-                throw UnsupportedOperationException("Not supported yet.") //To change body of generated methods, choose Tools | Templates.
+            override fun update(entity: EuropaGame?) {
+
             }
 
         }
@@ -168,7 +173,6 @@ private constructor() : Game(), InputProcessor {
 
     private var frame: JFrame? = null
 
-    private var levelScreen: LevelScreen? = null
     private var loadingScreen: Screen? = null
     private var mainMenuScreen: MainMenuScreen? = null
     private var worlds: MutableMap<String, World>? = null
@@ -293,7 +297,7 @@ private constructor() : Game(), InputProcessor {
             Files.newDirectoryStream(worldsDir).use { paths ->
                 paths.forEach { path ->
                     try {
-                        val nextWorld = World.fromDirectory(path)!!
+                        val nextWorld = World.fromDirectory(path)
                         this.worlds?.put(nextWorld.name!!.toUpperCase(), nextWorld)
                     } catch (ex: Exception) {
 
@@ -426,7 +430,6 @@ private constructor() : Game(), InputProcessor {
         // Create our various screens
         this.loadingScreen = LoadingScreen(this)
         this.mainMenuScreen = MainMenuScreen()
-        this.levelScreen = LevelScreen()
 
         // Set the state machine - be careful to not do this until all screens
         //  are initialized!
@@ -460,23 +463,14 @@ private constructor() : Game(), InputProcessor {
     }
 
     override fun dispose() {
-        if (this.loadingScreen != null) {
-            this.loadingScreen!!.dispose()
+        this.setState(GameStates.EXIT)
+
+        this.loadingScreen?.dispose()
+        this.mainMenuScreen?.dispose()
+        for (world in worlds?.values() ?: setOf<World>()) {
+            world.dispose()
         }
-        if (this.mainMenuScreen != null) {
-            this.mainMenuScreen!!.dispose()
-        }
-        if (this.levelScreen != null) {
-            this.levelScreen!!.dispose()
-        }
-        if (this.worlds != null) {
-            for (world in worlds?.values() ?: setOf<World>()) {
-                world.dispose()
-            }
-        }
-        if (this.assetManager != null) {
-            this.assetManager!!.dispose()
-        }
+        this.assetManager?.dispose()
     }
 
 

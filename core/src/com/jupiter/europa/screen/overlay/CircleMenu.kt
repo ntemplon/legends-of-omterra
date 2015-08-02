@@ -35,23 +35,32 @@ import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.jupiter.europa.EuropaGame
 import com.jupiter.europa.io.FileLocations
 import com.jupiter.europa.screen.OverlayableScreen
+import com.jupiter.ganymede.event.Event
 import java.awt.Point
+import kotlin.properties.Delegates
 
 /**
  * Created by nathan on 5/23/15.
  */
-public class CircleMenu(private val center: Point, items: List<CircleMenuItem>) : Scene2DOverlay(true) {
+public class CircleMenu(private val center: Point, private val items: List<CircleMenu.CircleMenuItem>) : Scene2DOverlay(true) {
 
     // Properties
-    private val entries: List<CircleMenuEntry> = items.map { item -> CircleMenuEntry(item) }.toList()
+    private val onCloseNoSelection: Event<CircleMenu> = Event()
     private var firstUp = true
+    private var selectionMade = false
+
+
+    // Initialization
+    init {
+        items.forEach { it.menu = this }
+    }
 
 
     // Public Methods
     override fun added(screen: OverlayableScreen) {
         super<Scene2DOverlay>.added(screen)
 
-        val cam = this.stage?.getCamera()
+        val cam = this.stage.getCamera()
 
         if (cam != null) {
             cam.viewportWidth = cam.viewportWidth / EuropaGame.SCALE
@@ -60,22 +69,22 @@ public class CircleMenu(private val center: Point, items: List<CircleMenuItem>) 
         }
 
         // The functional approach causes an issue, this one doesn't.  Huh.
-        for (entry in this.entries) {
-            this.stage?.addActor(entry)
+        for (entry in this.items) {
+            this.stage.addActor(entry)
         }
         //        this.entries.forEach { entry ->
         //            this.stage?.addActor(entry)
         //        }
 
-        val spacing = PIF / (this.entries.size() - 1)
-        val radius = back!!.getRegionWidth().toFloat() * 1f * EuropaGame.SCALE
+        val spacing = PIF / (this.items.size() - 1)
+        val radius = BACK.getRegionWidth().toFloat() * 1f * EuropaGame.SCALE
 
         var i = 0
-        for (entry in this.entries) {
+        for (entry in this.items) {
             val angle = i * spacing
 
-            val x = center.x * EuropaGame.SCALE - radius * Math.cos(angle.toDouble()).toFloat() - back!!.getRegionWidth() / 2.0f
-            val y = center.y * EuropaGame.SCALE + radius * Math.sin(angle.toDouble()).toFloat() - back!!.getRegionHeight() / 2.0f
+            val x = center.x * EuropaGame.SCALE - radius * Math.cos(angle.toDouble()).toFloat() - BACK.getRegionWidth() / 2.0f
+            val y = center.y * EuropaGame.SCALE + radius * Math.sin(angle.toDouble()).toFloat() - BACK.getRegionHeight() / 2.0f
             entry.setPosition(x, y)
             entry.setScale(EuropaGame.SCALE)
 
@@ -84,48 +93,32 @@ public class CircleMenu(private val center: Point, items: List<CircleMenuItem>) 
     }
 
     override fun resize(width: Int, height: Int) {
-        val cam = this.stage?.getCamera()
+        val cam = this.stage.getCamera()
         if (cam != null) {
-            cam.viewportWidth = cam.viewportWidth / EuropaGame.SCALE
-            cam.viewportHeight = cam.viewportHeight / EuropaGame.SCALE
+            cam.viewportWidth = width / EuropaGame.SCALE
+            cam.viewportHeight = height / EuropaGame.SCALE
             cam.update()
         }
     }
 
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         if (!this.firstUp) {
+            if (!this.selectionMade) {
+                this.onCloseNoSelection.dispatch(this)
+            }
+
             this.screen?.removeOverlay(this)
         }
         this.firstUp = false
         return true
     }
 
-
-    // Inner Classes
-    private inner class CircleMenuEntry(private val item: CircleMenuItem) : Actor() {
-
-        init {
-            this.setBounds(0f, 0f, back!!.getRegionWidth().toFloat(), back!!.getRegionHeight().toFloat())
-            this.addListener(object : InputListener() {
-                override fun touchDown(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int): Boolean {
-                    if (button == Input.Buttons.LEFT) {
-                        this@CircleMenuEntry.item.action.run()
-                        return true
-                    } else {
-                        return false
-                    }
-                }
-            })
-        }
-
-
-        // Public Methods
-        override fun draw(batch: Batch?, parentAlpha: Float) {
-            batch!!.draw(back, this.getX(), this.getY())
-            batch.draw(this.item.icon, this.getX(), this.getY())
-        }
+    public fun addCloseNoSelectionListener(listener: (CircleMenu) -> Unit) {
+        this.onCloseNoSelection.addListener(listener)
     }
 
+
+    // Statics
     companion object {
 
         // Constants
@@ -137,12 +130,48 @@ public class CircleMenu(private val center: Point, items: List<CircleMenuItem>) 
 
 
         // Static Variables
-        public var back: TextureRegion? = null
-        public var backHovered: TextureRegion? = null
+        public val BACK: TextureRegion by Delegates.lazy { EuropaGame.game.assetManager!!.get(FileLocations.HUD_ATLAS, javaClass<TextureAtlas>()).findRegion(BACK_TEXTURE_NAME) }
+        public val BACK_HOVERED: TextureRegion by Delegates.lazy { EuropaGame.game.assetManager!!.get(FileLocations.HUD_ATLAS, javaClass<TextureAtlas>()).findRegion(HOVERED_TEXTURE_NAME) }
+    }
 
+
+    // Nested Classes
+    data class CircleMenuItem(private val icon: TextureRegion, private val text: String, private val action: () -> Unit) : Actor() {
+
+        // Properties
+        private var back: TextureRegion = BACK
+        internal var menu: CircleMenu? = null
+
+
+        // Initialization
         init {
-            back = EuropaGame.game.assetManager!!.get(FileLocations.HUD_ATLAS, javaClass<TextureAtlas>()).findRegion(BACK_TEXTURE_NAME)
-            backHovered = EuropaGame.game.assetManager!!.get(FileLocations.HUD_ATLAS, javaClass<TextureAtlas>()).findRegion(HOVERED_TEXTURE_NAME)
+            this.setBounds(0f, 0f, this.back.getRegionWidth().toFloat(), this.back.getRegionHeight().toFloat())
+            this.addListener(object : InputListener() {
+                override fun touchDown(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+                    if (button == Input.Buttons.LEFT) {
+                        this@CircleMenuItem.menu?.selectionMade = true
+                        this@CircleMenuItem.action.invoke()
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+
+                override fun enter(event: InputEvent, x: Float, y: Float, pointer: Int, fromActor: Actor?) {
+                    this@CircleMenuItem.back = BACK_HOVERED
+                }
+
+                override fun exit(event: InputEvent, x: Float, y: Float, pointer: Int, toActor: Actor?) {
+                    this@CircleMenuItem.back = BACK
+                }
+            })
+        }
+
+
+        // Public Methods
+        override fun draw(batch: Batch, parentAlpha: Float) {
+            batch.draw(this.back, this.getX(), this.getY())
+            batch.draw(this.icon, this.getX(), this.getY())
         }
     }
 }

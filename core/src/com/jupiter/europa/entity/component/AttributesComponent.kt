@@ -30,12 +30,14 @@ import com.badlogic.gdx.utils.Json.Serializable
 import com.badlogic.gdx.utils.JsonValue
 import com.jupiter.europa.EuropaGame
 import com.jupiter.europa.entity.stats.AttributeSet
+import com.jupiter.europa.entity.stats.race.Race
+import com.jupiter.europa.util.Initializable
 
 /**
 
  * @author Nathan Templon
  */
-public class AttributesComponent(public val baseAttributes: AttributeSet) : Component(), Serializable {
+public class AttributesComponent(public val baseAttributes: AttributeSet) : Component(), Serializable, Initializable {
 
     // Properties
     public val currentAttributes: AttributeSet = AttributeSet(this.baseAttributes)
@@ -43,6 +45,31 @@ public class AttributesComponent(public val baseAttributes: AttributeSet) : Comp
 
     // Initialization
     public constructor() : this(AttributeSet())
+
+
+    // Public Methods
+    public fun applyRace(race: Race): AttributesComponent {
+        this.baseAttributes[AttributeSet.Attributes.STRENGTH] += race.strengthBonus
+        this.baseAttributes[AttributeSet.Attributes.CONSTITUTION] += race.constitutionBonus
+        this.baseAttributes[AttributeSet.Attributes.DEXTERITY] += race.dexterityBonus
+        this.baseAttributes[AttributeSet.Attributes.INTELLIGENCE] += race.intelligenceBonus
+        this.baseAttributes[AttributeSet.Attributes.WISDOM] += race.wisdomBonus
+        this.baseAttributes[AttributeSet.Attributes.CHARISMA] += race.charismaBonus
+        this.baseAttributes[AttributeSet.Attributes.MOVEMENT_SPEED] += race.movementSpeed
+        return this
+    }
+
+    override fun initialize() {
+        this.copyBaseToCurrent()
+    }
+
+
+    // Private Methods
+    private fun copyBaseToCurrent() {
+        for (attr in AttributeSet.Attributes.values()) {
+            this.currentAttributes[attr] = this.baseAttributes[attr]
+        }
+    }
 
 
     // Serializable (Json) Implementation

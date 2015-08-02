@@ -107,9 +107,13 @@ public class AttributeSet : Serializable {
         return 0
     }
 
+    public fun get(attribute: Attributes): Int = this.getAttribute(attribute)
+
     public fun setAttribute(attribute: Attributes, value: Int) {
         this.attributes.put(attribute, value)
     }
+
+    public fun set(attribute: Attributes, value: Int): Unit = this.setAttribute(attribute, value)
 
 
     // Initialization

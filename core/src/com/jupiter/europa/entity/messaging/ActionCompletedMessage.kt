@@ -22,44 +22,12 @@
  *
  */
 
-package com.jupiter.europa.entity.ability
+package com.jupiter.europa.entity.messaging
 
 import com.badlogic.ashley.core.Entity
-import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.jupiter.europa.EuropaGame
-import com.jupiter.europa.io.FileLocations
-import kotlin.properties.Delegates
+import com.jupiter.europa.entity.ability.Action
 
 /**
- * Created by nathan on 5/22/15.
+ * Created by nathan on 7/30/15.
  */
-public class AttackAbility(private val entity: Entity) : Ability {
-
-    private var sprite: TextureRegion = TextureRegion()
-
-
-    // Public Methods
-    override val name: String = NAME
-    override val cost: Cost = COST
-    override val action: Action = AttackAction(entity)
-
-    override fun getCategory(): AbilityCategory {
-        return BasicAbilityCategories.ALL_ABILITIES
-    }
-
-    override val icon: TextureRegion = ICON
-
-    public class AttackAction internal constructor(entity: Entity) : Action(entity) {
-    }
-
-    companion object {
-
-        // Constants
-        private val NAME = "Attack"
-        private val ICON_NAME = "attack"
-        private val COST = Cost.NONE
-
-        private val ICON by Delegates.lazy { EuropaGame.game.assetManager!!.get(FileLocations.ICON_ATLAS, javaClass<TextureAtlas>()).findRegion(ICON_NAME) }
-    }
-}
+public data class ActionCompletedMessage(public val entity: Entity, public val ability: Action) : StateChangeMessage()

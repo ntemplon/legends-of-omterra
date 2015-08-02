@@ -24,21 +24,35 @@
 
 package com.jupiter.europa.entity.ability
 
+import com.jupiter.europa.world.Level
+import java.awt.Point
+import java.util.ArrayList
+
 /**
- * Created by nathan on 5/21/15.
+ * Created by nathan on 7/23/15.
  */
-public class TargetInfo<T : Target>// Initialization
-(private val type: TargetInfo.TargetType, private val filter: TargetInfo.TargetFilter<T>) {
+// First function is the filter, and the second function is the acceptance
+public class TargetSelectionManager(public val action: Action, private val startSelection: ((Level, Point) -> Boolean, (Point) -> Unit) -> Unit) {
 
-    // Enumerations
-    public enum class TargetType {
-        TILE,
-        ENTITY
+    private val points: MutableList<Point> = ArrayList()
+
+    public fun beginSelection() {
+        if (this.action.targets.size() == 0) {
+            this.action.apply(points)
+        } else {
+            this.select(this.action.targets, 0)
+        }
     }
 
-
-    FunctionalInterface
-    public interface TargetFilter<T : Target> {
-        public fun accept(target: Target): Boolean
+    private fun select(targets: List<(Level, Point) -> Boolean>, index: Int) {
+        if (index < targets.size()) {
+            this.startSelection(targets[index], { point ->
+                this.points.add(point)
+                this.select(targets, index + 1)
+            })
+        } else {
+            this.action.apply(points)
+        }
     }
+
 }

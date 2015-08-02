@@ -92,6 +92,11 @@ public abstract class CharacterClass : Serializable, Initializable {
     public abstract val fortitude: Int
     public abstract val reflexes: Int
     public abstract val will: Int
+    public abstract val stamina: Int
+    public abstract val mana: Int
+    public abstract val manaAttribute: AttributeSet.Attributes
+    public abstract val aether: Int
+    public abstract val aetherAttribute: AttributeSet.Attributes
     public abstract val classSkills: Set<Skills>
     public abstract val textureSetName: String
 

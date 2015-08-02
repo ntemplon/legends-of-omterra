@@ -24,6 +24,7 @@
 
 package com.jupiter.europa.entity.ability.spell
 
+import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.jupiter.europa.EuropaGame
@@ -40,18 +41,18 @@ import kotlin.properties.Delegates
  * Created by nathan on 5/25/15.
  */
 Spell(characterClass = Magus::class, level = 1)
-public class JumpSpell : Ability {
+public class JumpSpell(private val entity: Entity) : Ability {
 
 
     // Public Methods
     override val name: String = "Jump"
     override val cost: Cost = COST
-    override val action: Action = Action.NO_OP
+    override val action: Action = Action(entity)
     override fun getCategory(): AbilityCategory {
         return SpellCategories.LEVEL_ONE
     }
 
-    override val icon: TextureRegion = innerIcon
+    override val icon: TextureRegion = INNER_ICON
 
     companion object {
 
@@ -59,6 +60,6 @@ public class JumpSpell : Ability {
 
         // Static Members
         private val COST = Cost.constant(ResourceComponent.Resources.MANA, 1)
-        private val innerIcon: TextureRegion by Delegates.lazy({ EuropaGame.game.assetManager!!.get(FileLocations.ICON_ATLAS, javaClass<TextureAtlas>()).findRegion("jump-spell") })
+        private val INNER_ICON: TextureRegion by Delegates.lazy({ EuropaGame.game.assetManager!!.get(FileLocations.ICON_ATLAS, javaClass<TextureAtlas>()).findRegion("jump-spell") })
     }
 }

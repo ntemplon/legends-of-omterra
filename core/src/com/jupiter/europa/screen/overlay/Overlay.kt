@@ -39,4 +39,7 @@ public interface Overlay : InputProcessor {
     public fun resize(width: Int, height: Int)
     public fun isBlocking(): Boolean
 
+    public fun addCloseListener(listener: (Overlay) -> Unit): Boolean
+    public fun removeCloseListener(listener: (Overlay) -> Unit): Boolean
+
 }

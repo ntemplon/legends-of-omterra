@@ -25,12 +25,26 @@
 package com.jupiter.europa.entity.ability
 
 import com.badlogic.ashley.core.Entity
+import com.badlogic.gdx.ai.pfa.Connection
+import com.badlogic.gdx.ai.pfa.DefaultGraphPath
+import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.jupiter.europa.EuropaGame
+import com.jupiter.europa.entity.Families
+import com.jupiter.europa.entity.Mappers
+import com.jupiter.europa.entity.MovementSystem
+import com.jupiter.europa.entity.behavior.Heuristics
+import com.jupiter.europa.entity.messaging.InputRequestMessage
+import com.jupiter.europa.entity.messaging.Message
+import com.jupiter.europa.entity.messaging.MovementCompleteMessage
+import com.jupiter.europa.entity.messaging.WalkRequestMessage
+import com.jupiter.europa.entity.stats.AttributeSet
 import com.jupiter.europa.io.FileLocations
-import java.util.Arrays
-import java.util.Collections
+import com.jupiter.europa.world.Level
+import com.jupiter.ganymede.event.Listener
+import java.awt.Point
+import java.awt.Rectangle
 import kotlin.properties.Delegates
 
 /**
@@ -55,26 +69,76 @@ public class MoveAbility(private val entity: Entity) : Ability {
 
 
     // Inner Classes
-    public class MoveAction// Initialization
-    internal constructor(private val entity: Entity) : Action() {
+    public class MoveAction internal constructor(entity: Entity) : Action(entity) {
+        override val targets: List<(Level, Point) -> Boolean> = listOf(
+                { level, point ->
+                    if (!level.contains(Rectangle(point.x, point.y, 1, 1))) {
+                        false
+                    } else {
+                        val pointUnder = Mappers.position[this.entity].tilePosition
+                        val pathFinder = IndexedAStarPathFinder<Level.LevelSquare>(level)
+                        val path = DefaultGraphPath<Connection<Level.LevelSquare>>()
+                        val found = pathFinder.searchConnectionPath(level.getSquare(pointUnder), level.getSquare(point),
+                                Heuristics.CITY_BLOCK,
+                                path
+                        )
+                        found && path.getCount() <= if (Families.attributed.matches(entity)) {
+                            Mappers.attributes[entity].currentAttributes[AttributeSet.Attributes.MOVEMENT_SPEED]
+                        } else {
+                            1
+                        }
+                    }
+                }
+        )
 
-        // TODO: Make it take pathing into account (i.e., path exists instead of distance maintainable)
-        // Fields
-        private val reqList: List<TargetInfo<Target>>
+        override fun apply(targets: List<Point>) {
+            val walkTo = targets[0]
 
+            val comp = Mappers.position[this.entity]
+            val level = comp.level ?: return
+            val currentPoint = comp.tilePosition
+            val pathFinder = IndexedAStarPathFinder<Level.LevelSquare>(level)
+            val path = DefaultGraphPath<Connection<Level.LevelSquare>>()
+            val found = pathFinder.searchConnectionPath(level.getSquare(currentPoint), level.getSquare(walkTo), Heuristics.CITY_BLOCK, path)
 
-        init {
-
-            val targets = arrayOf<TargetInfo<Target>>()
-            this.reqList = Collections.unmodifiableList(Arrays.asList(*targets))
+            if (found && path.nodes.size > 0) {
+                EuropaGame.game.messageSystem.publish(InputRequestMessage(InputRequestMessage.InputRequests.NONE))
+                MoveManager(path, this.entity, { this.complete() }).start()
+            } else {
+                this.complete()
+            }
         }
 
-        override fun getTargetRequirements(): List<TargetInfo<Target>> {
-            return this.reqList
-        }
+        protected class MoveManager(private val path: DefaultGraphPath<Connection<Level.LevelSquare>>, private val entity: Entity, private val onComplete: () -> Unit) : Listener<Message> {
+            private var position: Int = 0
 
-        public override fun apply(targets: List<Target>) {
-            // TODO: Move to square
+            public fun start() {
+                EuropaGame.game.messageSystem.subscribe(this, javaClass<MovementCompleteMessage>())
+                this.move(this.path.nodes[this.position])
+            }
+
+            public override fun handle(message: Message) {
+                if (message is MovementCompleteMessage && message.entity === this.entity) {
+                    this.position++
+                    if (this.position < this.path.nodes.size) {
+                        this.move(this.path.nodes[this.position])
+                    } else {
+                        this.complete()
+                    }
+                }
+            }
+
+            private fun move(connection: Connection<Level.LevelSquare>) {
+                val first = connection.getFromNode()
+                val second = connection.getToNode()
+                val direction = MovementSystem.MovementDirections.getSingleStepDirectionFor(second.x - first.x, second.y - first.y) ?: return this.complete() // If we can't move, exit
+                EuropaGame.game.messageSystem.publish(WalkRequestMessage(this.entity, direction))
+            }
+
+            private fun complete() {
+                EuropaGame.game.messageSystem.unsubscribe(this, javaClass<MovementCompleteMessage>())
+                this.onComplete.invoke()
+            }
         }
     }
 

@@ -22,25 +22,12 @@
  *
  */
 
-package com.jupiter.europa.entity.ability
-
-import com.badlogic.ashley.core.Entity
-import com.jupiter.europa.EuropaGame
-import com.jupiter.europa.entity.messaging.ActionCompletedMessage
-import com.jupiter.europa.world.Level
-import java.awt.Point
+package com.jupiter.europa.util
 
 /**
- * Created by nathan on 5/20/15.
+ * Created by nathan on 7/21/15.
  */
-public open class Action(public val entity: Entity) {
-
-    public open val targets: List<(Level, Point) -> Boolean> = listOf()
-    public open fun apply(targets: List<Point>) {
-        this.complete()
-    }
-
-    protected fun complete() {
-        EuropaGame.game.messageSystem.publish(ActionCompletedMessage(this.entity, this))
-    }
+public fun <T> T.apply(application: (T) -> Unit): T {
+    application(this)
+    return this
 }

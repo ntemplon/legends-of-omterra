@@ -49,6 +49,8 @@ public interface Race {
         get() = 0
     val classSkills: Set<SkillSet.Skills>
         get() = setOf()
+    val movementSpeed: Int
+        get() = 6
 }
 
 public enum class PlayerRaces : Race {
@@ -60,20 +62,21 @@ public enum class PlayerRaces : Race {
     },
     Elf() {
         override val textureString: String = "elf"
-        override val strengthBonus: Int = -1
-        override val dexterityBonus: Int = 1
-        override val wisdomBonus: Int = 1
+        override val strengthBonus: Int = -5
+        override val dexterityBonus: Int = 5
+        override val wisdomBonus: Int = 5
     },
     Dwarf() {
         override val textureString: String = "dwarf"
-        override val strengthBonus: Int = 1
-        override val constitutionBonus: Int = 0
-        override val charismaBonus: Int = -1
+        override val strengthBonus: Int = 5
+        override val constitutionBonus: Int = 5
+        override val charismaBonus: Int = -5
+        override val movementSpeed: Int = 4
     },
     Goblin() {
         override val textureString: String = "goblin"
-        override val dexterityBonus: Int = 1
-        override val charismaBonus: Int = 1
-        override val wisdomBonus: Int = -1
+        override val dexterityBonus: Int = 5
+        override val charismaBonus: Int = 5
+        override val wisdomBonus: Int = -5
     }
 }

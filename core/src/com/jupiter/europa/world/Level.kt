@@ -24,6 +24,10 @@
 package com.jupiter.europa.world
 
 import com.badlogic.ashley.core.Entity
+import com.badlogic.gdx.ai.pfa.Connection
+import com.badlogic.gdx.ai.pfa.DefaultConnection
+import com.badlogic.gdx.ai.pfa.indexed.IndexedGraph
+import com.badlogic.gdx.ai.pfa.indexed.IndexedNode
 import com.badlogic.gdx.maps.MapLayer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
@@ -31,14 +35,17 @@ import com.badlogic.gdx.utils.Disposable
 import com.jupiter.europa.audio.AudioService
 import com.jupiter.europa.geometry.Size
 import com.jupiter.europa.util.Quadtree
+import java.awt.Point
 import java.awt.Rectangle
+import java.util.ArrayList
+import com.badlogic.gdx.utils.Array as GdxArray
 
 /**
  * A class representing an individual level (map) in Legends of Omterra
 
  * @author Nathan Templon
  */
-public class Level(public val name: String, map: TiledMap, public val world: World) : Disposable {
+public class Level(public val name: String, map: TiledMap, public val world: World) : Disposable, IndexedGraph<Level.LevelSquare> {
 
     // Properties
     public var map: TiledMap
@@ -72,6 +79,7 @@ public class Level(public val name: String, map: TiledMap, public val world: Wor
                 this.musicType = value.getProperties().get(MUSIC_PROPERTY, javaClass<String>())
             }
         }
+    private val squares: Array<Array<LevelSquare>>
     public var entityLayer: EntityLayer? = null
         private set
     private var collision: Quadtree<Zone>? = null
@@ -98,6 +106,13 @@ public class Level(public val name: String, map: TiledMap, public val world: Wor
     init {
         this.$map = map
         this.map = map
+
+        this.squares = Array(this.mapWidth, { Array<LevelSquare>(this.mapHeight, { LevelSquare(0, 0) }) })
+        for (x in 0..(this.mapWidth - 1)) {
+            for (y in 0..(this.mapHeight - 1)) {
+                this.squares[x][y] = LevelSquare(x, y)
+            }
+        }
     }
 
 
@@ -110,8 +125,16 @@ public class Level(public val name: String, map: TiledMap, public val world: Wor
         return this.collision!!.bounds.contains(rectangle)
     }
 
+    public fun getSquare(point: Point): LevelSquare {
+        return this.squares[point.x][point.y]
+    }
 
-    // Disposable Imiplementation
+    override fun getNodeCount(): Int = this.mapWidth * this.mapHeight
+
+    override fun getConnections(outNode: LevelSquare): GdxArray<Connection<LevelSquare>> = outNode.getConnections()
+
+
+    // Disposable Implementation
     override fun dispose() {
         this.map.dispose()
     }
@@ -161,6 +184,34 @@ public class Level(public val name: String, map: TiledMap, public val world: Wor
 
         public val DEFAULT_TILE_WIDTH: Int = 16
         public val DEFAULT_TILE_HEIGHT: Int = 16
+    }
+
+
+    // Nested Classes
+    public inner class LevelSquare constructor(public val x: Int, public val y: Int) : IndexedNode<LevelSquare> {
+
+        private val indexInternal = x + y * this@Level.mapWidth
+
+        override fun getIndex(): Int = indexInternal
+        override fun getConnections(): GdxArray<Connection<LevelSquare>> {
+            val connections = ArrayList<Point>()
+            for (i in -1..1 step 2) {
+                val rect = Rectangle(this.x + i, this.y, 1, 1)
+                if (!this@Level.collides(rect)) {
+                    connections.add(Point(this.x + i, this.y))
+                }
+            }
+            for (j in -1..1 step 2) {
+                val rect = Rectangle(this.x, this.y + j, 1, 1)
+                if (!this@Level.collides(rect)) {
+                    connections.add(Point(this.x, this.y + j))
+                }
+            }
+            return GdxArray(connections.map { point ->
+                DefaultConnection<LevelSquare>(this, this@Level.getSquare(point))
+            }.toTypedArray())
+        }
+
     }
 
 }
