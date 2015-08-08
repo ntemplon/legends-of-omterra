@@ -35,28 +35,20 @@ import com.jupiter.europa.entity.traits.FeatNotPresentQualifier
 
  * @author Nathan Templon
  */
-public class GreatFortitude : Feat {
+public class GreatFortitude : AttributeModifierEffect(), Feat {
 
     // Properties
     override val qualifier = FeatNotPresentQualifier(javaClass<GreatFortitude>())
-    override val effect = GreatFortitudeEffect()
     override val icon = Sprite()
     override val name = "Great Fortitude"
     override val description = "You gain +10 Fortitude."
+
+    override val modifiers = mapOf(Pair(Attributes.FORTITUDE, 10))
 
     override fun write(json: Json) {
     }
 
     override fun read(json: Json, jsonData: JsonValue) {
-    }
-
-
-    // Effect
-    private class GreatFortitudeEffect : AttributeModifierEffect() {
-
-        // Properties
-        override val modifiers = mapOf(Pair(Attributes.FORTITUDE, 10))
-
     }
 
 }

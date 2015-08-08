@@ -41,12 +41,11 @@ public class AttackAbility(private val entity: Entity) : Ability {
 
     // Public Methods
     override val name: String = NAME
+    override val description: String = "Perform a basic attack with a melee or ranged weapon."
     override val cost: Cost = COST
     override val action: Action = AttackAction(entity)
 
-    override fun getCategory(): AbilityCategory {
-        return BasicAbilityCategories.ALL_ABILITIES
-    }
+    override val category: AbilityCategory = BasicAbilityCategories.ALL_ABILITIES
 
     override val icon: TextureRegion = ICON
 

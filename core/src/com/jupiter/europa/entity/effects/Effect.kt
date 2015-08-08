@@ -25,13 +25,24 @@
 package com.jupiter.europa.entity.effects
 
 import com.badlogic.ashley.core.Entity
+import com.badlogic.gdx.graphics.g2d.Sprite
+import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.Json.Serializable
+import com.badlogic.gdx.utils.JsonValue
+import com.jupiter.europa.entity.traits.Qualifications
+import com.jupiter.europa.entity.traits.Qualifier
 
 /**
 
  * @author Nathan Templon
  */
-public interface Effect : Serializable {
+public interface Effect : Serializable, Comparable<Effect> {
+
+    public val qualifier: Qualifier
+
+    public val icon: Sprite
+    public val name: String
+    public val description: String
 
     public fun onAdd(entity: Entity)
 
@@ -40,5 +51,42 @@ public interface Effect : Serializable {
     public fun onCombatTurnStart()
     public fun onCombatTurnEnd()
     public fun onOutOfCombatTurn()
+
+    override fun compareTo(other: Effect): Int {
+        return this.name.compareTo(other.name)
+    }
+
+    companion object {
+        public val NO_OP: Effect = object : Effect {
+            override val qualifier = Qualifications.ACCEPT
+            override val icon = Sprite()
+            override val name = "NO_OP"
+            override val description = "Effect that performs no operation."
+
+            override fun onAdd(entity: Entity) {
+            }
+
+            override fun onRemove() {
+            }
+
+            override fun update(deltaT: Float) {
+            }
+
+            override fun onCombatTurnStart() {
+            }
+
+            override fun onCombatTurnEnd() {
+            }
+
+            override fun onOutOfCombatTurn() {
+            }
+
+            override fun write(json: Json) {
+            }
+
+            override fun read(json: Json, value: JsonValue) {
+            }
+        }
+    }
 
 }

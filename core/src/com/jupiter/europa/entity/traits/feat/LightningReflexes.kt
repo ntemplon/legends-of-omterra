@@ -34,14 +34,15 @@ import com.jupiter.europa.entity.traits.FeatNotPresentQualifier
 /**
  * Created by nathan on 5/18/15.
  */
-public class LightningReflexes : Feat {
+public class LightningReflexes : AttributeModifierEffect(), Feat {
 
     // Fields
     override val qualifier = FeatNotPresentQualifier(javaClass<LightningReflexes>())
-    override val effect = LightningReflexesEffect()
     override val icon = Sprite()
     override val name = "Lightning Reflexes"
     override val description = "You gain 10 Reflexes."
+
+    override val modifiers = mapOf(Pair(AttributeSet.Attributes.REFLEXES, 10))
 
 
     // Serializable (json) implementation
@@ -51,12 +52,4 @@ public class LightningReflexes : Feat {
     override fun read(json: Json, jsonData: JsonValue) {
     }
 
-
-    // Effect
-    private class LightningReflexesEffect : AttributeModifierEffect() {
-
-        // Properties
-        override val modifiers = mapOf(Pair(AttributeSet.Attributes.REFLEXES, 10))
-
-    }
 }

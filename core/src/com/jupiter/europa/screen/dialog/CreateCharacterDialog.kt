@@ -38,13 +38,13 @@ import com.jupiter.europa.entity.EuropaEntity
 import com.jupiter.europa.entity.Mappers
 import com.jupiter.europa.entity.Party
 import com.jupiter.europa.entity.component.MovementResourceComponent
+import com.jupiter.europa.entity.effects.Effect
 import com.jupiter.europa.entity.stats.AttributeSet
 import com.jupiter.europa.entity.stats.SkillSet.Skills
 import com.jupiter.europa.entity.stats.characterclass.CharacterClass
 import com.jupiter.europa.entity.stats.race.PlayerRaces
 import com.jupiter.europa.entity.stats.race.Race
-import com.jupiter.europa.entity.traits.Trait
-import com.jupiter.europa.entity.traits.TraitPool
+import com.jupiter.europa.entity.traits.EffectPool
 import com.jupiter.europa.entity.traits.feat.Feat
 import com.jupiter.europa.io.FileLocations
 import com.jupiter.europa.scene2d.ui.AttributeSelector
@@ -79,7 +79,7 @@ public class CreateCharacterDialog : ObservableDialog(CreateCharacterDialog.DIAL
     private val selectRaceClass: SelectRaceClassAttributesDialog
     private var selectSkills: SelectSkillsDialog? = null
     private var selectFeats: SelectTraitDialog<Feat>? = null
-    private val otherPools = ArrayList<TraitPool<out Trait>>()
+    private val otherPools = ArrayList<EffectPool<out Effect>>()
     private val skinInternal: Skin = getDefaultSkin()
 
     public var exitState: CreateCharacterExitStates = CreateCharacterExitStates.CANCELED

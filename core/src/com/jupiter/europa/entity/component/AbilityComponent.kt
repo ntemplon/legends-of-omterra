@@ -30,7 +30,7 @@ import com.badlogic.gdx.utils.JsonValue
 import com.jupiter.europa.entity.ability.Ability
 import com.jupiter.europa.entity.ability.AbilityCategory
 import com.jupiter.europa.entity.ability.BasicAbilityCategories
-import com.jupiter.ganymede.util.CategorizedTree
+import com.jupiter.europa.util.CategorizedTree
 import java.util.TreeSet
 
 /**

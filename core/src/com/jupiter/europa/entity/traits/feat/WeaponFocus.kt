@@ -39,14 +39,27 @@ import com.jupiter.europa.entity.traits.FeatNotPresentQualifier
 
  * @author Nathan Templon
  */
-public class WeaponFocus : Feat {
+public class WeaponFocus : VariableAttributeModifierEffect(), Feat {
 
     // Properties
     override val qualifier = FeatNotPresentQualifier(javaClass<WeaponFocus>())
-    override val effect = WeaponFocusEffect()
     override val icon = Sprite()
     override val name = "Weapon Focus"
     override val description = "Your attack bonus increases by 10."
+
+    override val modifiers = hashMapOf(Pair(Attributes.ATTACK_BONUS, 10))
+
+    override fun computeModifiers(entity: Entity): Map<Attributes, Int> {
+        this.modifiers.clear()
+
+        if (Families.classed.matches(entity)) {
+            val charClass = Mappers.characterClass.get(entity).characterClass
+
+            this.modifiers.put(Attributes.ATTACK_BONUS, 5 + charClass.level)
+        }
+
+        return this.modifiers
+    }
 
 
     // Serializable (Json) Implementation
@@ -54,29 +67,6 @@ public class WeaponFocus : Feat {
     }
 
     override fun read(json: Json, jsonData: JsonValue) {
-    }
-
-
-    // Effect
-    private class WeaponFocusEffect : VariableAttributeModifierEffect() {
-
-        // Fields
-        override val modifiers = hashMapOf(Pair(Attributes.ATTACK_BONUS, 10))
-
-
-        // Properties
-        override fun computeModifiers(entity: Entity): Map<Attributes, Int> {
-            this.modifiers.clear()
-
-            if (Families.classed.matches(entity)) {
-                val charClass = Mappers.characterClass.get(entity).characterClass
-
-                this.modifiers.put(Attributes.ATTACK_BONUS, 5 + charClass.level)
-            }
-
-            return this.modifiers
-        }
-
     }
 
 }

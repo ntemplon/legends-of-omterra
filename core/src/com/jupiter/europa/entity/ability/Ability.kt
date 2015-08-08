@@ -24,7 +24,7 @@
 package com.jupiter.europa.entity.ability
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.jupiter.ganymede.util.Categorized
+import com.jupiter.europa.util.Categorized
 
 /**
 
@@ -32,9 +32,10 @@ import com.jupiter.ganymede.util.Categorized
  */
 public interface Ability : Categorized<AbilityCategory>, Comparable<Ability> {
     public val name: String
+    public val description: String
     public val cost: Cost
     public val action: Action
-    override fun getCategory(): AbilityCategory
+    override val category: AbilityCategory
     public val icon: TextureRegion
 
     override fun compareTo(other: Ability): Int {

@@ -24,16 +24,15 @@
 
 package com.jupiter.europa.entity.traits.feat
 
-import com.jupiter.europa.entity.traits.Trait
+import com.jupiter.europa.entity.effects.Effect
 import org.reflections.Reflections
-
 import java.util.Collections
 
 /**
 
  * @author Nathan Templon
  */
-public interface Feat : Trait {
+public interface Feat : Effect {
     companion object {
         // Constants
         public val FEAT_TYPES: Set<Class<out Feat>> = Collections.unmodifiableSet<Class<out Feat>>(Reflections("com.jupiter.europa").getSubTypesOf<Feat>(javaClass<Feat>()))

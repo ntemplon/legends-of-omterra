@@ -22,30 +22,15 @@
  *
  */
 
-package com.jupiter.europa.entity.traits
+package com.jupiter.europa.entity.messaging
 
-import com.badlogic.gdx.graphics.g2d.Sprite
-import com.badlogic.gdx.utils.Json.Serializable
-import com.jupiter.europa.entity.effects.Effect
-import com.sun.istack.internal.NotNull
+import com.badlogic.ashley.core.Entity
+import com.jupiter.europa.entity.MovementSystem.MovementDirections
 
 /**
 
- * @author Nathan Templon
+ * @author Hortator
  */
-public interface Trait : Serializable, Comparable<Trait> {
+public data class WalkCompleteMessage(public val entity: Entity, public val direction: MovementDirections) : StateChangeMessage()
 
-    // Properties
-    public val qualifier: Qualifier
-
-    public val icon: Sprite
-    public val name: String
-    public val description: String
-    public val effect: Effect
-
-    // Comparable
-    override fun compareTo(NotNull other: Trait): Int {
-        return this.name.compareTo(other.name)
-    }
-
-}
+public data class TeleportCompleteMessage(public val entity: Entity) : StateChangeMessage()

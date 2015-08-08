@@ -22,13 +22,24 @@
  *
  */
 
-package com.jupiter.europa.entity.messaging
+package com.jupiter.europa.entity.ability.spell
 
 import com.badlogic.ashley.core.Entity
-import com.jupiter.europa.entity.MovementSystem.MovementDirections
+import com.jupiter.europa.entity.ability.Ability
 
 /**
-
- * @author Nathan Templon
+ * Created by nathan on 8/2/15.
  */
-public data class WalkRequestMessage(public val entity: Entity, public val direction: MovementDirections) : RequestMessage()
+public object SpellFactory {
+    public fun create<T : Ability>(spellClass: Class<T>, entity: Entity): T {
+        try {
+            return spellClass.getConstructor(javaClass<Entity>()).newInstance(entity)
+        } catch (ex: Exception) {
+            try {
+                return spellClass.newInstance()
+            } catch (ex: Exception) {
+                throw IllegalStateException("The provided spell class must have a constructor with no parameters, or a single parameter of an Entity.")
+            }
+        }
+    }
+}

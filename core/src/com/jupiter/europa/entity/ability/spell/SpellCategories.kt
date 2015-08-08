@@ -24,13 +24,14 @@
 
 package com.jupiter.europa.entity.ability.spell
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.jupiter.europa.entity.ability.AbilityCategory
 import com.jupiter.europa.entity.ability.BasicAbilityCategories
 
 /**
  * Created by nathan on 5/20/15.
  */
-public enum class SpellCategories(private val name: String) : AbilityCategory {
+public enum class SpellCategories(override val name: String) : AbilityCategory {
     LEVEL_ONE("Level 1"),
     LEVEL_TWO("Level 2"),
     LEVEL_THREE("Level 3"),
@@ -41,11 +42,8 @@ public enum class SpellCategories(private val name: String) : AbilityCategory {
     LEVEL_EIGHT("Level 8"),
     LEVEL_NINE("Level 9");
 
-    override fun getParent(): AbilityCategory {
-        return BasicAbilityCategories.SPELLS
-    }
+    override val parent: AbilityCategory = BasicAbilityCategories.SPELLS
 
-    override fun getName(): String {
-        return name
-    }
+    // TODO: Actual Icons
+    override val icon: TextureRegion = TextureRegion()
 }

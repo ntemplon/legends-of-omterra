@@ -71,6 +71,10 @@ public class Magus : CharacterClass() {
         }
     }
 
+    override fun onFirstCreation() {
+        //this.abilityPoolsInternal.add(EffectPool<Effect>())
+    }
+
 
     // Serializable (Json) Implementation
     override fun write(json: Json) {

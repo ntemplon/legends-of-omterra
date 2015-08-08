@@ -27,15 +27,18 @@ package com.jupiter.europa.entity.effects
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.JsonValue
+import com.jupiter.europa.entity.traits.Qualifications
+import com.jupiter.europa.entity.traits.Qualifier
 
 /**
  * Created by nathan on 5/21/15.
  */
-public open class BaseEffect() : Effect {
+public abstract class BaseEffect() : Effect {
 
     // Properties
     public var entity: Entity? = null
         private set
+    override val qualifier: Qualifier = Qualifications.ACCEPT
 
 
     // Public Methods

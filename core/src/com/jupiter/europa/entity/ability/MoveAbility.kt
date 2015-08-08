@@ -37,7 +37,7 @@ import com.jupiter.europa.entity.MovementSystem
 import com.jupiter.europa.entity.behavior.Heuristics
 import com.jupiter.europa.entity.messaging.InputRequestMessage
 import com.jupiter.europa.entity.messaging.Message
-import com.jupiter.europa.entity.messaging.MovementCompleteMessage
+import com.jupiter.europa.entity.messaging.WalkCompleteMessage
 import com.jupiter.europa.entity.messaging.WalkRequestMessage
 import com.jupiter.europa.entity.stats.AttributeSet
 import com.jupiter.europa.io.FileLocations
@@ -60,10 +60,9 @@ public class MoveAbility(private val entity: Entity) : Ability {
 
     // Public Methods
     override val name: String = NAME
+    override val description: String = DESCRIPTION
     override val cost: Cost = COST
-    override fun getCategory(): AbilityCategory {
-        return BasicAbilityCategories.ALL_ABILITIES
-    }
+    override val category: AbilityCategory = BasicAbilityCategories.ALL_ABILITIES
 
     override val icon: TextureRegion = ICON
 
@@ -113,12 +112,12 @@ public class MoveAbility(private val entity: Entity) : Ability {
             private var position: Int = 0
 
             public fun start() {
-                EuropaGame.game.messageSystem.subscribe(this, javaClass<MovementCompleteMessage>())
+                EuropaGame.game.messageSystem.subscribe(this, javaClass<WalkCompleteMessage>())
                 this.move(this.path.nodes[this.position])
             }
 
             public override fun handle(message: Message) {
-                if (message is MovementCompleteMessage && message.entity === this.entity) {
+                if (message is WalkCompleteMessage && message.entity === this.entity) {
                     this.position++
                     if (this.position < this.path.nodes.size) {
                         this.move(this.path.nodes[this.position])
@@ -136,7 +135,7 @@ public class MoveAbility(private val entity: Entity) : Ability {
             }
 
             private fun complete() {
-                EuropaGame.game.messageSystem.unsubscribe(this, javaClass<MovementCompleteMessage>())
+                EuropaGame.game.messageSystem.unsubscribe(this, javaClass<WalkCompleteMessage>())
                 this.onComplete.invoke()
             }
         }
@@ -145,6 +144,7 @@ public class MoveAbility(private val entity: Entity) : Ability {
     companion object {
 
         private val NAME = "Move"
+        private val DESCRIPTION = "Move to a location within range."
         private val ICON_NAME = "move"
         private val COST = Cost.NONE
         private val ICON by Delegates.lazy { EuropaGame.game.assetManager!!.get(FileLocations.ICON_ATLAS, javaClass<TextureAtlas>()).findRegion(ICON_NAME) }

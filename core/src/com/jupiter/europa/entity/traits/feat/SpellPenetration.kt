@@ -35,14 +35,15 @@ import com.jupiter.europa.entity.traits.FeatNotPresentQualifier
 /**
  * Created by nathan on 5/18/15.
  */
-public class SpellPenetration : Feat {
+public class SpellPenetration : AttributeModifierEffect(), Feat {
 
     // Feat Implementation
     override val qualifier = FeatNotPresentQualifier(javaClass<SpellPenetration>())
-    override val effect = SpellPenetrationEffect()
     override val icon = Sprite()
     override val name = "Spell Penetration"
     override val description = "Your spells ignore 10 of their targets' Spell Resistance."
+
+    override val modifiers = mapOf(Pair(AttributeSet.Attributes.SPELL_PENETRATION, 10))
 
 
     // Serializable (json) implementation
@@ -52,12 +53,4 @@ public class SpellPenetration : Feat {
     override fun read(json: Json, jsonData: JsonValue) {
     }
 
-
-    // Effect
-    private class SpellPenetrationEffect : AttributeModifierEffect() {
-
-        // Properties
-        override val modifiers = mapOf(Pair(AttributeSet.Attributes.SPELL_PENETRATION, 10))
-
-    }
 }

@@ -22,23 +22,16 @@
  *
  */
 
-package com.jupiter.europa.entity.ability
+package com.jupiter.europa.entity.messaging
+
+import com.badlogic.ashley.core.Entity
+import com.jupiter.europa.entity.MovementSystem.MovementDirections
+import java.awt.Point
 
 /**
- * Created by nathan on 5/20/15.
+
+ * @author Nathan Templon
  */
-public enum class BasicAbilityCategories(private val name: String, private val parent: AbilityCategory?) : AbilityCategory {
-    ALL_ABILITIES("All Abilities", null),
-    SPELLS("Spells", ALL_ABILITIES),
-    COMBAT_MANEUVERS("Combat Maneuvers", ALL_ABILITIES),
-    FEATS("Feats", ALL_ABILITIES);
+public data class WalkRequestMessage(public val entity: Entity, public val direction: MovementDirections) : RequestMessage()
 
-    override fun getParent(): AbilityCategory? {
-        return this.parent
-    }
-
-    override fun getName(): String {
-        return this.name
-    }
-
-}
+public data class TeleportRequestMessage(public val entity: Entity, public val target: Point) : RequestMessage()

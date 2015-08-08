@@ -154,7 +154,7 @@ public class MovementSystem : IteratingSystem(Families.positionables, EuropaGame
                 sprite.setRegion(textures.standingTextureFor(walk.walkDirection))
                 this.moveEntityTo(entity, walk.walkTarget)
                 Mappers.position.get(entity).facingDirection = walk.walkDirection
-                EuropaGame.game.messageSystem.publish(MovementCompleteMessage(entity, walk.walkDirection))
+                EuropaGame.game.messageSystem.publish(WalkCompleteMessage(entity, walk.walkDirection))
             }
             WalkComponent.WalkStates.STANDING -> {
             }

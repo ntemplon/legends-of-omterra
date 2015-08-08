@@ -33,25 +33,23 @@ import com.jupiter.europa.EuropaGame
 
  * @author Nathan Templon
  */
-public open class MultiEffect(vararg effects: Effect = listOf<Effect>().toTypedArray()) : Effect {
+public abstract class MultiEffect(vararg effects: Effect = listOf<Effect>().toTypedArray()) : BaseEffect() {
 
 
     // Properties
     public open var effects: List<Effect> = effects.toList()
         private set
-    public var entity: Entity? = null
-        private set
 
     // Public Methods
     override fun onAdd(entity: Entity) {
-        this.entity = entity
+        super.onAdd(entity)
         for (effect in this.effects) {
             effect.onAdd(entity)
         }
     }
 
     override fun onRemove() {
-        this.entity = null
+        super.onRemove()
         this.effects.forEach { it.onRemove() }
     }
 
@@ -79,7 +77,7 @@ public open class MultiEffect(vararg effects: Effect = listOf<Effect>().toTypedA
     // Serializable (Json) Implementation
     override fun write(json: Json) {
         json.writeArrayStart(EFFECTS_KEY)
-        for (effect in this.effects!!) {
+        for (effect in this.effects) {
             json.writeObjectStart()
             json.writeValue(EFFECT_CLASS_KEY, effect.javaClass.getName())
             json.writeValue(EFFECT_DATA_KEY, effect, effect.javaClass)

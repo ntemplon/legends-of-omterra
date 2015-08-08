@@ -27,8 +27,8 @@ package com.jupiter.europa.screen.dialog
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable
 import com.badlogic.gdx.utils.Align
-import com.jupiter.europa.entity.traits.Trait
-import com.jupiter.europa.entity.traits.TraitPool
+import com.jupiter.europa.entity.effects.Effect
+import com.jupiter.europa.entity.traits.EffectPool
 import com.jupiter.europa.scene2d.ui.EuropaButton
 import com.jupiter.europa.scene2d.ui.ObservableDialog
 import com.jupiter.europa.scene2d.ui.TraitPoolSelector
@@ -42,7 +42,7 @@ import com.jupiter.ganymede.event.Listener
  * *
  * @author Nathan Templon
  */
-public class SelectTraitDialog<T : Trait>(private val title: String, private val skinInternal: Skin, public val pool: TraitPool<T>) : ObservableDialog("", skinInternal.get(javaClass<Window.WindowStyle>())) {
+public class SelectTraitDialog<T : Effect>(private val title: String, private val skinInternal: Skin, public val pool: EffectPool<T>) : ObservableDialog("", skinInternal.get(javaClass<Window.WindowStyle>())) {
     private val selectorStyle: TraitPoolSelectorStyle
 
     private var mainTable: Table? = null

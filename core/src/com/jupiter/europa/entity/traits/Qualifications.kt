@@ -23,15 +23,14 @@
  */
 
 
-package com.jupiter.europa.entity.traits.feat
+package com.jupiter.europa.entity.traits
 
 import com.badlogic.ashley.core.Entity
 import com.jupiter.europa.entity.Families
 import com.jupiter.europa.entity.Mappers
 import com.jupiter.europa.entity.stats.AttributeSet
-import com.jupiter.europa.entity.traits.FeatNotPresentQualifier
-import com.jupiter.europa.entity.traits.FeatPresentQualifier
-import com.jupiter.europa.entity.traits.Qualifier
+import com.jupiter.europa.entity.stats.characterclass.CharacterClass
+import com.jupiter.europa.entity.traits.feat.Feat
 
 /**
  * Created by nathan on 5/18/15.
@@ -51,13 +50,13 @@ public class Qualifications private constructor(quals: (Entity?) -> Boolean) : Q
         return this.quals.invoke(entity)
     }
 
-    public fun or(other: Qualifications): Qualifications {
+    public fun or(other: Qualifier): Qualifications {
         return Qualifications { entity ->
             this.qualifies(entity) || other.qualifies(entity)
         }
     }
 
-    public fun and(other: Qualifications): Qualifications {
+    public fun and(other: Qualifier): Qualifications {
         return Qualifications { entity ->
             this.qualifies(entity) && other.qualifies(entity)
         }
@@ -71,6 +70,9 @@ public class Qualifications private constructor(quals: (Entity?) -> Boolean) : Q
 
     companion object {
 
+        public val ACCEPT: Qualifications = Qualifications({ entity -> false })
+        public val REJECT: Qualifications = Qualifications({ entity -> false })
+
         // Static Methods
         public fun has(featClass: Class<out Feat>): Qualifications {
             return Qualifications(FeatPresentQualifier(featClass))
@@ -80,7 +82,7 @@ public class Qualifications private constructor(quals: (Entity?) -> Boolean) : Q
             return Qualifications(FeatNotPresentQualifier(featClass))
         }
 
-        public fun all(vararg quals: Qualifications): Qualifications {
+        public fun all(vararg quals: Qualifier): Qualifications {
             return Qualifications { entity ->
                 quals.fold(true, { qualifies, nextQual ->
                     qualifies && nextQual.qualifies(entity)
@@ -88,7 +90,13 @@ public class Qualifications private constructor(quals: (Entity?) -> Boolean) : Q
             }
         }
 
-        public fun none(vararg quals: Qualifications): Qualifications {
+        public fun any(vararg quals: Qualifier): Qualifications {
+            return Qualifications { entity ->
+                quals.any { it.qualifies(entity) }
+            }
+        }
+
+        public fun none(vararg quals: Qualifier): Qualifications {
             return Qualifications { entity ->
                 quals.fold(true, { qualifies, nextQual ->
                     qualifies && !nextQual.qualifies(entity)
@@ -101,6 +109,17 @@ public class Qualifications private constructor(quals: (Entity?) -> Boolean) : Q
                 entity != null &&
                         Families.attributed.matches(entity) &&
                         Mappers.attributes[entity].baseAttributes.getAttribute(attribute) >= minValue
+            }
+        }
+
+        public fun level(characterClass: Class<out CharacterClass>, level: Int): Qualifications {
+            return Qualifications { entity ->
+                if (Families.classed.matches(entity)) {
+                    val charClass = Mappers.characterClass[entity].characterClass
+                    characterClass == charClass.javaClass && charClass.level >= level
+                } else {
+                    false
+                }
             }
         }
     }

@@ -29,6 +29,7 @@ import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.Json.Serializable
 import com.badlogic.gdx.utils.JsonValue
 import com.jupiter.europa.EuropaGame
+import com.jupiter.europa.entity.effects.Effect
 import com.jupiter.ganymede.event.Event
 import com.jupiter.ganymede.event.Listener
 
@@ -42,7 +43,7 @@ import java.util.Comparator
  * *
  * @param
  */
-public abstract class TraitPool<T : Trait>(public val name: String) : Serializable {
+public abstract class EffectPool<T : Effect>(public val name: String) : Serializable {
 
 
     // Properties
@@ -177,7 +178,7 @@ public abstract class TraitPool<T : Trait>(public val name: String) : Serializab
                     val typeName = value.getString(ITEM_CLASS_KEY)
                     try {
                         val type = Class.forName(typeName)
-                        if (javaClass<Trait>().isAssignableFrom(type)) {
+                        if (javaClass<Effect>().isAssignableFrom(type)) {
                             this.selected.add(json.fromJson(type, value.get(ITEM_DATA_KEY).prettyPrint(EuropaGame.PRINT_SETTINGS)) as T);
                         }
                     } catch(ex: Exception) {
@@ -190,7 +191,7 @@ public abstract class TraitPool<T : Trait>(public val name: String) : Serializab
 
 
     // Nested Classes
-    public data class TraitPoolEvent<T : Trait>(public val pool: TraitPool<T>, public val `trait`: T)
+    public data class TraitPoolEvent<T : Effect>(public val pool: EffectPool<T>, public val `trait`: T)
 
     companion object {
 

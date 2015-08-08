@@ -24,6 +24,7 @@
 
 package com.jupiter.europa.entity.effects
 
+import com.badlogic.gdx.graphics.g2d.Sprite
 import com.jupiter.europa.entity.ability.AttackAbility
 import com.jupiter.europa.entity.ability.MoveAbility
 
@@ -48,6 +49,10 @@ public class BasicAbilitiesEffect : MultiEffect() {
         }
     private var effectsInternal: List<Effect> = listOf()
     private val effectsLock = Object()
+
+    override val icon: Sprite = Sprite()
+    override val name = "Basic Abilities"
+    override val description = "A character's basic abilities."
 
 
     // Private Methods

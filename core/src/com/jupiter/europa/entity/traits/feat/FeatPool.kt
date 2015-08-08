@@ -25,12 +25,12 @@
 package com.jupiter.europa.entity.traits.feat
 
 import com.badlogic.ashley.core.Entity
-import com.jupiter.europa.entity.traits.TraitPool
+import com.jupiter.europa.entity.traits.EffectPool
 
 /**
  * @author Nathan Templon
  */
-public class FeatPool : TraitPool<Feat> {
+public class FeatPool : EffectPool<Feat> {
 
 
     // Initialization

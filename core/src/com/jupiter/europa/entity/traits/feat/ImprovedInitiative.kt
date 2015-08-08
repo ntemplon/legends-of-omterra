@@ -35,28 +35,20 @@ import com.jupiter.europa.entity.traits.FeatNotPresentQualifier
 
  * @author Nathan Templon
  */
-public class ImprovedInitiative : Feat {
+public class ImprovedInitiative : AttributeModifierEffect(), Feat {
 
     // Properties
     override val qualifier = FeatNotPresentQualifier(javaClass<ImprovedInitiative>())
-    override val effect = ImprovedInitiativeEffect()
     override val icon = Sprite()
     override val name = "Improved Initiative"
     override val description = "You gain a +4 bonus to your Initiative"
+
+    override val modifiers = mapOf(Pair(AttributeSet.Attributes.INITIATIVE, 20))
 
     override fun write(json: Json) {
     }
 
     override fun read(json: Json, jsonData: JsonValue) {
-    }
-
-
-    // Effect
-    private class ImprovedInitiativeEffect : AttributeModifierEffect() {
-
-        // Properties
-        override val modifiers = mapOf(Pair(AttributeSet.Attributes.INITIATIVE, 20))
-
     }
 
 }

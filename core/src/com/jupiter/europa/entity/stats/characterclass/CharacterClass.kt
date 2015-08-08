@@ -30,12 +30,12 @@ import com.badlogic.gdx.utils.Json.Serializable
 import com.badlogic.gdx.utils.JsonValue
 import com.jupiter.europa.EuropaGame
 import com.jupiter.europa.entity.Mappers
+import com.jupiter.europa.entity.effects.Effect
 import com.jupiter.europa.entity.messaging.RequestEffectAddMessage
 import com.jupiter.europa.entity.stats.AttributeSet
 import com.jupiter.europa.entity.stats.SkillSet.Skills
-import com.jupiter.europa.entity.traits.Trait
-import com.jupiter.europa.entity.traits.TraitPool
-import com.jupiter.europa.entity.traits.TraitPool.TraitPoolEvent
+import com.jupiter.europa.entity.traits.EffectPool
+import com.jupiter.europa.entity.traits.EffectPool.TraitPoolEvent
 import com.jupiter.europa.entity.traits.feat.Feat
 import com.jupiter.europa.entity.traits.feat.FeatPool
 import com.jupiter.europa.util.Initializable
@@ -56,7 +56,7 @@ public abstract class CharacterClass : Serializable, Initializable {
 
     private var ownerId: Long = -1
 
-    private val abilityPoolsInternal = LinkedHashSet<TraitPool<out Trait>>()
+    protected val abilityPoolsInternal: MutableSet<EffectPool<out Effect>> = LinkedHashSet<EffectPool<out Effect>>()
 
     public var level: Int = 0
         private set
@@ -73,7 +73,7 @@ public abstract class CharacterClass : Serializable, Initializable {
             }
         }
 
-    public val abilityPools: Set<TraitPool<out Trait>>
+    public val abilityPools: Set<EffectPool<out Effect>>
         get() = this.abilityPoolsInternal
 
     public val maxPointsPerSkill: Int
@@ -165,7 +165,7 @@ public abstract class CharacterClass : Serializable, Initializable {
 
     private fun onFeatSelection(event: TraitPoolEvent<Feat>) {
         if (this.owner != null) {
-            EuropaGame.game.messageSystem.publish(RequestEffectAddMessage(this.owner!!, event.`trait`.effect))
+            EuropaGame.game.messageSystem.publish(RequestEffectAddMessage(this.owner!!, event.`trait`))
         }
     }
 

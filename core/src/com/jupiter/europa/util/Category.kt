@@ -22,13 +22,12 @@
  *
  */
 
-package com.jupiter.europa.entity.messaging
-
-import com.badlogic.ashley.core.Entity
-import com.jupiter.europa.entity.MovementSystem.MovementDirections
+package com.jupiter.europa.util
 
 /**
-
- * @author Hortator
+ * Created by nathan on 6/11/15.
  */
-public data class MovementCompleteMessage(public val entity: Entity, public val direction: MovementDirections) : StateChangeMessage()
+public interface Category<out T : Category<T>> {
+    public val name: String
+    public val parent: T?
+}

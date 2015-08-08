@@ -25,6 +25,7 @@
 package com.jupiter.europa.entity.effects
 
 import com.badlogic.ashley.core.Entity
+import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.JsonValue
 import com.jupiter.europa.entity.Families
@@ -34,12 +35,34 @@ import com.jupiter.europa.entity.ability.Ability
 /**
  * Created by nathan on 5/21/15.
  */
-public class AbilityGrantingEffect(ability: Ability? = null) : BaseEffect() {
+public open class AbilityGrantingEffect(ability: Ability? = null) : BaseEffect() {
 
     // Properties
+    private var _icon = DEFAULT_ICON
+    private var _name = DEFAULT_NAME
+    private var _description = DEFAULT_DESCRIPTION
+
+    override val icon: Sprite
+        get() = this._icon
+    override val name: String
+        get() = this._name
+    override val description: String
+        get() = this._description
+
     public var ability: Ability? = ability
-        public get
-        private set
+        public get() = this.$ability
+        private set(value) {
+            this.$ability = value
+            if (value == null) {
+                this._icon = DEFAULT_ICON
+                this._name = DEFAULT_NAME
+                this._description = DEFAULT_DESCRIPTION
+            } else {
+                this._icon = Sprite(value.icon)
+                this._name = value.name
+                this._description = value.description
+            }
+        }
 
     // Public Methods
     override fun onAdd(entity: Entity) {
@@ -82,6 +105,10 @@ public class AbilityGrantingEffect(ability: Ability? = null) : BaseEffect() {
 
     // Companion Object
     companion object {
+        private val DEFAULT_NAME = "name"
+        private val DEFAULT_DESCRIPTION = "description"
+        private val DEFAULT_ICON = Sprite()
+
         public val ABILITY_CLASS_KEY: String = "ability-class"
     }
 }

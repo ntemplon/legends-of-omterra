@@ -32,8 +32,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable
 import com.badlogic.gdx.utils.Align
-import com.jupiter.europa.entity.traits.Trait
-import com.jupiter.europa.entity.traits.TraitPool
+import com.jupiter.europa.entity.effects.Effect
+import com.jupiter.europa.entity.traits.EffectPool
 import com.jupiter.europa.screen.MainMenuScreen
 import com.jupiter.ganymede.event.Event
 import com.jupiter.ganymede.event.Listener
@@ -46,7 +46,7 @@ import java.util.TreeMap
  * *
  * @author Nathan Templon
  */
-public class TraitPoolSelector<T : Trait>(style: TraitPoolSelector.TraitPoolSelectorStyle, private val pool: TraitPool<T>) : Table() {
+public class TraitPoolSelector<T : Effect>(style: TraitPoolSelector.TraitPoolSelectorStyle, private val pool: EffectPool<T>) : Table() {
     // TODO: Recompute qualifications on feat addition, and remove any unqualified feats if necessary on feat removal.
 
     // Properties
@@ -88,10 +88,10 @@ public class TraitPoolSelector<T : Trait>(style: TraitPoolSelector.TraitPoolSele
         this.initComponent()
     }
 
-    public constructor(skin: Skin, pool: TraitPool<T>) : this(skin.get(javaClass<TraitPoolSelectorStyle>()), pool) {
+    public constructor(skin: Skin, pool: EffectPool<T>) : this(skin.get(javaClass<TraitPoolSelectorStyle>()), pool) {
     }
 
-    public constructor(skin: Skin, styleName: String, pool: TraitPool<T>) : this(skin.get(styleName, javaClass<TraitPoolSelectorStyle>()), pool) {
+    public constructor(skin: Skin, styleName: String, pool: EffectPool<T>) : this(skin.get(styleName, javaClass<TraitPoolSelectorStyle>()), pool) {
     }
 
     // Public Methods
@@ -258,7 +258,7 @@ public class TraitPoolSelector<T : Trait>(style: TraitPoolSelector.TraitPoolSele
         public var unselectedBackground: Drawable? = null
     }
 
-    interface Traitable<T : Trait> {
+    interface Traitable<T : Effect> {
         public fun isShaded(): Boolean
 
         public fun setShaded(value: Boolean)
@@ -266,7 +266,7 @@ public class TraitPoolSelector<T : Trait>(style: TraitPoolSelector.TraitPoolSele
         public fun getTrait(): T
     }
 
-    inner class SourceTrait<T : Trait>(private val `trait`: T) : Table(), Traitable<T> {
+    inner class SourceTrait<T : Effect>(private val `trait`: T) : Table(), Traitable<T> {
 
         // Fields
         private val addClicked = Event<TraitSelectorEventArgs<T>>()
@@ -354,7 +354,7 @@ public class TraitPoolSelector<T : Trait>(style: TraitPoolSelector.TraitPoolSele
         }
     }
 
-    inner class SelectedTrait<T : Trait>(private val `trait`: T) : Table(), Traitable<T> {
+    inner class SelectedTrait<T : Effect>(private val `trait`: T) : Table(), Traitable<T> {
 
         // Fields
         private val removedClicked = Event<TraitSelectorEventArgs<T>>()
@@ -443,7 +443,7 @@ public class TraitPoolSelector<T : Trait>(style: TraitPoolSelector.TraitPoolSele
         }
     }
 
-    public data class TraitSelectorEventArgs<T : Trait>(public val `trait`: T, public val wrapper: Traitable<out Trait>)
+    public data class TraitSelectorEventArgs<T : Effect>(public val `trait`: T, public val wrapper: Traitable<out Effect>)
 
     companion object {
         // Constants

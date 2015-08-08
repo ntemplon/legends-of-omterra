@@ -24,7 +24,11 @@
 
 package com.jupiter.europa.entity.ability
 
-import com.jupiter.ganymede.util.Category
+import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.jupiter.europa.EuropaGame
+import com.jupiter.europa.io.FileLocations
+import com.jupiter.europa.util.Category
 import org.reflections.Reflections
 
 /**
@@ -32,10 +36,18 @@ import org.reflections.Reflections
  */
 public interface AbilityCategory : Category<AbilityCategory> {
 
-    override fun getParent(): AbilityCategory?
-    override fun getName(): String
+    override val parent: AbilityCategory?
+    override val name: String
+    val icon: TextureRegion
 
     companion object {
         public val categories: Set<Class<out AbilityCategory>> = Reflections("com.jupiter.europa").getSubTypesOf(javaClass<AbilityCategory>())
     }
+}
+
+public enum class BasicAbilityCategories(override val name: String, override val parent: AbilityCategory?, override val icon: TextureRegion) : AbilityCategory {
+    ALL_ABILITIES("All Abilities", null, EuropaGame.game.assetManager!!.get(FileLocations.ICON_ATLAS, javaClass<TextureAtlas>()).findRegion("all-abilities")),
+    SPELLS("Spells", ALL_ABILITIES, EuropaGame.game.assetManager!!.get(FileLocations.ICON_ATLAS, javaClass<TextureAtlas>()).findRegion("spells")),
+    COMBAT_MANEUVERS("Combat Maneuvers", ALL_ABILITIES, TextureRegion()),
+    FEATS("Feats", ALL_ABILITIES, TextureRegion());
 }

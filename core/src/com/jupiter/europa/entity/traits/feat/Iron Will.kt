@@ -34,14 +34,15 @@ import com.jupiter.europa.entity.traits.FeatNotPresentQualifier
 /**
  * Created by nathan on 6/8/15.
  */
-public class IronWill : Feat {
+public class IronWill : AttributeModifierEffect(), Feat {
 
     // Feat Implementation
     override val qualifier = FeatNotPresentQualifier(javaClass<IronWill>())
-    override val effect = IronWillEffect()
     override val icon = Sprite()
     override val name = "Iron Will"
     override val description = "You gain +10 Will."
+
+    override val modifiers = mapOf(Pair(AttributeSet.Attributes.WILL, 10))
 
 
     // Serializable Implementation
@@ -51,10 +52,6 @@ public class IronWill : Feat {
 
     override fun read(json: Json, jsonData: JsonValue) {
 
-    }
-
-    private class IronWillEffect() : AttributeModifierEffect() {
-        override val modifiers = mapOf(Pair(AttributeSet.Attributes.WILL, 10))
     }
 
 }

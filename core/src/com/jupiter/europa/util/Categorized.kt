@@ -22,34 +22,11 @@
  *
  */
 
-package com.jupiter.europa.entity.traits.feat
-
-import com.badlogic.gdx.graphics.g2d.Sprite
-import com.badlogic.gdx.utils.Json
-import com.badlogic.gdx.utils.JsonValue
-import com.jupiter.europa.entity.effects.AttributeModifierEffect
-import com.jupiter.europa.entity.stats.AttributeSet
-import com.jupiter.europa.entity.traits.Qualifications
+package com.jupiter.europa.util
 
 /**
- * Created by nathan on 5/18/15.
+ * Created by nathan on 5/21/15.
  */
-public class SpellPenetrationGreater : AttributeModifierEffect(), Feat {
-
-    // Feat Implementation
-    override val qualifier = Qualifications.has(javaClass<SpellPenetration>()).and(Qualifications.lacks(javaClass<SpellPenetrationGreater>()))
-    override val icon = Sprite()
-    override val name = "Spell Penetration (Greater)"
-    override val description = "You spells ignore an additional 10 of their targets' Spell Resistance (stacks with Spell Penetration)."
-
-    override val modifiers = mapOf(Pair(AttributeSet.Attributes.SPELL_PENETRATION, 10))
-
-
-    // Serializable (json) implementation
-    override fun write(json: Json) {
-    }
-
-    override fun read(json: Json, jsonData: JsonValue) {
-    }
-
+public interface Categorized<out T : Category<T>> {
+    public val category: T
 }
