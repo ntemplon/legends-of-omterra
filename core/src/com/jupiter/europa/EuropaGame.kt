@@ -52,7 +52,6 @@ import com.jupiter.europa.util.GameTimer
 import com.jupiter.europa.util.Initializable
 import com.jupiter.europa.world.Level
 import com.jupiter.europa.world.World
-import com.jupiter.ganymede.event.Listener
 import java.awt.Insets
 import java.awt.Point
 import java.io.IOException
@@ -425,7 +424,7 @@ public class EuropaGame private constructor() : Game(), InputProcessor {
         this.loadSettings()
 
         // Configure Property Change listeners
-        this.settings!!.musicVolume.addPropertyChangedListener(Listener { args -> this.audioService!!.setMusicVolume(args.newValue) })
+        this.settings!!.musicVolume.addPropertyChangedListener { args -> this.audioService!!.setMusicVolume(args.newValue) }
 
         // Create our various screens
         this.loadingScreen = LoadingScreen(this)

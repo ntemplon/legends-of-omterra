@@ -47,6 +47,8 @@ public class RenderingMaintenanceSystem : IteratingSystem(Families.renderables, 
             this.updateSpriteData(message.entity)
         } else if (message is OffsetUpdatedMessage) {
             this.updateSpriteData(message.entity)
+        } else if (message is TeleportCompleteMessage) {
+            this.updateSpriteData(message.entity)
         }
     }
 
@@ -59,7 +61,7 @@ public class RenderingMaintenanceSystem : IteratingSystem(Families.renderables, 
 
     override fun subscribe(engine: Engine, system: MessageSystem) {
         engine.addEntityListener(Families.renderables, this)
-        system.subscribe(this, javaClass<PositionChangedMessage>(), javaClass<OffsetUpdatedMessage>())
+        system.subscribe(this, javaClass<PositionChangedMessage>(), javaClass<OffsetUpdatedMessage>(), javaClass<TeleportCompleteMessage>())
     }
 
     override fun initialize() {

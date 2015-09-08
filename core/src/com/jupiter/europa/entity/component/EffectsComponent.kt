@@ -37,7 +37,7 @@ import java.util.ArrayList
 /**
  * @author Nathan Templon
  */
-public class EffectsComponent : Component(), Serializable, OwnedComponent {
+public class EffectsComponent : Component(), Serializable, Owned {
 
 
     // Fields

@@ -34,8 +34,6 @@ import com.jupiter.europa.scene2d.ui.ObservableDialog
 import com.jupiter.europa.scene2d.ui.TabbedPane
 import com.jupiter.europa.screen.MainMenuScreen
 
-import com.jupiter.ganymede.event.Listener
-
 /**
 
  * @author Nathan Templon
@@ -72,7 +70,7 @@ public class OptionsDialog : ObservableDialog(OptionsDialog.DIALOG_NAME, Options
 
         this.initComponent()
 
-        this.addDialogListener(Listener { this.loadSettings() }, ObservableDialog.DialogEvents.SHOWN)
+        this.addDialogListener({ this.loadSettings() }, ObservableDialog.DialogEvents.SHOWN)
     }
 
 
@@ -83,10 +81,10 @@ public class OptionsDialog : ObservableDialog(OptionsDialog.DIALOG_NAME, Options
         this.optionsPane = TabbedPane(skinInternal.get(MainMenuScreen.TAB_STYLE_KEY, javaClass<TextButton.TextButtonStyle>()))
 
         this.optionsAcceptButton = EuropaButton("Accept", skinInternal.get(MainMenuScreen.DEFAULT_KEY, javaClass<TextButton.TextButtonStyle>()))
-        this.optionsAcceptButton!!.addClickListener(Listener { args -> this.onAcceptClick(args) })
+        this.optionsAcceptButton!!.addClickListener { args -> this.onAcceptClick(args) }
 
         this.optionsCancelButton = EuropaButton("Cancel", skinInternal.get(MainMenuScreen.DEFAULT_KEY, javaClass<TextButton.TextButtonStyle>()))
-        this.optionsCancelButton!!.addClickListener(Listener { this.onCancelClick(it) })
+        this.optionsCancelButton!!.addClickListener { this.onCancelClick(it) }
 
         this.optionsButtonTable = Table()
         this.optionsButtonTable!!.add<EuropaButton>(this.optionsCancelButton).space(MainMenuScreen.COMPONENT_SPACING.toFloat()).width(MainMenuScreen.DIALOG_BUTTON_WIDTH.toFloat()).right().expandX()

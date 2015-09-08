@@ -79,6 +79,7 @@ public class CreateCharacterDialog : ObservableDialog(CreateCharacterDialog.DIAL
     private val selectRaceClass: SelectRaceClassAttributesDialog
     private var selectSkills: SelectSkillsDialog? = null
     private var selectFeats: SelectTraitDialog<Feat>? = null
+    private var manager: DialogManager? = null
     private val otherPools = ArrayList<EffectPool<out Effect>>()
     private val skinInternal: Skin = getDefaultSkin()
 
@@ -102,13 +103,13 @@ public class CreateCharacterDialog : ObservableDialog(CreateCharacterDialog.DIAL
 
     init {
         this.selectRaceClass = SelectRaceClassAttributesDialog(skinInternal)
-        this.selectRaceClass.addDialogListener(Listener { args -> this.onSelectRaceClassHide(args) }, ObservableDialog.DialogEvents.HIDDEN)
+        this.selectRaceClass.addDialogListener({ args -> this.onSelectRaceClassHide(args) }, ObservableDialog.DialogEvents.HIDDEN)
         this.selectSkills = SelectSkillsDialog(skinInternal, 8, 4, Arrays.asList(*Skills.values()))
-        this.selectSkills?.addDialogListener(Listener { args -> this.onSelectSkillsHide(args) }, ObservableDialog.DialogEvents.HIDDEN)
+        this.selectSkills?.addDialogListener({ args -> this.onSelectSkillsHide(args) }, ObservableDialog.DialogEvents.HIDDEN)
 
         this.lastDialog = this.selectRaceClass
 
-        this.addDialogListener(Listener { args -> this.onShown(args) }, ObservableDialog.DialogEvents.SHOWN)
+        this.addDialogListener({ args -> this.onShown(args) }, ObservableDialog.DialogEvents.SHOWN)
     }
 
 
@@ -116,6 +117,7 @@ public class CreateCharacterDialog : ObservableDialog(CreateCharacterDialog.DIAL
     override fun setSize(width: Float, height: Float) {
         super.setSize(width, height)
         this.getDialogs().forEach { it.setSize(width, height) }
+        this.manager?.dialogs?.forEach { it.setSize(width, height) }
 
         this.widthInternal = width
         this.heightInternal = height
@@ -126,7 +128,17 @@ public class CreateCharacterDialog : ObservableDialog(CreateCharacterDialog.DIAL
     private fun onShown(args: ObservableDialog.DialogEventArgs) {
         val last = this.lastDialog
         if (last != null) {
-            this.showDialog(last)
+            if (last is SelectTraitDialog<*>) {
+                val manager = this.manager
+                if (manager != null && manager.dialogs.contains(last)) {
+                    manager.index = manager.dialogs.indexOf(last)
+                    manager.start()
+                } else {
+                    this.showDialog(last)
+                }
+            } else {
+                this.showDialog(last)
+            }
         }
     }
 
@@ -139,7 +151,7 @@ public class CreateCharacterDialog : ObservableDialog(CreateCharacterDialog.DIAL
             val classComp = Mappers.characterClass.get(this.createdEntity)
 
             this.selectSkills = SelectSkillsDialog(this.skinInternal, classComp.characterClass.availableSkillPoints - skills.getSkillPointsSpent(), classComp.characterClass.maxPointsPerSkill, skillList)
-            this.selectSkills!!.addDialogListener(Listener { args -> this.onSelectSkillsHide(args) }, ObservableDialog.DialogEvents.HIDDEN)
+            this.selectSkills!!.addDialogListener({ args -> this.onSelectSkillsHide(args) }, ObservableDialog.DialogEvents.HIDDEN)
             this.showDialog(this.selectSkills)
         } else {
             this.exitState = CreateCharacterExitStates.CANCELED
@@ -152,7 +164,7 @@ public class CreateCharacterDialog : ObservableDialog(CreateCharacterDialog.DIAL
             // Debug Code
             this.selectFeats = SelectTraitDialog("Select Feats", this.skinInternal, Mappers.characterClass.get(this.createdEntity).characterClass.featPool)
             selectFeats!!.setDialogBackground(this.skinInternal.get(MainMenuScreen.DIALOG_BACKGROUND_KEY, javaClass<SpriteDrawable>()))
-            this.selectFeats!!.addDialogListener(Listener { args -> this.onSelectFeatsHide(args) }, ObservableDialog.DialogEvents.HIDDEN)
+            this.selectFeats!!.addDialogListener({ args -> this.onSelectFeatsHide(args) }, ObservableDialog.DialogEvents.HIDDEN)
             this.showDialog(selectFeats)
         } else {
             this.showDialog(this.selectRaceClass)
@@ -173,28 +185,29 @@ public class CreateCharacterDialog : ObservableDialog(CreateCharacterDialog.DIAL
                 SelectTraitDialog("Select " + pool.name, this.skinInternal, pool) as SelectTraitDialog<*> // Unnecessary cast due to java-kotlin interop quirk
             }.toList()
 
+            // Switch to a DialogManager that can handle the "back" button
             if (dialogs.size() > 0) {
                 for (dialog in dialogs) {
                     dialog.setDialogBackground(this.skinInternal.get(MainMenuScreen.DIALOG_BACKGROUND_KEY, javaClass<SpriteDrawable>()))
                 }
 
-                for (i in dialogs.indices) {
-                    val dialog = dialogs.get(i)
-                    if (i < dialogs.size() - 1) {
-                        val index = i
-                        dialog.addDialogListener(Listener { args -> this.showDialog(dialogs.get(index + 1)) }, ObservableDialog.DialogEvents.HIDDEN)
-                    } else {
-                        dialog.addDialogListener(Listener { args ->
-                            this.exitState = CreateCharacterExitStates.OK
-                            this.concludeDialog()
-                        }, ObservableDialog.DialogEvents.HIDDEN)
-                    }
+                val manager = DialogManager(dialogs, { dialog -> this.showDialog(dialog) })
+                manager.onForward = {
+                    this.exitState = CreateCharacterExitStates.OK
+                    this.concludeDialog()
                 }
+                manager.onBack = {
+                    // Going back one dialog
+                    this.showDialog(this.selectFeats)
+                }
+                manager.start()
+                this.manager = manager
             } else {
                 this.exitState = CreateCharacterExitStates.OK
                 this.concludeDialog()
             }
         } else {
+            // Going back one dialog
             this.showDialog(this.selectSkills)
         }
     }
@@ -218,6 +231,10 @@ public class CreateCharacterDialog : ObservableDialog(CreateCharacterDialog.DIAL
                 for ((skill, value) in skillLevels) {
                     skills.setSkill(skill, value)
                 }
+            }
+
+            for (dialog in this.manager?.dialogs ?: listOf()) {
+                dialog.applyChanges()
             }
         }
 
@@ -274,7 +291,7 @@ public class CreateCharacterDialog : ObservableDialog(CreateCharacterDialog.DIAL
         init {
             this.initComponents()
 
-            this.addDialogListener(Listener { args ->
+            this.addDialogListener({ args ->
                 this.nextButton?.setChecked(false)
                 this.backButton?.setChecked(false)
             }, ObservableDialog.DialogEvents.SHOWN)
@@ -310,10 +327,10 @@ public class CreateCharacterDialog : ObservableDialog(CreateCharacterDialog.DIAL
             })
 
             this.backButton = EuropaButton("Back", skinInternal.get(javaClass<TextButton.TextButtonStyle>()))
-            this.backButton?.addClickListener(Listener { args -> this.onRaceClassBackButton(args) })
+            this.backButton?.addClickListener({ args -> this.onRaceClassBackButton(args) })
 
             this.nextButton = EuropaButton("Next", skinInternal.get(javaClass<TextButton.TextButtonStyle>()))
-            this.nextButton!!.addClickListener(Listener { args -> this.onRaceClassNextButton(args) })
+            this.nextButton!!.addClickListener({ args -> this.onRaceClassNextButton(args) })
 
             this.attributeSelector = AttributeSelector(50, skinInternal.get(javaClass<MultipleNumberSelectorStyle>()), 2)
 
@@ -437,10 +454,10 @@ public class CreateCharacterDialog : ObservableDialog(CreateCharacterDialog.DIAL
             this.skillSelector?.setIncrement(5)
 
             this.nextButton = EuropaButton("Next", skinInternal.get(javaClass<TextButton.TextButtonStyle>()))
-            this.nextButton?.addClickListener(Listener { args -> this.onNextButton(args) })
+            this.nextButton?.addClickListener { args -> this.onNextButton(args) }
 
             this.backButton = EuropaButton("Back", skinInternal.get(javaClass<TextButton.TextButtonStyle>()))
-            this.backButton!!.addClickListener(Listener { args -> this.onBackButton(args) })
+            this.backButton!!.addClickListener { args -> this.onBackButton(args) }
 
             this.buttonTableInternal = Table()
             this.buttonTableInternal!!.add<EuropaButton>(this.backButton).space(MainMenuScreen.COMPONENT_SPACING.toFloat()).width(MainMenuScreen.DIALOG_BUTTON_WIDTH.toFloat()).right().expandX()
@@ -477,6 +494,47 @@ public class CreateCharacterDialog : ObservableDialog(CreateCharacterDialog.DIAL
         }
 
     }// Properties
+
+
+    private class DialogManager(internal val dialogs: List<SelectTraitDialog<*>>, private val show: (ObservableDialog) -> Unit) : Listener<ObservableDialog.DialogEventArgs> {
+
+        internal var index: Int = 0
+
+        public var onForward: () -> Unit = {}
+        public var onBack: () -> Unit = {}
+
+        public fun start() {
+            if (dialogs.size() > 0) {
+                this.show(this.index)
+            } else {
+                this.onForward()
+            }
+        }
+
+        private fun show(index: Int) {
+            val dialog = this.dialogs[index]
+            dialog.addDialogListener(this, ObservableDialog.DialogEvents.HIDDEN)
+            this.show(dialog)
+        }
+
+        override fun handle(args: ObservableDialog.DialogEventArgs) {
+            this.dialogs[this.index].removeDialogListener(this)
+
+            when (this.dialogs[this.index].exitState) {
+                DialogExitStates.BACK -> this.index--
+                DialogExitStates.NEXT -> this.index++
+            }
+
+            if (this.index <= 0) {
+                this.onBack()
+            } else if (this.index >= this.dialogs.size()) {
+                this.onForward()
+            } else {
+                this.show(this.index)
+            }
+        }
+    }
+
 
     companion object {
 

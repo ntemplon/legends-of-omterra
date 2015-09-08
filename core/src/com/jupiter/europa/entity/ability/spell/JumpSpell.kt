@@ -43,6 +43,7 @@ import com.jupiter.europa.io.FileLocations
 import com.jupiter.europa.world.Level
 import com.jupiter.ganymede.event.Listener
 import java.awt.Point
+import java.awt.Rectangle
 import kotlin.properties.Delegates
 
 /**
@@ -65,7 +66,12 @@ public class JumpSpell(private val entity: Entity) : Ability {
                     if (Families.positionables.matches(entity)) {
                         val currentPosition = Mappers.position[this.entity].tilePosition
                         val dist = Math.abs(currentPosition.x - point.x) + Math.abs(currentPosition.y - point.y)
-                        dist <= RANGE
+                        if (dist <= RANGE) {
+                            val rect = Rectangle(point.x, point.y, 1, 1)
+                            !level.collides(rect)
+                        } else {
+                            false
+                        }
                     } else {
                         false
                     }

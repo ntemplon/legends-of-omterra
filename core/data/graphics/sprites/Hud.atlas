@@ -1,0 +1,18 @@
+Hud.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+popup-item
+  rotate: false
+  xy: 0, 0
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1
+popup-item-hover
+  rotate: false
+  xy: 16, 0
+  size: 16, 16
+  orig: 0, 0
+  offset: 0, 0
+  index: -1

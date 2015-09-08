@@ -59,7 +59,7 @@ public abstract class OverlayableScreen : Screen, InputProcessor {
     }
 
     public fun getTint(): Color {
-        return this.tint.get()
+        return this.tint.get() ?: Color.WHITE
     }
 
     public fun setTint(tint: Color) {
@@ -123,6 +123,8 @@ public abstract class OverlayableScreen : Screen, InputProcessor {
         return this.tint.addPropertyChangedListener(listener)
     }
 
+    public fun addTintChangedListener(listener: (Property.PropertyChangedArgs<Color>) -> Unit): Boolean = this.tint.addPropertyChangedListener(listener)
+
     public fun removeTintChangedListener(listener: Listener<Property.PropertyChangedArgs<Color>>): Boolean {
         return this.tint.removePropertyChangedListener(listener)
     }
@@ -161,5 +163,4 @@ public abstract class OverlayableScreen : Screen, InputProcessor {
         return this.multiplexer.scrolled(i)
     }
 
-}// Properties
-// Initialization
+}

@@ -116,7 +116,7 @@ public class Qualifications private constructor(quals: (Entity?) -> Boolean) : Q
             return Qualifications { entity ->
                 if (Families.classed.matches(entity)) {
                     val charClass = Mappers.characterClass[entity].characterClass
-                    characterClass == charClass.javaClass && charClass.level >= level
+                    characterClass.isInstance(charClass) && charClass.level >= level
                 } else {
                     false
                 }

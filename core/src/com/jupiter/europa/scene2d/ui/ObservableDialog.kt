@@ -98,6 +98,21 @@ public open class ObservableDialog : Dialog {
         return this.addDialogListener(listener, *DialogEvents.values())
     }
 
+    public fun addDialogListener(listener: (DialogEventArgs) -> Unit, vararg events: DialogEvents): Boolean {
+        var added = false
+        if (events.contains(DialogEvents.SHOWN)) {
+            val addedThisTime = this.shown.addListener(listener)
+            added = added || addedThisTime
+        }
+        if (events.contains(DialogEvents.HIDDEN)) {
+            val addedThisTime = this.hidden.addListener(listener)
+            added = added || addedThisTime
+        }
+        return added
+    }
+
+    public fun addDialogListener(listener: (DialogEventArgs) -> Unit): Boolean = this.addDialogListener(listener, *DialogEvents.values())
+
     public fun removeDialogListener(listener: Listener<DialogEventArgs>, vararg events: DialogEvents): Boolean {
         var removed = false
         if (events.contains(DialogEvents.SHOWN)) {
@@ -114,6 +129,21 @@ public open class ObservableDialog : Dialog {
     public fun removeDialogListener(listener: Listener<DialogEventArgs>): Boolean {
         return this.removeDialogListener(listener, *DialogEvents.values())
     }
+
+    public fun removeDialogListener(listener: (DialogEventArgs) -> Unit, vararg events: DialogEvents): Boolean {
+        var removed = false
+        if (events.contains(DialogEvents.SHOWN)) {
+            val removedThisTime = this.shown.removeListener(listener)
+            removed = removed || removedThisTime
+        }
+        if (events.contains(DialogEvents.HIDDEN)) {
+            val removedThisTime = this.hidden.removeListener(listener)
+            removed = removed || removedThisTime
+        }
+        return removed
+    }
+
+    public fun removeDialogListener(listener: (DialogEventArgs) -> Unit): Boolean = this.removeDialogListener(listener, *DialogEvents.values())
 
 
     // Nested Classes

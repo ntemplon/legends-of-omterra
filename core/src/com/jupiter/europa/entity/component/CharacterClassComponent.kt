@@ -38,7 +38,7 @@ import com.jupiter.europa.util.Initializable
 
  * @author Nathan Templon
  */
-public class CharacterClassComponent : Component, Serializable, Initializable, OwnedComponent {
+public class CharacterClassComponent : Component, Serializable, Initializable, Owned {
 
 
     // Properties

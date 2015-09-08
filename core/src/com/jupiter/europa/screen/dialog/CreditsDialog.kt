@@ -30,7 +30,6 @@ import com.jupiter.europa.EuropaGame
 import com.jupiter.europa.scene2d.ui.EuropaButton
 import com.jupiter.europa.scene2d.ui.ObservableDialog
 import com.jupiter.europa.screen.MainMenuScreen
-import com.jupiter.ganymede.event.Listener
 
 /**
 
@@ -61,7 +60,7 @@ public class CreditsDialog : ObservableDialog(CreditsDialog.DIALOG_NAME, Credits
         this.label = Label(EuropaGame.game.credits, skinInternal.get(MainMenuScreen.INFO_STYLE_KEY, javaClass<Label.LabelStyle>()))
         this.scrollPane = ScrollPane(this.label, skinInternal.get(MainMenuScreen.DEFAULT_KEY, javaClass<ScrollPane.ScrollPaneStyle>()))
         this.returnButton = EuropaButton("Return to Menu", skinInternal.get(MainMenuScreen.DEFAULT_KEY, javaClass<TextButton.TextButtonStyle>()))
-        this.returnButton?.addClickListener(Listener { args -> this.hide() })
+        this.returnButton?.addClickListener { args -> this.hide() }
 
         this.wrapperTable = Table()
         this.wrapperTable!!.add<ScrollPane>(this.scrollPane).pad(MainMenuScreen.LIST_WRAPPER_PADDING.toFloat()).expand().fill()

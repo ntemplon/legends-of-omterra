@@ -55,17 +55,16 @@ import com.jupiter.europa.entity.Party
 import com.jupiter.europa.geometry.Size
 import com.jupiter.europa.io.FileLocations
 import com.jupiter.europa.save.SaveGame
+import com.jupiter.europa.scene2d.ui.EffectPoolSelector.TraitPoolSelectorStyle
 import com.jupiter.europa.scene2d.ui.EuropaButton
 import com.jupiter.europa.scene2d.ui.EuropaButton.ClickEvent
 import com.jupiter.europa.scene2d.ui.MultipleNumberSelector
 import com.jupiter.europa.scene2d.ui.NumberSelector.NumberSelectorStyle
 import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEventArgs
 import com.jupiter.europa.scene2d.ui.ObservableDialog.DialogEvents
-import com.jupiter.europa.scene2d.ui.TraitPoolSelector.TraitPoolSelectorStyle
 import com.jupiter.europa.screen.dialog.*
 import com.jupiter.europa.screen.dialog.CreateCharacterDialog.CreateCharacterExitStates
 import com.jupiter.europa.screen.dialog.NewGameDialog.NewGameExitStates
-import com.jupiter.ganymede.event.Listener
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
@@ -218,24 +217,24 @@ public class MainMenuScreen : Screen, InputProcessor {
         this.buttonTable!!.center()
 
         this.newGameButton = EuropaButton("New Game", skin.get(DEFAULT_KEY, javaClass<TextButtonStyle>())) // Use the initialized skin
-        this.newGameButton!!.addClickListener(Listener { args -> this.onNewGameClick(args) })
+        this.newGameButton!!.addClickListener { args -> this.onNewGameClick(args) }
 
         this.loadGameButton = EuropaButton("Load Game", skin.get(DEFAULT_KEY, javaClass<TextButtonStyle>()))
-        this.loadGameButton!!.addClickListener(Listener { args -> this.onLoadGameClick(args) })
+        this.loadGameButton!!.addClickListener { args -> this.onLoadGameClick(args) }
         this.loadGameButton!!.setDisabled(EuropaGame.game.getSaveNames().size() == 0)
 
         this.multiplayerButton = EuropaButton("Multiplayer", skin.get(DEFAULT_KEY, javaClass<TextButtonStyle>()))
-        this.multiplayerButton!!.addClickListener(Listener { args -> this.onMultiplayerClick(args) })
+        this.multiplayerButton!!.addClickListener { args -> this.onMultiplayerClick(args) }
         this.multiplayerButton!!.setDisabled(true)
 
         this.optionsButton = EuropaButton("Options", skin.get(DEFAULT_KEY, javaClass<TextButtonStyle>()))
-        this.optionsButton!!.addClickListener(Listener { args -> this.onOptionsClick(args) })
+        this.optionsButton!!.addClickListener { args -> this.onOptionsClick(args) }
 
         this.creditsButton = EuropaButton("Credits", skin.get(DEFAULT_KEY, javaClass<TextButtonStyle>()))
-        this.creditsButton!!.addClickListener(Listener { args -> this.onCreditsClick(args) })
+        this.creditsButton!!.addClickListener { args -> this.onCreditsClick(args) }
 
         this.quitButton = EuropaButton("Exit", skin.get(DEFAULT_KEY, javaClass<TextButtonStyle>()))
-        this.quitButton!!.addClickListener(Listener { args -> this.onQuitClick(args) })
+        this.quitButton!!.addClickListener { args -> this.onQuitClick(args) }
 
         // Configure Button Table
         this.buttonTable!!.add<EuropaButton>(this.newGameButton).width(TITLE_BUTTON_WIDTH.toFloat()).space(MainMenuScreen.COMPONENT_SPACING.toFloat())
@@ -285,13 +284,13 @@ public class MainMenuScreen : Screen, InputProcessor {
 
     private fun onNewGameClick(event: ClickEvent) {
         this.createCharacterDialog = CreateCharacterDialog()
-        this.createCharacterDialog!!.addDialogListener(Listener { args -> this.onCharacterCreationCompleted(args) }, DialogEvents.HIDDEN)
+        this.createCharacterDialog!!.addDialogListener({ args -> this.onCharacterCreationCompleted(args) }, DialogEvents.HIDDEN)
         this.showDialog(this.createCharacterDialog!!)
     }
 
     private fun onLoadGameClick(event: ClickEvent) {
         this.loadGameDialog = LoadGameDialog()
-        this.loadGameDialog!!.addDialogListener(Listener { args -> this.onLoadGameDialogHidden(args) }, DialogEvents.HIDDEN)
+        this.loadGameDialog!!.addDialogListener({ args -> this.onLoadGameDialogHidden(args) }, DialogEvents.HIDDEN)
         this.showDialog(this.loadGameDialog!!)
     }
 
@@ -314,7 +313,7 @@ public class MainMenuScreen : Screen, InputProcessor {
     private fun onCharacterCreationCompleted(args: DialogEventArgs) {
         if (this.createCharacterDialog!!.exitState == CreateCharacterExitStates.OK) {
             this.newGameDialog = NewGameDialog()
-            this.newGameDialog!!.addDialogListener(Listener { args -> this.onNewGameDialogHidden(args) }, DialogEvents.HIDDEN)
+            this.newGameDialog!!.addDialogListener({ args -> this.onNewGameDialogHidden(args) }, DialogEvents.HIDDEN)
             this.showDialog(this.newGameDialog!!)
         }
     }

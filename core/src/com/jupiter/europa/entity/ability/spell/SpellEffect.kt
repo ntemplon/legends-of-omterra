@@ -28,6 +28,7 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.JsonValue
 import com.jupiter.europa.entity.ability.Ability
+import com.jupiter.europa.entity.component.Owned
 import com.jupiter.europa.entity.effects.AbilityGrantingEffect
 import com.jupiter.europa.entity.traits.Qualifications
 import com.jupiter.europa.entity.traits.Qualifier
@@ -35,7 +36,7 @@ import com.jupiter.europa.entity.traits.Qualifier
 /**
  * Created by nathan on 8/2/15.
  */
-public class SpellEffect() : AbilityGrantingEffect() {
+public class SpellEffect() : AbilityGrantingEffect(), Owned {
 
     public constructor(spellClass: Class<out Ability>) : this() {
         this.spellClass = spellClass
@@ -51,35 +52,41 @@ public class SpellEffect() : AbilityGrantingEffect() {
                 this.$spellClass = value
 
                 val annotations = value.getAnnotationsByType(javaClass<Spell>())
-                this._qualifier = Qualifications.all(*annotations.map { annotation ->
+                this._qualifier = Qualifications.any(*annotations.map { annotation ->
                     Qualifications.level(annotation.characterClass, annotation.level)
                 }.toTypedArray())
             } else {
                 throw IllegalArgumentException("The provided class must be a spell!")
             }
-
         }
 
     private var _qualifier: Qualifier = DEFAULT_QUALIFIER
     override val qualifier: Qualifier
         get() = this._qualifier
 
+    override var owner: Entity? = null
+        get() = this.$owner
+        set(value) {
+            this.$owner = value
+
+            val spellClass = this.spellClass
+            if (spellClass != null && value != null) {
+                this.ability = SpellFactory.create(spellClass, value)
+            } else {
+                this.ability = null
+            }
+        }
+
 
     // Effect Implementation
     override fun onAdd(entity: Entity) {
-        val spellClass = this.spellClass
-        if (spellClass != null) {
-            this.ability = SpellFactory.create(spellClass, entity)
-        } else {
-            throw IllegalStateException("Cannot add spell effect to entity without a spell class.")
-        }
-
-        super.onAdd(entity)
+        this.owner = entity
+        super<AbilityGrantingEffect>.onAdd(entity)
     }
 
     override fun onRemove() {
-        super.onRemove()
-        this.ability = null
+        super<AbilityGrantingEffect>.onRemove()
+        this.owner = null
     }
 
 

@@ -35,7 +35,6 @@ import com.jupiter.europa.scene2d.ui.EuropaButton
 import com.jupiter.europa.scene2d.ui.EuropaButton.ClickEvent
 import com.jupiter.europa.scene2d.ui.ObservableDialog
 import com.jupiter.europa.screen.MainMenuScreen
-import com.jupiter.ganymede.event.Listener
 import com.badlogic.gdx.scenes.scene2d.ui.List as GuiList
 import com.badlogic.gdx.utils.Array as GdxArray
 
@@ -109,13 +108,13 @@ public class LoadGameDialog : ObservableDialog(LoadGameDialog.DIALOG_NAME, LoadG
         this.listTable!!.background(skinInternal.get(MainMenuScreen.LIST_BACKGROUND_KEY, javaClass<SpriteDrawable>()))
 
         this.okButton = EuropaButton("Accept", skinInternal.get(MainMenuScreen.DEFAULT_KEY, javaClass<TextButton.TextButtonStyle>()))
-        this.okButton!!.addClickListener(Listener { args -> this.onLoadClick(args) })
+        this.okButton!!.addClickListener { args -> this.onLoadClick(args) }
 
         this.cancelButton = EuropaButton("Cancel", skinInternal.get(MainMenuScreen.DEFAULT_KEY, javaClass<TextButton.TextButtonStyle>()))
-        this.cancelButton!!.addClickListener(Listener { args -> this.onCancelClick(args) })
+        this.cancelButton!!.addClickListener { args -> this.onCancelClick(args) }
 
         this.deleteButton = EuropaButton("Delete", skinInternal.get(MainMenuScreen.DEFAULT_KEY, javaClass<TextButton.TextButtonStyle>()))
-        this.deleteButton!!.addClickListener(Listener { args -> this.onDeleteClick(args) })
+        this.deleteButton!!.addClickListener { args -> this.onDeleteClick(args) }
 
         this.buttonTableInternal = Table()
         this.buttonTableInternal!!.add<EuropaButton>(this.cancelButton).space(MainMenuScreen.COMPONENT_SPACING.toFloat()).width(MainMenuScreen.DIALOG_BUTTON_WIDTH.toFloat()).right().expandX()
@@ -150,7 +149,7 @@ public class LoadGameDialog : ObservableDialog(LoadGameDialog.DIALOG_NAME, LoadG
 
     private fun onDeleteClick(event: ClickEvent) {
         this.confirmDeleteDialog = ConfirmDeleteSaveDialog(this.gameList!!.getSelected().toString(), this.skinInternal)
-        this.confirmDeleteDialog!!.addDialogListener(Listener { args -> this.onConfirmDeleteSaveDialogClose(args) }, ObservableDialog.DialogEvents.HIDDEN)
+        this.confirmDeleteDialog!!.addDialogListener({ args -> this.onConfirmDeleteSaveDialogClose(args) }, ObservableDialog.DialogEvents.HIDDEN)
         this.confirmDeleteDialog!!.show(this.getStage())
         this.confirmDeleteDialog!!.setSize(this.widthInternal, this.heightInternal)
     }

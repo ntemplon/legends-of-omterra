@@ -29,13 +29,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable
 import com.badlogic.gdx.utils.Align
 import com.jupiter.europa.entity.effects.Effect
 import com.jupiter.europa.entity.traits.EffectPool
+import com.jupiter.europa.scene2d.ui.EffectPoolSelector
+import com.jupiter.europa.scene2d.ui.EffectPoolSelector.TraitPoolSelectorStyle
 import com.jupiter.europa.scene2d.ui.EuropaButton
 import com.jupiter.europa.scene2d.ui.ObservableDialog
-import com.jupiter.europa.scene2d.ui.TraitPoolSelector
-import com.jupiter.europa.scene2d.ui.TraitPoolSelector.TraitPoolSelectorStyle
 import com.jupiter.europa.screen.MainMenuScreen
 import com.jupiter.europa.screen.MainMenuScreen.DialogExitStates
-import com.jupiter.ganymede.event.Listener
 
 /**
  * @param
@@ -47,7 +46,7 @@ public class SelectTraitDialog<T : Effect>(private val title: String, private va
 
     private var mainTable: Table? = null
     private var titleLabelInternal: Label? = null
-    private var selector: TraitPoolSelector<T>? = null
+    private var selector: EffectPoolSelector<T>? = null
     private var featNameLabel: Label? = null
     private var featDescLabel: Label? = null
     private var featDescPane: ScrollPane? = null
@@ -93,13 +92,13 @@ public class SelectTraitDialog<T : Effect>(private val title: String, private va
         this.mainTable!!.row()
 
         // Selector
-        this.selector = TraitPoolSelector(this.selectorStyle, this.pool)
-        this.selector!!.addTraitClickListener(Listener { args ->
+        this.selector = EffectPoolSelector(this.selectorStyle, this.pool)
+        this.selector!!.addTraitClickListener { args ->
             this.featNameLabel?.setText(args.`trait`.name)
             this.featDescLabel?.setText(args.`trait`.description)
-        })
+        }
 
-        this.mainTable!!.add<TraitPoolSelector<T>>(this.selector).center().top().expand().fill().space(MainMenuScreen.COMPONENT_SPACING.toFloat())
+        this.mainTable!!.add<EffectPoolSelector<T>>(this.selector).center().top().expand().fill().space(MainMenuScreen.COMPONENT_SPACING.toFloat())
         this.mainTable!!.row()
 
         // Feat Descriptions
@@ -117,9 +116,9 @@ public class SelectTraitDialog<T : Effect>(private val title: String, private va
         // Buttons
         this.buttonTableInternal = Table()
         this.nextButton = EuropaButton("Next", this.skinInternal.get(javaClass<TextButton.TextButtonStyle>()))
-        this.nextButton!!.addClickListener(Listener { args -> this.onNextButtonClick(args) })
+        this.nextButton!!.addClickListener { args -> this.onNextButtonClick(args) }
         this.backButton = EuropaButton("Back", this.skinInternal.get(javaClass<TextButton.TextButtonStyle>()))
-        this.backButton!!.addClickListener(Listener { args -> this.onBackButtonClick(args) })
+        this.backButton!!.addClickListener { args -> this.onBackButtonClick(args) }
 
         this.buttonTableInternal!!.add<EuropaButton>(this.backButton).space(MainMenuScreen.COMPONENT_SPACING.toFloat()).width(MainMenuScreen.DIALOG_BUTTON_WIDTH.toFloat()).right().expandX()
         this.buttonTableInternal!!.add<EuropaButton>(this.nextButton).space(MainMenuScreen.COMPONENT_SPACING.toFloat()).width(MainMenuScreen.DIALOG_BUTTON_WIDTH.toFloat()).right()

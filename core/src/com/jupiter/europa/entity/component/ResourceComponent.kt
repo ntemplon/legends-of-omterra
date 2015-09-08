@@ -38,7 +38,7 @@ import java.util.EnumMap
 /**
  * Created by nathan on 6/16/15.
  */
-public class ResourceComponent() : Component(), Json.Serializable, OwnedComponent {
+public class ResourceComponent() : Component(), Json.Serializable, Owned {
 
     // Enumerations
     public enum class Resources(public val drawColor: Color) {

@@ -37,7 +37,7 @@ buildscript {
         ashleyVersion = '1.5.0'
         aiVersion = '1.5.0'
         reflectionsVersion = '0.9.9'
-        kotlinVersion = '0.12.1218'
+        kotlinVersion = '0.12.1230'
         // Note: kotlin version must be updated manually in buildscript -> dependencies
     }
 

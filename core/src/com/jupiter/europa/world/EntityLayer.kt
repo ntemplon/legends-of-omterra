@@ -46,8 +46,7 @@ import java.util.TreeSet
 
  * @author Nathan Templon
  */
-public class EntityLayer// Initialization
-(size: Size, private val level: Level) : Comparator<Entity> {
+public class EntityLayer(size: Size, private val level: Level) : Comparator<Entity>, Listener<Message> {
 
     // Fields
     private val positionalLookup: Quadtree<PositionedEntity>
@@ -66,7 +65,7 @@ public class EntityLayer// Initialization
         this.entities = TreeSet(this)
         this.listeners = HashSet<EntityListener>()
 
-        EuropaGame.game.messageSystem.subscribe(Listener { args -> this.onEntityPositionChanged(args) }, javaClass<PositionChangedMessage>())
+        EuropaGame.game.messageSystem.subscribe(this, javaClass<PositionChangedMessage>())
     }
 
     public constructor(layer: MapLayer, size: Size, level: Level) : this(size, level) {
@@ -142,6 +141,14 @@ public class EntityLayer// Initialization
         }
 
         return secondZ - firstZ
+    }
+
+
+    // Listener Implementation
+    public override fun handle(message: Message) {
+        if (message is PositionChangedMessage) {
+            this.onEntityPositionChanged(message)
+        }
     }
 
 

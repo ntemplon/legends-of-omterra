@@ -43,7 +43,6 @@ import com.jupiter.europa.screen.overlay.CircleMenu
 import com.jupiter.europa.screen.overlay.PartyOverlay
 import com.jupiter.europa.screen.overlay.PauseMenu
 import com.jupiter.europa.world.Level
-import com.jupiter.ganymede.event.Listener
 import java.awt.MouseInfo
 import java.awt.Point
 import java.util.HashMap
@@ -100,7 +99,7 @@ public class LevelScreen(public val level: Level) : OverlayableScreen() {
         }
 
         this.partyOverlay = PartyOverlay(EuropaGame.game.party!!)
-        this.partyOverlay?.addEntityClickListener(Listener { args -> this.onSidebarEntityClicked(args) })
+        this.partyOverlay?.addEntityClickListener({ args -> this.onSidebarEntityClicked(args) })
         this.addOverlay(this.partyOverlay!!)
     }
 
@@ -208,22 +207,38 @@ public class LevelScreen(public val level: Level) : OverlayableScreen() {
     private fun onEntityClick(entity: Entity) {
         if (Families.renderables.matches(entity) && Families.abilitied.matches(entity)) {
             val focusedSprite = Mappers.render.get(entity).sprite
-            val popup = CircleMenu(
-                    Point(Math.round((focusedSprite.getX() + focusedSprite.getWidth() / 2.0f - this.camera.position.x) / EuropaGame.SCALE + this.camera.viewportWidth / 2.0f),
-                            Math.round((focusedSprite.getY() + focusedSprite.getHeight() / 2.0f - this.camera.position.y) / EuropaGame.SCALE + this.camera.viewportHeight / 2.0f)),
-                    Mappers.abilities[entity].getAbilities(BasicAbilityCategories.ALL_ABILITIES)
-                            .map { ability ->
-                                CircleMenu.CircleMenuItem(ability.icon, ability.name, {
-                                    TargetSelectionManager(ability.action, {
-                                        filter: (Level, Point) -> Boolean, select: (Point) -> Unit ->
-                                        this.processor.beginSelection(filter, select)
-                                    }).beginSelection()
-                                })
-                            }.toList())
+            val center = Point(Math.round((focusedSprite.getX() + focusedSprite.getWidth() / 2.0f - this.camera.position.x) / EuropaGame.SCALE + this.camera.viewportWidth / 2.0f),
+                    Math.round((focusedSprite.getY() + focusedSprite.getHeight() / 2.0f - this.camera.position.y) / EuropaGame.SCALE + this.camera.viewportHeight / 2.0f))
+            val popup = this.entityMenu(entity, center)
             popup.addCloseNoSelectionListener { this.processor.controlPlayer() }
             this.addOverlay(popup)
             this.processor.enterMenuState()
         }
+    }
+
+    private fun entityMenu(entity: Entity, centerPoint: Point): CircleMenu {
+        val comp = Mappers.abilities[entity]
+
+        val categoryItems = comp.getSubcategories(BasicAbilityCategories.ALL_ABILITIES)
+                .map { category ->
+                    CircleMenu.BasicCircleMenuItem(category.icon, category.name, {
+                        // Hide Menu and show submenu
+                    })
+                }
+
+        val abilityItems = comp.getAbilities(BasicAbilityCategories.ALL_ABILITIES)
+                .map { ability ->
+                    CircleMenu.BasicCircleMenuItem(ability.icon, ability.name, {
+                        TargetSelectionManager(ability.action, {
+                            filter: (Level, Point) -> Boolean, select: (Point) -> Unit ->
+                            this.processor.beginSelection(filter, select)
+                        }).beginSelection()
+                    })
+                }
+
+        val items = categoryItems + abilityItems
+
+        return CircleMenu(centerPoint, items)
     }
 
     private fun updateInput() {

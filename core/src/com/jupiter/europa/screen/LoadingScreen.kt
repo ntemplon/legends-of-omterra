@@ -34,7 +34,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.jupiter.europa.EuropaGame
 import com.jupiter.europa.io.EmergenceAssetManager
 import com.jupiter.europa.threading.NotifyingThread
-import com.jupiter.ganymede.event.Listener
 import java.text.DecimalFormat
 
 /**
@@ -77,7 +76,7 @@ public class LoadingScreen// Initialization
 
         if (!this.startedDataLoadingThread && this.assetManager.update()) {
             this.dataLoadingThread = NotifyingThread(Runnable { this.game.loadWorldData() })
-            this.dataLoadingThread!!.addThreadCompleteListener(Listener { args -> this.loadingComplete = true })
+            this.dataLoadingThread!!.addThreadCompleteListener { args -> this.loadingComplete = true }
             this.dataLoadingThread!!.start()
             this.startedDataLoadingThread = true
         }

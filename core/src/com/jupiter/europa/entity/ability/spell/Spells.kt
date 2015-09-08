@@ -52,7 +52,7 @@ public object Spells {
 
 
     // Static Methods
-    public fun getSpells(characterClass: Class<out CharacterClass>, level: Int?): Set<Class<out Ability>> {
+    public fun getSpells(characterClass: Class<out CharacterClass>, level: Int): Set<Class<out Ability>> {
         if (SPELL_LIST.containsKey(characterClass)) {
             val spells = SPELL_LIST.get(characterClass)
             if (spells != null && spells.containsKey(level)) {

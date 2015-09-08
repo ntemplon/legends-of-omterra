@@ -30,7 +30,6 @@ import com.jupiter.europa.EuropaGame
 import com.jupiter.europa.scene2d.ui.EuropaButton
 import com.jupiter.europa.scene2d.ui.ObservableDialog
 import com.jupiter.europa.screen.MainMenuScreen
-import com.jupiter.ganymede.event.Listener
 import com.badlogic.gdx.scenes.scene2d.ui.List as GuiList
 import com.badlogic.gdx.utils.Array as GdxArray
 
@@ -96,10 +95,10 @@ public class NewGameDialog : ObservableDialog(NewGameDialog.DIALOG_NAME, NewGame
         this.listWrapper!!.background(skinInternal.get(MainMenuScreen.LIST_BACKGROUND_KEY, javaClass<SpriteDrawable>()))
 
         this.nextButton = EuropaButton("Accept", skinInternal.get(MainMenuScreen.DEFAULT_KEY, javaClass<TextButton.TextButtonStyle>()))
-        this.nextButton!!.addClickListener(Listener { e -> this.startNewGame() })
+        this.nextButton!!.addClickListener { e -> this.startNewGame() }
 
         this.backButton = EuropaButton("Back", skinInternal.get(MainMenuScreen.DEFAULT_KEY, javaClass<TextButton.TextButtonStyle>()))
-        this.backButton!!.addClickListener(Listener { this.cancelNewGame() })
+        this.backButton!!.addClickListener { this.cancelNewGame() }
 
         this.buttonTableInternal = Table()
         this.buttonTableInternal!!.add<EuropaButton>(this.backButton).space(MainMenuScreen.COMPONENT_SPACING.toFloat()).width(MainMenuScreen.DIALOG_BUTTON_WIDTH.toFloat()).right().expandX()

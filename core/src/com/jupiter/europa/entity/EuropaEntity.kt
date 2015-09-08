@@ -30,7 +30,7 @@ import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.Json.Serializable
 import com.badlogic.gdx.utils.JsonValue
 import com.jupiter.europa.EuropaGame
-import com.jupiter.europa.entity.component.OwnedComponent
+import com.jupiter.europa.entity.component.Owned
 import com.jupiter.europa.util.Initializable
 
 /**
@@ -43,7 +43,7 @@ public class EuropaEntity : Entity(), Serializable {
     // Public Methods
     public fun initializeComponents() {
         for (component in this.getComponents()) {
-            if (component is OwnedComponent) {
+            if (component is Owned) {
                 component.owner = this
             }
             if (component is Initializable) {

@@ -76,11 +76,14 @@ public class MovementSystem : IteratingSystem(Families.positionables, EuropaGame
     override fun handle(message: Message) {
         if (message is WalkRequestMessage) {
             this.handleWalkRequest(message)
+        } else if (message is TeleportRequestMessage) {
+            this.handleTeleportRequest(message)
         }
     }
 
     override fun subscribe(engine: Engine, system: MessageSystem) {
         system.subscribe(this, javaClass<WalkRequestMessage>())
+        system.subscribe(this, javaClass<TeleportRequestMessage>())
     }
 
 
@@ -126,6 +129,18 @@ public class MovementSystem : IteratingSystem(Families.positionables, EuropaGame
                     Mappers.render.get(entity).sprite.setRegion(Mappers.moveTexture.get(entity).standingTextureFor(direction))
                     Mappers.position.get(entity).facingDirection = direction
                 }
+            }
+        }
+    }
+
+    private fun handleTeleportRequest(message: TeleportRequestMessage) {
+        val entity = message.entity
+        if (Families.positionables.matches(entity)) {
+            val position = Mappers.position[entity]
+            val size = Mappers.size[entity]
+            if (!(position.level?.collides(Rectangle(position.tilePosition.x, position.tilePosition.y, size.size.width, size.size.height)) ?: true)) {
+                this.moveEntityTo(entity, message.target)
+                EuropaGame.game.messageSystem.publish(TeleportCompleteMessage(entity))
             }
         }
     }

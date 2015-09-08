@@ -57,9 +57,13 @@ public class EuropaButton : TextButton {
         return this.clicked.addListener(listener)
     }
 
+    public fun addClickListener(listener: (ClickEvent) -> Unit): Boolean = this.clicked.addListener(listener)
+
     public fun removeClickListener(listener: Listener<ClickEvent>): Boolean {
         return this.clicked.removeListener(listener)
     }
+
+    public fun removeClickListener(listener: (ClickEvent) -> Unit): Boolean = this.clicked.removeListener(listener)
 
 
     // Private Methods

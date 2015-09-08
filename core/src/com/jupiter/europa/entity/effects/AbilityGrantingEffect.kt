@@ -51,7 +51,7 @@ public open class AbilityGrantingEffect(ability: Ability? = null) : BaseEffect()
 
     public var ability: Ability? = ability
         public get() = this.$ability
-        private set(value) {
+        internal set(value) {
             this.$ability = value
             if (value == null) {
                 this._icon = DEFAULT_ICON

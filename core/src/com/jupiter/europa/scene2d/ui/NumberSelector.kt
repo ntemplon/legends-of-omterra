@@ -132,9 +132,13 @@ public class NumberSelector(style: NumberSelector.NumberSelectorStyle) : Table()
         return this.valueChanged.addListener(listener)
     }
 
+    public fun addValueChangedListener(listener: (ValueChangedEventArgs) -> Unit): Boolean = this.valueChanged.addListener(listener)
+
     public fun removeValueChangedListener(listener: Listener<ValueChangedEventArgs>): Boolean {
         return this.valueChanged.removeListener(listener)
     }
+
+    public fun removeValueChangedListener(listener: (ValueChangedEventArgs) -> Unit): Boolean = this.valueChanged.removeListener(listener)
 
 
     // Private Methods

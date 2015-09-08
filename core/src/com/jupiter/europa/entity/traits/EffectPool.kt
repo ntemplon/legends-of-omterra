@@ -29,6 +29,7 @@ import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.Json.Serializable
 import com.badlogic.gdx.utils.JsonValue
 import com.jupiter.europa.EuropaGame
+import com.jupiter.europa.entity.component.Owned
 import com.jupiter.europa.entity.effects.Effect
 import com.jupiter.ganymede.event.Event
 import com.jupiter.ganymede.event.Listener
@@ -43,7 +44,7 @@ import java.util.Comparator
  * *
  * @param
  */
-public abstract class EffectPool<T : Effect>(public val name: String) : Serializable {
+public open class EffectPool<T : Effect>(name: String) : Serializable {
 
 
     // Properties
@@ -62,7 +63,19 @@ public abstract class EffectPool<T : Effect>(public val name: String) : Serializ
 
     public var capacity: Int = 0
         private set
+    public var name: String = name
+        internal set
     public var owner: Entity? = null
+        get() = this.$owner
+        set(value) {
+            this.$owner = value
+            for (source in this.sources) {
+                if (source is Owned) {
+                    source.owner = this.owner
+                }
+            }
+            this.reassesQualifications()
+        }
     public var autoQualify: Boolean = false
     public var sorted: Boolean = true
     public var sourceComparator: Comparator<T> = Comparator { first, second ->
@@ -105,12 +118,12 @@ public abstract class EffectPool<T : Effect>(public val name: String) : Serializ
         }
     }
 
-    public fun select(`trait`: T): Boolean {
-        if (this.source.contains(`trait`)) {
-            this.selected.add(`trait`)
+    public fun select(effect: T): Boolean {
+        if (this.source.contains(effect)) {
+            this.selected.add(effect)
 
             // Dispatch Message
-            this.selection.dispatch(TraitPoolEvent(this, `trait`))
+            this.selection.dispatch(TraitPoolEvent(this, effect))
 
             if (this.autoQualify) {
                 this.reassesQualifications()
@@ -125,13 +138,21 @@ public abstract class EffectPool<T : Effect>(public val name: String) : Serializ
         return this.selection.addListener(listener)
     }
 
+    public fun addSelectionListener(listener: (TraitPoolEvent<T>) -> Unit): Boolean = this.selection.addListener(listener)
+
     public fun removeSelectionListener(listener: Listener<TraitPoolEvent<T>>): Boolean {
         return this.selection.removeListener(listener)
     }
 
+    public fun removeSelectionListener(listener: (TraitPoolEvent<T>) -> Unit): Boolean = this.selection.removeListener(listener)
+
 
     // Private Methods
     private fun addSourceInternal(source: T, resort: Boolean) {
+        if (source is Owned) {
+            source.owner = this.owner
+        }
+
         this.source.add(source)
         if (this.autoQualify && source.qualifier.qualifies(this.owner)) {
             this.qualifiedInternal.add(source)
@@ -145,7 +166,7 @@ public abstract class EffectPool<T : Effect>(public val name: String) : Serializ
     private fun sort() {
         if (this.sorted) {
             Collections.sort(this.source, this.sourceComparator)
-            Collections.sort(this.qualified, this.sourceComparator)
+            Collections.sort(this.qualifiedInternal, this.sourceComparator)
         }
     }
 
@@ -191,7 +212,7 @@ public abstract class EffectPool<T : Effect>(public val name: String) : Serializ
 
 
     // Nested Classes
-    public data class TraitPoolEvent<T : Effect>(public val pool: EffectPool<T>, public val `trait`: T)
+    public data class TraitPoolEvent<T : Effect>(public val pool: EffectPool<T>, public val effect: T)
 
     companion object {
 

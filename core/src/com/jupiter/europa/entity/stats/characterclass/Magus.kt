@@ -26,9 +26,15 @@ package com.jupiter.europa.entity.stats.characterclass
 
 import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.JsonValue
+import com.jupiter.europa.EuropaGame
+import com.jupiter.europa.entity.ability.spell.SpellCategories
+import com.jupiter.europa.entity.ability.spell.SpellEffect
+import com.jupiter.europa.entity.ability.spell.SpellPool
 import com.jupiter.europa.entity.component.ResourceComponent
+import com.jupiter.europa.entity.messaging.RequestEffectAddMessage
 import com.jupiter.europa.entity.stats.AttributeSet
 import com.jupiter.europa.entity.stats.SkillSet.Skills
+import com.jupiter.europa.entity.traits.EffectPool
 import java.util.Collections
 import java.util.HashMap
 import java.util.TreeSet
@@ -72,7 +78,11 @@ public class Magus : CharacterClass() {
     }
 
     override fun onFirstCreation() {
-        //this.abilityPoolsInternal.add(EffectPool<Effect>())
+        val firstLevelSpells = SpellPool(this.javaClass, SpellCategories.LEVEL_ONE)
+        firstLevelSpells.increaseCapacity(SPELL_PROGRESSION[this.level]?.get(1) ?: 0)
+        firstLevelSpells.owner = this.owner
+        firstLevelSpells.addSelectionListener { args -> this.onSpellSelection(args) }
+        this.abilityPoolsInternal.add(firstLevelSpells)
     }
 
 
@@ -83,6 +93,15 @@ public class Magus : CharacterClass() {
 
     override fun read(json: Json, jsonData: JsonValue) {
         super.read(json, jsonData)
+    }
+
+
+    // Private Methods
+    private fun onSpellSelection(args: EffectPool.TraitPoolEvent<SpellEffect>) {
+        val owner = this.owner
+        if (owner != null) {
+            EuropaGame.game.messageSystem.publish(RequestEffectAddMessage(owner, args.effect))
+        }
     }
 
     companion object {

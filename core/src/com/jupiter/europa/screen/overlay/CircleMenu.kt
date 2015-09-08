@@ -36,6 +36,7 @@ import com.jupiter.europa.EuropaGame
 import com.jupiter.europa.io.FileLocations
 import com.jupiter.europa.screen.OverlayableScreen
 import com.jupiter.ganymede.event.Event
+import com.jupiter.ganymede.event.EventWrapper
 import java.awt.Point
 import kotlin.properties.Delegates
 
@@ -52,7 +53,9 @@ public class CircleMenu(private val center: Point, private val items: List<Circl
 
     // Initialization
     init {
-        items.forEach { it.menu = this }
+        items.forEach { item ->
+            item.selectionMade.addListener { this.selectionMade = true }
+        }
     }
 
 
@@ -136,11 +139,17 @@ public class CircleMenu(private val center: Point, private val items: List<Circl
 
 
     // Nested Classes
-    data class CircleMenuItem(private val icon: TextureRegion, private val text: String, private val action: () -> Unit) : Actor() {
+    abstract class CircleMenuItem : Actor() {
+        public abstract val selectionMade: EventWrapper<CircleMenuEventArgs>
+    }
+
+    class BasicCircleMenuItem(private val icon: TextureRegion, private val text: String, private val action: () -> Unit) : CircleMenuItem() {
 
         // Properties
         private var back: TextureRegion = BACK
-        internal var menu: CircleMenu? = null
+
+        private val selectionMadeEvent = Event<CircleMenuEventArgs>()
+        public override val selectionMade: EventWrapper<CircleMenuEventArgs> = EventWrapper(selectionMadeEvent)
 
 
         // Initialization
@@ -149,8 +158,8 @@ public class CircleMenu(private val center: Point, private val items: List<Circl
             this.addListener(object : InputListener() {
                 override fun touchDown(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                     if (button == Input.Buttons.LEFT) {
-                        this@CircleMenuItem.menu?.selectionMade = true
-                        this@CircleMenuItem.action.invoke()
+                        this@BasicCircleMenuItem.selectionMadeEvent.dispatch(CircleMenuEventArgs(this@BasicCircleMenuItem))
+                        this@BasicCircleMenuItem.action.invoke()
                         return true
                     } else {
                         return false
@@ -158,20 +167,64 @@ public class CircleMenu(private val center: Point, private val items: List<Circl
                 }
 
                 override fun enter(event: InputEvent, x: Float, y: Float, pointer: Int, fromActor: Actor?) {
-                    this@CircleMenuItem.back = BACK_HOVERED
+                    this@BasicCircleMenuItem.back = BACK_HOVERED
                 }
 
                 override fun exit(event: InputEvent, x: Float, y: Float, pointer: Int, toActor: Actor?) {
-                    this@CircleMenuItem.back = BACK
+                    this@BasicCircleMenuItem.back = BACK
                 }
             })
         }
 
 
         // Public Methods
-        override fun draw(batch: Batch, parentAlpha: Float) {
+        override final fun draw(batch: Batch, parentAlpha: Float) {
             batch.draw(this.back, this.getX(), this.getY())
             batch.draw(this.icon, this.getX(), this.getY())
         }
     }
+
+    class SubmenuItem(private val icon: TextureRegion, private val text: String, private val action: () -> Unit) : CircleMenuItem() {
+
+        // Properties
+        private var back: TextureRegion = BACK
+
+        private val selectionMadeEvent = Event<CircleMenuEventArgs>()
+        public override val selectionMade: EventWrapper<CircleMenuEventArgs> = EventWrapper(selectionMadeEvent)
+
+
+        // Initialization
+        init {
+            this.setBounds(0f, 0f, this.back.getRegionWidth().toFloat(), this.back.getRegionHeight().toFloat())
+            this.addListener(object : InputListener() {
+                override fun touchDown(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+                    if (button == Input.Buttons.LEFT) {
+                        this@SubmenuItem.selectionMadeEvent.dispatch(CircleMenuEventArgs(this@SubmenuItem))
+                        this@SubmenuItem.action.invoke()
+                        return true
+                    } else {
+                        return false
+                    }
+                }
+
+                override fun enter(event: InputEvent, x: Float, y: Float, pointer: Int, fromActor: Actor?) {
+                    this@SubmenuItem.back = BACK_HOVERED
+                }
+
+                override fun exit(event: InputEvent, x: Float, y: Float, pointer: Int, toActor: Actor?) {
+                    this@SubmenuItem.back = BACK
+                }
+            })
+        }
+
+
+        // Public Methods
+        override final fun draw(batch: Batch, parentAlpha: Float) {
+            batch.draw(this.back, this.getX(), this.getY())
+            batch.draw(this.icon, this.getX(), this.getY())
+        }
+
+    }
+
+    data class CircleMenuEventArgs(public val item: CircleMenuItem)
 }

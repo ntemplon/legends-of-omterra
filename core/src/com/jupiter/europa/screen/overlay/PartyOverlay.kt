@@ -68,9 +68,13 @@ public class PartyOverlay(private val party: Party) : Scene2DOverlay(false), Dis
         return this.entityClicked.addListener(listener)
     }
 
+    public fun addEntityClickListener(listener: (EntityEventArgs) -> Unit): Boolean = this.entityClicked.addListener(listener)
+
     public fun removeEntityClickListener(listener: Listener<EntityEventArgs>): Boolean {
         return this.entityClicked.removeListener(listener)
     }
+
+    public fun removeEntityClickListener(listener: (EntityEventArgs) -> Unit): Boolean = this.entityClicked.removeListener(listener)
 
     override fun added(screen: OverlayableScreen) {
         super<Scene2DOverlay>.added(screen)
@@ -78,7 +82,7 @@ public class PartyOverlay(private val party: Party) : Scene2DOverlay(false), Dis
         this.anchor.add(this.table).expand().top().right().pad(10f)
         this.stage?.addActor(anchor)
 
-        screen.addTintChangedListener(Listener { args -> this.tint = args.newValue })
+        screen.addTintChangedListener { args -> this.tint = args.newValue }
     }
 
     override fun dispose() {

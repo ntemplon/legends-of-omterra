@@ -29,7 +29,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.jupiter.europa.scene2d.ui.NumberSelector.NumberSelectorStyle
 import com.jupiter.europa.scene2d.ui.NumberSelector.ValueChangedEventArgs
-import com.jupiter.ganymede.event.Listener
 import java.util.ArrayList
 import java.util.LinkedHashMap
 
@@ -162,7 +161,7 @@ public open class MultipleNumberSelector @jvmOverloads constructor(public val ma
                 addedToRow++
             }
 
-            selector.addValueChangedListener(Listener { args -> this.onValueChanged(args) })
+            selector.addValueChangedListener { args -> this.onValueChanged(args) }
         }
     }
 

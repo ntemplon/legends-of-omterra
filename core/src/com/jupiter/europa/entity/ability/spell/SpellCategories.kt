@@ -24,26 +24,26 @@
 
 package com.jupiter.europa.entity.ability.spell
 
+import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.jupiter.europa.EuropaGame
 import com.jupiter.europa.entity.ability.AbilityCategory
 import com.jupiter.europa.entity.ability.BasicAbilityCategories
+import com.jupiter.europa.io.FileLocations
 
 /**
  * Created by nathan on 5/20/15.
  */
-public enum class SpellCategories(override val name: String) : AbilityCategory {
-    LEVEL_ONE("Level 1"),
-    LEVEL_TWO("Level 2"),
-    LEVEL_THREE("Level 3"),
-    LEVEL_FOUR("Level 4"),
-    LEVEL_FIVE("Level 5"),
-    LEVEL_SIX("Level 6"),
-    LEVEL_SEVEN("Level 7"),
-    LEVEL_EIGHT("Level 8"),
-    LEVEL_NINE("Level 9");
+public enum class SpellCategories(override val name: String, public val level: Int, override val icon: TextureRegion) : AbilityCategory {
+    LEVEL_ONE("Level 1 Spells", 1, EuropaGame.game.assetManager!!.get(FileLocations.ICON_ATLAS, javaClass<TextureAtlas>()).findRegion("first-level-spells")),
+    LEVEL_TWO("Level 2 Spells", 2, EuropaGame.game.assetManager!!.get(FileLocations.ICON_ATLAS, javaClass<TextureAtlas>()).findRegion("first-level-spells")),
+    LEVEL_THREE("Level 3 Spells", 3, EuropaGame.game.assetManager!!.get(FileLocations.ICON_ATLAS, javaClass<TextureAtlas>()).findRegion("first-level-spells")),
+    LEVEL_FOUR("Level 4 Spells", 4, EuropaGame.game.assetManager!!.get(FileLocations.ICON_ATLAS, javaClass<TextureAtlas>()).findRegion("first-level-spells")),
+    LEVEL_FIVE("Level 5 Spells", 5, EuropaGame.game.assetManager!!.get(FileLocations.ICON_ATLAS, javaClass<TextureAtlas>()).findRegion("first-level-spells")),
+    LEVEL_SIX("Level 6 Spells", 6, EuropaGame.game.assetManager!!.get(FileLocations.ICON_ATLAS, javaClass<TextureAtlas>()).findRegion("first-level-spells")),
+    LEVEL_SEVEN("Level 7 Spells", 7, EuropaGame.game.assetManager!!.get(FileLocations.ICON_ATLAS, javaClass<TextureAtlas>()).findRegion("first-level-spells")),
+    LEVEL_EIGHT("Level 8 Spells", 8, EuropaGame.game.assetManager!!.get(FileLocations.ICON_ATLAS, javaClass<TextureAtlas>()).findRegion("first-level-spells")),
+    LEVEL_NINE("Level 9 Spells", 9, EuropaGame.game.assetManager!!.get(FileLocations.ICON_ATLAS, javaClass<TextureAtlas>()).findRegion("first-level-spells"));
 
     override val parent: AbilityCategory = BasicAbilityCategories.SPELLS
-
-    // TODO: Actual Icons
-    override val icon: TextureRegion = TextureRegion()
 }

@@ -51,10 +51,13 @@ public class NotifyingThread// Initialization
         return this.completed.addListener(listener)
     }
 
+    public fun addThreadCompleteListener(listener: (ThreadCompleteArgs) -> Unit): Boolean = this.completed.addListener(listener)
+
     public fun removeThreadCompleteListener(listener: Listener<ThreadCompleteArgs>): Boolean {
         return this.completed.removeListener(listener)
     }
 
+    public fun removeThreadCompleteListener(listener: (ThreadCompleteArgs) -> Unit): Boolean = this.completed.removeListener(listener)
 
     // Neseted Classes
     public data class ThreadCompleteArgs(public val thread: NotifyingThread)

@@ -107,7 +107,7 @@ public abstract class CharacterClass : Serializable, Initializable {
         // Feats
         this.featPool.increaseCapacity(1)
         this.abilityPoolsInternal.add(this.featPool)
-        this.featPool.addSelectionListener(Listener { args -> this.onFeatSelection(args) })
+        this.featPool.addSelectionListener { args -> this.onFeatSelection(args) }
     }
 
     override fun initialize() {
@@ -136,7 +136,7 @@ public abstract class CharacterClass : Serializable, Initializable {
             this.level++
 
             if (this.level % 3 == 0) {
-                this.featPool!!.increaseCapacity(1)
+                this.featPool.increaseCapacity(1)
             }
 
             this.levelUp.dispatch(LevelUpArgs(this, this.level))
@@ -164,8 +164,9 @@ public abstract class CharacterClass : Serializable, Initializable {
     }
 
     private fun onFeatSelection(event: TraitPoolEvent<Feat>) {
-        if (this.owner != null) {
-            EuropaGame.game.messageSystem.publish(RequestEffectAddMessage(this.owner!!, event.`trait`))
+        val owner = this.owner
+        if (owner != null) {
+            EuropaGame.game.messageSystem.publish(RequestEffectAddMessage(owner, event.effect))
         }
     }
 
@@ -174,7 +175,7 @@ public abstract class CharacterClass : Serializable, Initializable {
     override fun write(json: Json) {
         json.writeValue(LEVEL_KEY, this.level)
         json.writeValue(OWNER_ID_KEY, this.owner!!.getId())
-        json.writeValue(FEAT_POOL_KEY, this.featPool, this.featPool!!.javaClass)
+        json.writeValue(FEAT_POOL_KEY, this.featPool, this.featPool.javaClass)
         json.writeValue(AVAILABLE_SKILL_POINTS_KEY, this.availableSkillPoints)
     }
 
@@ -190,7 +191,7 @@ public abstract class CharacterClass : Serializable, Initializable {
         if (jsonData.has(FEAT_POOL_KEY)) {
             this.abilityPoolsInternal.remove(this.featPool)
             this.featPool = json.fromJson(javaClass<FeatPool>(), jsonData.get(FEAT_POOL_KEY).prettyPrint(EuropaGame.PRINT_SETTINGS))
-            this.featPool.addSelectionListener(Listener { args -> this.onFeatSelection(args) })
+            this.featPool.addSelectionListener { args -> this.onFeatSelection(args) }
             this.abilityPoolsInternal.add(this.featPool)
         }
 
